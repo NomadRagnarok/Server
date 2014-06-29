@@ -1,0 +1,1290 @@
+//-------------------------------------------------------------------------
+//Toasty Warper 1.32
+// by ToastOfDoom
+//-------------------------------------------------------------------------
+//Changelog:
+//1.32 --------------------------------------------------------------------
+//- Changed default 'Upper' value to allow for 3rd class. (Thanks Annie)
+//1.31 --------------------------------------------------------------------
+//- Reverted BaseJob check back to jobLookup method but uses BaseJob instead
+//  of Class. Best of both methods. Saves on post processing calculations
+//  but still allows for an elegant way of writing script (don't need a 
+//  bunch of exceptions)
+//1.3 ---------------------------------------------------------------------
+//- Changed OnStart labels to OnStartNPC to prevent mystery errors.
+//- Removed jobLookup and replaced with BaseJob check with simple 
+//  adjustment for dancers. (Cheers to AnnieRuru for reminding me)
+//- Changed the way Upper status was checked.
+//- Changed the way WoE status was checked.
+//- Commented out defaultly missing moc_filds.
+//- Modified mapserver console output when script loads.
+//1.2 ---------------------------------------------------------------------
+//- Added a index lookup for maps (.map_<mapname> = index)
+//- Implemented user count for nodes (stored in .userCount_#[%])
+//- Added settings to turn on/off user count for nodes and maps
+//  (in OnInit: .showNodeUserCount, .showMapUserCount)
+//- Optimised the overflow test function so it wouldn't sleep so much
+//  (ie..no longer takes so much time to execute)
+//1.1 ---------------------------------------------------------------------
+//- Renamed some NPCs cause 'warper' was too common and was causing problems
+//- Chucked out the old cost system and replaced with a new multi-
+//  modification structure. Thus old bug with cost not passing on pass 1st
+//  sub menu no longer exists.
+//- Now can dynamically adjusts available maps/menus according to:
+//     - "gm": 0: allows everyone
+//             0+: only allows people above or equal to set gmlevel
+//             0-: only allows people below or equal to set gmlevel
+//     - "woe": 1:active when woe inactive
+//              2:active when woe active
+//              3:active regardless of woe setting
+//     - "job": works exactly the same as the 'job' setting in item_db
+//     - "upper": same as 'upper' setting in item_db
+//     - "gender": same as 'sex' setting in item_db
+//     - "blvl": works the same as 'gm' but with base level instead
+//     - "flag": when passed a variable name, it check if variable is 
+//               empty as the condition to allow access.
+//     - "function": like with 'flag' but instead of a variable, it uses a
+//                   function name. Will pass the following parameters:
+//                      Node: "Node", <nodeID>, <nodeName>  
+//                      Map: "Map", <mapID>, <mapTitle>, <mapName>, <mapX>, <mapY>, <mapCost>
+//- Other modifiers added: "zeny", "mapUsers"
+//- Shortened some of the map names to get them to fit better
+//1.0 ---------------------------------------------------------------------
+//- Added menu check in OnInit that checks if a menu may exceed maximum
+//  menu length. Hardcoded to print a warning at 2000 characters to
+//  compensate for changes in length due to number of map users. Client
+//  will crash if exceeds 2047.
+//0.3 ---------------------------------------------------------------------
+//- Fixed npc duplication problem
+//- Added last warp functionality (edit .numLastWarps in OnInit to adjust
+//  number of listed warps)
+//- Colour-coded some things in the menu
+//0.2 ---------------------------------------------------------------------
+//- Fixed bad lookup names for x/y coords for warp (thanks BrianL)
+//- Removed 'Back' option for root node
+//- Added ablilty to define basic zeny cost to individual nodes and/or maps
+//0.1 ---------------------------------------------------------------------
+//- Initial Release
+//-------------------------------------------------------------------------
+-	script	toastywarperbase	-1,{
+
+	function StartNode;
+	function EndNode;
+	function AddMap;
+	function SetArrayValue;
+	function GetArrayValue;
+	function WipeArray; //can't use cleararray =P
+	function ComputeMenu;
+	function ShowMenu;
+	function SelectMap;
+	function AddLastWarpsNode;
+	function ConvertStringToChrArray;
+	function GenerateMapSaveString;
+	function AddMapToList;
+	function ListMaps;
+	function InitialiseMapData;
+	function PrepLastWarpsMenu;
+	function TestMenus;
+	function CountAllUsers;
+	
+OnStartNPC:
+	set @gotoCount, 0;	//make sure it doesn't overflow and crash later on.
+	if(getgmlevel() >= .gmAccessLvl) {
+		mes "Would to like to test all the menus for overflow error?";
+		next;
+		if(prompt("Yes:No") == 1) {
+			TestMenus();
+		}
+	}
+
+	mes "This is the ^FF0000Ragnarok Tales'^000000 World Portal!";
+	
+	if(.showNodeUserCount)
+		CountAllUsers();
+	
+	next;
+
+	set .@selectedMap, ShowMenu();
+	SelectMap(.@selectedMap);
+
+	end;
+
+	function ShowMenu {
+		setarray .@stack$[0], ".menu_0$";	//traversed menu stack
+
+		while(1) {
+			set .@currentMenu$, .@stack$[getarraysize(.@stack$) - 1];
+			set .@menuStr$, ComputeMenu(.@currentMenu$);
+
+			if(getstrlen(.@menuStr$) >= 2047) { //graceful close if menu string overflows(2047)
+				debugmes "TOASTYWARPER - ERROR: Menu (" + getd(.@currentMenu$ + "[0]") + ") has overflowed: " + getstrlen(.@menuStr$) + " chars.";
+				mes "An error has occurred. Please notify the GMs";
+				close;
+			}
+			set .@menu, select(.@menuStr$);
+			set .@selectedItem, atoi(getd(.@currentMenu$ + "[" + (.@menu + 1) + "]"));
+
+			if(.@selectedItem == 0) {
+				//back
+				if(getarraysize(.@stack$) <= 1) {
+					set .@i, -1;
+					break;
+				}
+				setarray .@stack$[getarraysize(.@stack$) - 1], "";
+			} else
+				if(.@selectedItem <= .mapOffset) {
+					setarray .@stack$[getarraysize(.@stack$)], ((.@selectedItem == .mapOffset)?"@menu_lastwarps$":".menu_" + .@selectedItem + "$");
+				} else {
+					//leaf node - map
+					set .@i, .@selectedItem - .mapOffset;
+					break;
+				}
+		}
+		return .@i;
+	}
+
+	function CountAllUsers {
+		//".userCount_#[%]"
+		set .@i, .nodeCount;
+
+		while(.@i > 0) {
+			set .@nodePtr$, ".menu_" + .@i + "$";
+			set .@userCount, 0;
+			set .@k, 2;
+			while(getd(.@nodePtr$ + "[" + .@k + "]") != "") {
+				set .@selectedItem, atoi(getd(.@nodePtr$ + "[" + .@k + "]"));
+				if(.@selectedItem <= .mapOffset) {
+					//node
+					set .@userCount, .@userCount + ((.@selectedItem != .mapOffset)?
+							(getd(".userCount_" + (.@selectedItem / 128) + "[" + (.@selectedItem % 128))):
+							0); //make sure it's not the lastwarp menu
+				} else {
+					//map
+					set .@selectedItem, .@selectedItem - .mapOffset;
+
+					set .@a$, "_" + (.@selectedItem / 128) + "$[" + (.@selectedItem % 128) + "]";
+					set .@mapMap$, getd(".maps_map" + .@a$);
+					set .@mapUsers$, getd(".maps_mapUsers" + .@a$);
+
+					set .@userCount, .@userCount + getmapusers((.@mapUsers$ == "")?.@mapMap$:.@mapUsers$);
+				}
+				set .@k, .@k + 1;
+			}
+			setd(".userCount_" + (.@i / 128) + "[" + (.@i % 128) + "]", .@userCount);
+			set .@i, .@i - 1;
+		}
+	}
+	
+	//Dynamic generation of menus happens in here!!!
+	function ComputeMenu { //menu_pointer
+		//default precomputed string (here for memory's sake)
+		//return getd(getarg(0) + "[1]");
+		set .@i, 2;
+		set @gotoCount, @gotoCount + 3;
+		
+		while(getd(getarg(0) + "[" + .@i + "]") != "") {
+			set .@selectedItem, atoi(getd(getarg(0) + "[" + .@i + "]"));
+
+			set .@player_job, getd(".jobLookUp_" + BaseJob);
+			
+			set @gotoCount, @gotoCount + 1;
+			if(.@selectedItem <= .mapOffset) {
+				//node - category
+				set @gotoCount, @gotoCount + 1;
+				if(.@selectedItem == .mapOffset) {
+					//lastwarp
+					set .@output$, .@output$ + "Last Warp";
+				} else {
+					set .@enable, 1;
+					set .@a$, "_" + (.@selectedItem / 128) + "[" + (.@selectedItem % 128) + "]";
+					set .@b$, "_" + (.@selectedItem / 128) + "$[" + (.@selectedItem % 128) + "]";
+
+					set .@nodeName$, getd(".menu_" + .@selectedItem + "$[0]");
+					set .@gm, getd(".menus_gm" + .@a$);
+					set .@woe, getd(".menus_woe" + .@a$);
+					set .@job, getd(".menus_job" + .@a$);
+					set .@upper, getd(".menus_upper" + .@a$);
+					set .@gender, getd(".menus_gender" + .@a$);
+					set .@blvl, getd(".menus_blvl" + .@a$);
+					set .@flag$, getd(".menus_flag" + .@b$);
+					set .@function$, getd(".menus_function" + .@b$);
+
+					set .@enable, .@enable && ((.@gm >= 0)?(getgmlevel() >= .@gm):((getgmlevel() + .@gm) <= 0));
+					set .@enable, .@enable && (.@woe & ((agitcheck() || agitcheck2()) + 1) > 0);
+					set .@enable, .@enable && ((.@job & (1 << .@player_job)) > 0);
+					set .@enable, .@enable && ((.@upper & pow(2, Upper)) > 0);
+					set .@enable, .@enable && (.@gender == Sex || .@gender == 2);
+					set .@enable, .@enable && ((.@blvl >= 0)?(BaseLevel >= .@blvl):(BaseLevel + .@blvl <= 0));
+					set .@enable, .@enable && ((.@flag$ != "")?getd(.@flag$):1);
+					if(.@function$ != "")	//used if here cause logical operators won't shortcircuit and thus will execute really bad code
+						set .@enable, .@enable && callfunc(.@function$, "Node", .@selectedItem, .@nodeName$);
+
+					set .@userCount, getd(".userCount" + .@a$);
+						
+					set .@output$, .@output$ + ((.@enable)?(.@nodeName$ + 
+							((.showNodeUserCount)?(" [^0000FF" + .@userCount + "^000000]"):"")):"");
+							
+					set @gotoCount, @gotoCount + 2;
+				}
+
+				set .@output$, .@output$ + ":";
+			} else {
+				//leaf node - map
+				set .@selectedItem, .@selectedItem - .mapOffset;
+
+				set .@enable, 1;
+				set .@a$, "_" + (.@selectedItem / 128) + "[" + (.@selectedItem % 128) + "]";
+				set .@b$, "_" + (.@selectedItem / 128) + "$[" + (.@selectedItem % 128) + "]";
+
+				set .@mapName$, getd(".maps_name" + .@b$);
+				set .@mapMap$, getd(".maps_map" + .@b$);
+
+				set .@zeny, getd(".maps_zeny" + .@a$);
+				set .@gm, getd(".maps_gm" + .@a$);
+				set .@woe, getd(".maps_woe" + .@a$);
+				set .@job, getd(".maps_job" + .@a$);
+				set .@upper, getd(".maps_upper" + .@a$);
+				set .@gender, getd(".maps_gender" + .@a$);
+				set .@blvl, getd(".maps_blvl" + .@a$);
+				set .@mapUsers$, getd(".maps_mapUsers" + .@b$);
+				set .@flag$, getd(".maps_flag" + .@b$);
+				set .@function$, getd(".maps_function" + .@b$);
+				
+				set .@enable, .@enable && ((.@gm >= 0)?(getgmlevel() >= .@gm):((getgmlevel() + .@gm) <= 0));
+				set .@enable, .@enable && (.@woe & ((agitcheck() || agitcheck2()) + 1) > 0);
+				set .@enable, .@enable && ((.@job & (1 << .@player_job)) > 0);
+				set .@enable, .@enable && ((.@upper & pow(2, Upper)) > 0);
+				set .@enable, .@enable && (.@gender == Sex || .@gender == 2);
+				set .@enable, .@enable && ((.@blvl >= 0)?(BaseLevel >= .@blvl):(BaseLevel + .@blvl <= 0));
+				set .@enable, .@enable && ((.@flag$ != "")?getd(.@flag$):1);
+				if(.@function$ != "") {	//used if here cause logical operators won't shortcircuit and thus will execute really bad code
+					set .@mapX, getd(".maps_x" + .@a$);
+					set .@mapY, getd(".maps_y" + .@a$);
+					set .@enable, .@enable && callfunc(.@function$, "Map", .@selectedItem, .@mapName$, .@mapMap$, .@mapX, .@mapY, .@zeny);
+				}
+				
+				set .@numUsers, getmapusers((.@mapUsers$ == "")?.@mapMap$:.@mapUsers$);				
+				
+				set .@output$, .@output$ + ((.@enable)?
+					("- " + .@mapName$ + 
+					((.showMapUserCount)?(" [^0000FF" + .@numUsers + "^000000]"):"") + 
+					((.@zeny > 0)?(" - " + .@zeny + "z"):"")):"") + ":";
+					
+				set @gotoCount, @gotoCount + 2;
+			}
+			set .@i, .@i + 1;
+			set @gotoCount, @gotoCount + 1;
+		}
+		return .@output$ + ((getarg(0) != ".menu_0$") ? "Back" : "");
+	}
+	
+	function SelectMap { // <mapID>
+		set .@name$, GetArrayValue(".maps_name", getarg(0), 1);
+		set .@map$, GetArrayValue(".maps_map", getarg(0), 1);
+		set .@x, GetArrayValue(".maps_x", getarg(0));
+		set .@y, GetArrayValue(".maps_y", getarg(0));
+		set .@users, getmapusers(.@map$);
+		set .@cost, GetArrayValue(".maps_zeny", getarg(0));
+
+		mes "^0000FF" + .@name$ + "^000000 has ^0000FF" + .@users + "^000000 player" + ((.@users != 1)?"s":"") + " at the moment.";
+		if(.@cost > 0) {
+			mes "It costs ^0000FF" + .@cost + "z^000000 to warp here.";
+			if(Zeny < .@cost) {
+				mes " ";
+				mes "^FF0000You do not have enough zeny to warp here.^000000";
+				mes "Please come back when you do.";
+				close2;
+				return;
+			}
+		}
+
+		mes "Would you like to warp there now?";
+
+		set .@menu, select("Yes:No");
+		close2;
+
+		if(.@menu == 1) {
+			AddMapToList(getarg(0) + 1);
+			PrepLastWarpsMenu();
+
+			set Zeny, Zeny - .@cost;
+			warp .@map$, .@x, .@y;
+		}
+
+		return;
+	}
+
+	OnPCLoginEvent:
+		set @toasty_stackStart, 0;
+		ConvertStringToChrArray(toasty_mapSave$, "@toasty_savedMaps");
+		InitialiseMapData();
+		end;
+
+	OnInit:
+		set .gotoLimit, 2000;	//lower this if you get infinite loop errors
+		set .numLastWarps, 10;	//max 64
+		set .gmAccessLvl, 80;
+
+		set .mapOffset, 1000; //increase if total number of nodes exceed
+
+		set .showNodeUserCount, 1;	//enables|disables display of number of users on nodes
+		set .showMapUserCount, 1;	//enables|disables display of number of users on maps
+		
+		//used for data compression in last warp storage (DON'T TOUCH)
+		setarray .char$[0],
+			"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+			"A", "B", "C", "D", "E", "F", "G", "H", "I",
+			"J", "K", "L", "M", "N", "O", "P", "Q", "R",
+			"S", "T", "U", "V", "W", "X", "Y", "Z",
+			"a", "b", "c", "d", "e", "f", "g", "h", "i",
+			"j", "k", "l", "m", "n", "o", "p", "q", "r",
+			"s", "t", "u", "v", "w", "x", "y", "z",
+			"{", "|";
+
+		setarray .mapModifiers$[0], "", "zeny", "gm", "woe", "job", "upper", "gender", "blvl", "mapUsers", "flag", "function";
+		setarray .tempModPtrs$[0], ".@badData$", ".@node_zeny", ".@node_gm", ".@node_woe", ".@node_job", ".@node_upper", ".@node_gender", ".@node_blvl", ".@node_mapUsers$", ".@node_flag$", ".@node_function$";
+
+		//define index lookups for modifiers
+		while(.@i < getarraysize(.mapModifiers$)) {
+			setd(".modifier_" + .mapModifiers$[.@i], .@i);
+			set .@i, .@i + 1;
+		}
+
+		//define index lookups for jobs
+		setarray .@jobLookup_0[0], Job_Novice, Job_SuperNovice;
+		setarray .@jobLookup_1[0], Job_Swordman;
+		setarray .@jobLookup_2[0], Job_Mage;
+		setarray .@jobLookup_3[0], Job_Archer;
+		setarray .@jobLookup_4[0], Job_Acolyte;
+		setarray .@jobLookup_5[0], Job_Merchant;
+		setarray .@jobLookup_6[0], Job_Thief;
+		setarray .@jobLookup_7[0], Job_Knight;
+		setarray .@jobLookup_8[0], Job_Priest;
+		setarray .@jobLookup_9[0], Job_Wizard;
+		setarray .@jobLookup_10[0], Job_Blacksmith;
+		setarray .@jobLookup_11[0], Job_Hunter;
+		setarray .@jobLookup_12[0], Job_Assassin;
+		setarray .@jobLookup_14[0], Job_Crusader;
+		setarray .@jobLookup_15[0], Job_Monk;
+		setarray .@jobLookup_16[0], Job_Sage;
+		setarray .@jobLookup_18[0], Job_Alchemist;
+		setarray .@jobLookup_19[0], Job_Bard, Job_Dancer;
+		setarray .@jobLookup_21[0], Job_Taekwon;
+		setarray .@jobLookup_22[0], Job_Star_Gladiator;
+		setarray .@jobLookup_23[0], Job_Soul_Linker;
+		setarray .@jobLookup_24[0], Job_Gunslinger;
+		setarray .@jobLookup_25[0], Job_Ninja;
+
+		set .@i, 0;
+		while(.@i < 25) {
+			set .@jobsPtr$, ".@jobLookup_" + .@i;
+			set .@k, getarraysize(getd(.@jobsPtr$));
+			while(.@k > 0) {
+				set .@k, .@k - 1;
+				setd(".jobLookUp_" + getd(.@jobsPtr$ + "[" + .@k + "]"), .@i);
+			}
+			set .@i, .@i + 1;
+		}
+		
+		callsub(LoadData);
+	end;
+
+	LoadData:
+		//reset data;
+		set .nodeCount, 0;
+		set .mapCount, 1;
+		cleararray(.buildStack$[0], "", 128);
+		setarray .buildStack$[0], ".menu_0$";
+
+		//default mod values
+		setarray .stack_zeny[0], 0;
+		setarray .stack_gm[0], 0;
+		setarray .stack_woe[0], 3;
+		setarray .stack_job[0], 0x03FFFFFF;
+		setarray .stack_upper[0], 119;
+		setarray .stack_gender[0], 2;
+		setarray .stack_blvl[0], 0;
+		setarray .stack_mapUsers$[0], "";
+		setarray .stack_flag$[0], "";
+		setarray .stack_function$[0], "";
+
+		set .stackLevel, 1;
+
+		set .gotoCount, 0;
+		sleep(1);
+		set .@startLoadTime, gettimetick(0);
+
+		AddLastWarpsNode();
+		StartNode("Towns");
+			AddMap("Alberta", "alberta", 28, 234);
+			AddMap("Aldebaran", "aldebaran", 140, 131);
+			AddMap("Amatsu", "amatsu", 198, 84);
+			AddMap("Ayothaya", "ayothaya", 150, 163);
+			AddMap("Comodo", "comodo", 209, 143);
+			AddMap("Einbech (Mining Village);", "einbech", 196, 83);
+			AddMap("Einbroch", "einbroch", 64, 200);
+			AddMap("Geffen", "geffen", 119, 59);
+			AddMap("Gonryun", "gonryun", 160, 121);
+			AddMap("Hugel", "hugel", 96, 145);
+			AddMap("Izlude", "izlude", 128, 114);
+			AddMap("Jawaii", "jawaii", 213, 230);
+			AddMap("Lighthalzen", "lighthalzen", 158, 92);
+			AddMap("Louyang", "louyang", 210, 108);
+			AddMap("Lutie", "xmas", 147, 134);
+			AddMap("Moscovia", "moscovia", 214, 183);
+			AddMap("Morroc", "morocc", 156, 93);
+			AddMap("Nameless Island", "nameless_n", 256, 215);
+			AddMap("Niflheim", "niflheim", 85, 154);
+			AddMap("Payon", "payon", 152, 75);
+			AddMap("Prontera", "prontera", 155, 183);
+			AddMap("Rachel", "rachel", 130, 137);
+			AddMap("Thor Camp", "thor_camp", 254, 90);
+			AddMap("Veins", "veins", 216, 123);
+			AddMap("Yuno", "yuno", 157, 51);
+			AddMap("Umbala", "umbala", 145, 155);
+		EndNode();
+		StartNode("Fields");
+			StartNode("Amatsu Fields");
+				AddMap("Amatsu Field 1", "ama_fild01", 190, 197);
+			EndNode();
+			StartNode("Ayothaya Fields");
+				AddMap("Ayothaya Field 1", "ayo_fild01", 173, 134);
+				AddMap("Ayothaya Field 2", "ayo_fild02", 212, 150);
+			EndNode();
+			StartNode("Comodo Fields");
+				AddMap("Comodo Field 1", "cmd_fild01", 180, 178);
+				AddMap("Comodo Field 2", "cmd_fild02", 231, 160);
+				AddMap("Comodo Field 3", "cmd_fild03", 191, 172);
+				AddMap("Comodo Field 4", "cmd_fild04", 228, 194);
+				AddMap("Comodo Field 5", "cmd_fild05", 224, 203);
+				AddMap("Comodo Field 6", "cmd_fild06", 190, 223);
+				AddMap("Comodo Field 7", "cmd_fild07", 234, 177);
+				AddMap("Comodo Field 8", "cmd_fild08", 194, 175);
+				AddMap("Comodo Field 9", "cmd_fild09", 172, 172);
+			EndNode();
+			StartNode("Einbroch Fields");
+				AddMap("Einbroch Field 1", "ein_fild01", 142, 225);
+				AddMap("Einbroch Field 2", "ein_fild02", 182, 141);
+				AddMap("Einbroch Field 3", "ein_fild03", 187, 228);
+				AddMap("Einbroch Field 4", "ein_fild04", 185, 173);
+				AddMap("Einbroch Field 5", "ein_fild05", 216, 173);
+				AddMap("Einbroch Field 6", "ein_fild06", 195, 148);
+				AddMap("Einbroch Field 7", "ein_fild07", 272, 220);
+				AddMap("Einbroch Field 8", "ein_fild08", 173, 214);
+				AddMap("Einbroch Field 9", "ein_fild09", 207, 174);
+				AddMap("Einbroch Field 10", "ein_fild10", 196, 200);
+			EndNode();
+			StartNode("Geffen Fields");
+				AddMap("Geffen Field 0", "gef_fild00", 46, 199);
+				AddMap("Geffen Field 1", "gef_fild01", 213, 204);
+				AddMap("Geffen Field 2", "gef_fild02", 195, 212);
+				AddMap("Geffen Field 3", "gef_fild03", 257, 192);
+				AddMap("Geffen Field 4", "gef_fild04", 188, 171);
+				AddMap("Geffen Field 5", "gef_fild05", 166, 263);
+				AddMap("Geffen Field 6", "gef_fild06", 248, 158);
+				AddMap("Geffen Field 7", "gef_fild07", 195, 191);
+				AddMap("Geffen Field 8", "gef_fild08", 186, 183);
+				AddMap("Geffen Field 9", "gef_fild09", 221, 117);
+				AddMap("Geffen Field 10", "gef_fild10", 178, 218);
+				AddMap("Geffen Field 11", "gef_fild11", 136, 328);
+				AddMap("Geffen Field 12", "gef_fild12", 240, 181);
+				AddMap("Geffen Field 13", "gef_fild13", 235, 235);
+				AddMap("Geffen Field 14", "gef_fild14", 211, 185);
+			EndNode();
+			StartNode("Gonryun Fields");
+				AddMap("Gonryun Field 1", "gon_fild01", 220, 227);
+			EndNode();
+			StartNode("Hugel Fields");
+				AddMap("Hugel Field 1", "hu_fild01", 268, 101);
+				AddMap("Hugel Field 2", "hu_fild02", 222, 193);
+				AddMap("Hugel Field 3", "hu_fild03", 232, 185);
+				AddMap("Hugel Field 4", "hu_fild04", 252, 189);
+				AddMap("Hugel Field 5", "hu_fild05", 196, 106);
+				AddMap("Hugel Field 6", "hu_fild06", 216, 220);
+				AddMap("Hugel Field 7", "hu_fild07", 227, 197);
+			EndNode();
+			StartNode("Lighthalzen Fields");
+				AddMap("Lighthalzen Field 1", "lhz_fild01", 240, 179);
+				AddMap("Lighthalzen Field 2", "lhz_fild02", 185, 235);
+				AddMap("Lighthalzen Field 3", "lhz_fild03", 240, 226);
+			EndNode();
+			StartNode("Louyang Field");
+				AddMap("Louyang Field 1", "lou_fild01", 229, 187);
+			EndNode();
+			StartNode("Lutie Field");
+				AddMap("Lutie Field 1", "xmas_fild01", 115, 145);
+			EndNode();
+			StartNode("Manuk Fields");
+				AddMap("Manuk Field 1", "man_fild01", 200, 210);
+				AddMap("Manuk Field 2", "man_fild02", 206, 219);
+			EndNode();
+			StartNode("Mjolnir Fields");
+				AddMap("Mjolnir Field 1", "mjolnir_01", 204, 120);
+				AddMap("Mjolnir Field 2", "mjolnir_02", 175, 193);
+				AddMap("Mjolnir Field 3", "mjolnir_03", 208, 213);
+				AddMap("Mjolnir Field 4", "mjolnir_04", 179, 180);
+				AddMap("Mjolnir Field 5", "mjolnir_05", 181, 240);
+				AddMap("Mjolnir Field 6", "mjolnir_06", 195, 270);
+				AddMap("Mjolnir Field 7", "mjolnir_07", 235, 202);
+				AddMap("Mjolnir Field 8", "mjolnir_08", 188, 215);
+				AddMap("Mjolnir Field 9", "mjolnir_09", 205, 144);
+				AddMap("Mjolnir Field 10", "mjolnir_10", 245, 223);
+				AddMap("Mjolnir Field 11", "mjolnir_11", 180, 206);
+				AddMap("Mjolnir Field 12", "mjolnir_12", 196, 208);
+			EndNode();
+			StartNode("Moscovia Fields");
+				AddMap("Okrestnosti of Moscovia Field 1", "mosk_fild01", 82, 104);
+				AddMap("Okrestnosti of Moscovia 2", "mosk_fild02", 131, 147);
+			EndNode();
+			StartNode("Niflheim Fields");
+				AddMap("Niflheim Field 1", "nif_fild01", 215, 229);
+				AddMap("Niflheim Field 2", "nif_fild02", 167, 234);
+			EndNode();
+			StartNode("Odin Temple");
+				AddMap("Odin Temple 1", "odin_tem01", 298, 167);
+				AddMap("Odin Temple 2", "odin_tem02", 224, 149);
+				AddMap("Odin Temple 3", "odin_tem03", 266, 280);
+			EndNode();
+			StartNode("Payon Forests");
+				AddMap("Payon Forest 1", "pay_fild01", 158, 206);
+				AddMap("Payon Forest 2", "pay_fild02", 151, 219);
+				AddMap("Payon Forest 3", "pay_fild03", 205, 148);
+				AddMap("Payon Forest 4", "pay_fild04", 186, 247);
+				AddMap("Payon Forest 5", "pay_fild05", 134, 204);
+				AddMap("Payon Forest 6", "pay_fild06", 193, 235);
+				AddMap("Payon Forest 7", "pay_fild07", 200, 177);
+				AddMap("Payon Forest 8", "pay_fild08", 137, 189);
+				AddMap("Payon Forest 9", "pay_fild09", 201, 224);
+				AddMap("Payon Forest 10", "pay_fild10", 160, 205);
+				AddMap("Payon Forest 11", "pay_fild11", 194, 150);
+			EndNode();
+			StartNode("Prontera Fields");
+				AddMap("Prontera Field 0", "prt_fild00", 184, 235);
+				AddMap("Prontera Field 1", "prt_fild01", 190, 206);
+				AddMap("Prontera Field 2", "prt_fild02", 240, 206);
+				AddMap("Prontera Field 3", "prt_fild03", 190, 143);
+				AddMap("Prontera Field 4", "prt_fild04", 307, 252);
+				AddMap("Prontera Field 5", "prt_fild05", 239, 213);
+				AddMap("Prontera Field 6", "prt_fild06", 185, 188);
+				AddMap("Prontera Field 7", "prt_fild07", 193, 194);
+				AddMap("Prontera Field 8", "prt_fild08", 187, 218);
+				AddMap("Prontera Field 9", "prt_fild09", 210, 183);
+				AddMap("Prontera Field 10", "prt_fild10", 195, 149);
+				AddMap("Prontera Field 11", "prt_fild11", 198, 164);
+			EndNode();
+			StartNode("Rachel Fields");
+				AddMap("Rachel Field 1", "ra_fild01", 192, 162);
+				AddMap("Rachel Field 2", "ra_fild02", 235, 166);
+				AddMap("Rachel Field 3", "ra_fild03", 202, 206);
+				AddMap("Rachel Field 4", "ra_fild04", 202, 208);
+				AddMap("Rachel Field 5", "ra_fild05", 225, 202);
+				AddMap("Rachel Field 6", "ra_fild06", 202, 214);
+				AddMap("Rachel Field 7", "ra_fild07", 263, 196);
+				AddMap("Rachel Field 8", "ra_fild08", 217, 201);
+				AddMap("Rachel Field 9", "ra_fild09", 87, 121);
+				AddMap("Rachel Field 10", "ra_fild10", 277, 181);
+				AddMap("Rachel Field 11", "ra_fild11", 221, 185);
+				AddMap("Rachel Field 12", "ra_fild12", 175, 200);
+				AddMap("Rachel Field 13", "ra_fild13", 174, 197);
+			EndNode();
+			StartNode("Sograt Deserts");
+				AddMap("Sograt Desert 1", "moc_fild01", 219, 205);
+				AddMap("Sograt Desert 2", "moc_fild02", 177, 206);
+				AddMap("Sograt Desert 3", "moc_fild03", 194, 182);
+				//AddMap("Sograt Desert 4", "moc_fild04", 184, 217);
+				//AddMap("Sograt Desert 5", "moc_fild05", 203, 213);
+				//AddMap("Sograt Desert 6", "moc_fild06", 213, 208);
+				AddMap("Sograt Desert 7", "moc_fild07", 224, 170);
+				//AddMap("Sograt Desert 8", "moc_fild08", 229, 177);
+				//AddMap("Sograt Desert 9", "moc_fild09", 195, 198);
+				//AddMap("Sograt Desert 10", "moc_fild10", 209, 168);
+				AddMap("Sograt Desert 11", "moc_fild11", 198, 216);
+				AddMap("Sograt Desert 12", "moc_fild12", 156, 187);
+				AddMap("Sograt Desert 13", "moc_fild13", 185, 263);
+				//AddMap("Sograt Desert 14", "moc_fild14", 209, 219);
+				//AddMap("Sograt Desert 15", "moc_fild15", 223, 188);
+				AddMap("Sograt Desert 16", "moc_fild16", 206, 228);
+				AddMap("Sograt Desert 17", "moc_fild17", 208, 238);
+				AddMap("Sograt Desert 18", "moc_fild18", 209, 223);
+				AddMap("Sograt Desert 19", "moc_fild19", 85, 97);
+				AddMap("Sograt Desert 20", "moc_fild20", 85, 97);
+				AddMap("Sograt Desert 21", "moc_fild21", 85, 97);
+				AddMap("Sograt Desert 22", "moc_fild22", 85, 97);
+			EndNode();
+			StartNode("Splendide Fields");
+				AddMap("Splendide Field 1", "spl_fild01", 175, 186);
+				AddMap("Splendide Field 2", "spl_fild02", 236, 184);
+				AddMap("Splendide Field 3", "spl_fild03", 188, 204);
+			EndNode();
+			StartNode("Umbala Fields");
+				AddMap("Umbala Field 1", "um_fild01", 217, 206);
+				AddMap("Umbala Field 2", "um_fild02", 223, 221);
+				AddMap("Umbala Field 3", "um_fild03", 237, 215);
+				AddMap("Umbala Field 4", "um_fild04", 202, 197);
+			EndNode();
+			StartNode("Veins Fields");
+				AddMap("Veins Field 1", "ve_fild01", 186, 175);
+				AddMap("Veins Field 2", "ve_fild02", 196, 370);
+				AddMap("Veins Field 3", "ve_fild03", 222, 45);
+				AddMap("Veins Field 4", "ve_fild04", 51, 250);
+				AddMap("Veins Field 5", "ve_fild05", 202, 324);
+				AddMap("Veins Field 6", "ve_fild06", 150, 223);
+				AddMap("Veins Field 7", "ve_fild07", 149, 307);
+			EndNode();
+			StartNode("Yuno Fields");
+				AddMap("Yuno Field 1", "yuno_fild01", 189, 224);
+				AddMap("Yuno Field 2", "yuno_fild02", 192, 207);
+				AddMap("Yuno Field 3", "yuno_fild03", 221, 157);
+				AddMap("Yuno Field 4", "yuno_fild04", 226, 199);
+				AddMap("Yuno Field 5", "yuno_fild05", 223, 177);
+				AddMap("Yuno Field 6", "yuno_fild06", 187, 232);
+				AddMap("Yuno Field 7", "yuno_fild07", 231, 174);
+				AddMap("Yuno Field 8", "yuno_fild08", 196, 203);
+				AddMap("Yuno Field 9", "yuno_fild09", 183, 214);
+				AddMap("Yuno Field 10", "yuno_fild10", 200, 124);
+				AddMap("Yuno Field 11", "yuno_fild11", 195, 226);
+				AddMap("Yuno Field 12", "yuno_fild12", 210, 304);
+			EndNode();
+		EndNode();
+		StartNode("Dungeons");
+			StartNode("Abbey, Cursed Monastery");
+				AddMap("Abbey, Cursed Monastery - Lvl 1", "abbey01", 51, 14);
+				AddMap("Abbey, Cursed Monastery - Lvl 2", "abbey02", 150, 11);
+				AddMap("Abbey, Cursed Monastery - Lvl 3", "abbey03", 120, 10);
+			EndNode();
+			StartNode("Abyss Lakes");
+				AddMap("Abyss Lakes - Lvl 1", "abyss_01", 192, 207);
+				AddMap("Abyss Lakes - Lvl 2", "abyss_02", 275, 270);
+				AddMap("Abyss Lakes - Lvl 3", "abyss_03", 116, 27);
+			EndNode();
+			StartNode("Amatsu Dungeon");
+				AddMap("Amatsu Dungeon - Lvl 1", "ama_dun01", 228, 11);
+				AddMap("Amatsu Dungeon - Lvl 2", "ama_dun02", 34, 41);
+				AddMap("Amatsu Dungeon - Lvl 3", "ama_dun03", 119, 14);
+			EndNode();
+			StartNode("Anthell");
+				AddMap("Anthell - Lvl 1", "anthell01", 35, 262);
+				AddMap("Anthell - Lvl 2", "anthell02", 168, 170);
+			EndNode();
+			StartNode("Beach Dungeon");
+				AddMap("Beach Dungeon - Lvl 1", "beach_dun", 266, 67);
+				AddMap("Beach Dungeon - Lvl 2", "beach_dun2", 255, 244);
+				AddMap("Beach Dungeon - Lvl 3", "beach_dun3", 23, 260);
+			EndNode();
+			StartNode("Ayothaya Dungeons");
+				AddMap("Ancient Shrine Maze", "ayo_dun01", 275, 19);
+				AddMap("Inside Ancient Shrine", "ayo_dun02", 24, 26);
+			EndNode();
+			StartNode("Byalan Dungeon");
+				AddMap("Byalan Dungeon - Lvl 1", "iz_dun00", 168, 168);
+				AddMap("Byalan Dungeon - Lvl 2", "iz_dun01", 253, 252);
+				AddMap("Byalan Dungeon - Lvl 3", "iz_dun02", 236, 204);
+				AddMap("Byalan Dungeon - Lvl 4", "iz_dun03", 32, 63);
+				AddMap("Byalan Dungeon - Lvl 5", "iz_dun04", 26, 27);
+			EndNode();
+			StartNode("Clock Tower");
+				AddMap("Clock Tower - Lvl 1", "c_tower1", 199, 159);
+				AddMap("Clock Tower - Lvl 2", "c_tower2", 148, 283);
+				AddMap("Clock Tower - Lvl 3", "c_tower3", 65, 147);
+				AddMap("Clock Tower - Lvl 4", "c_tower4", 56, 155);
+				AddMap("Clock Tower - Basement 1", "alde_dun01", 297, 25);
+				AddMap("Clock Tower - Basement 2", "alde_dun02", 127, 169);
+				AddMap("Clock Tower - Basement 3", "alde_dun03", 277, 178);
+				AddMap("Clock Tower - Basement 4", "alde_dun04", 268, 74);
+			EndNode();
+			StartNode("Coal Mines");
+				AddMap("Coal Mines - Lvl 1", "mjo_dun01", 52, 17);
+				AddMap("Coal Mines - Lvl 2", "mjo_dun02", 381, 343);
+				AddMap("Coal Mines - Lvl 3", "mjo_dun03", 302, 262);
+			EndNode();
+			StartNode("Culverts");
+				AddMap("Culverts - Lvl 1", "prt_sewb1", 131, 247);
+				AddMap("Culverts - Lvl 2", "prt_sewb2", 19, 19);
+				AddMap("Culverts - Lvl 3", "prt_sewb3", 180, 169);
+				AddMap("Culverts - Lvl 4", "prt_sewb4", 100, 92);
+			EndNode();
+			StartNode("Einbroch Dungeons");
+				AddMap("Einbroch Dungeons - Lvl 1", "ein_dun01", 22, 14);
+				AddMap("Einbroch Dungeons - Lvl 2", "ein_dun02", 292, 290);
+			EndNode();
+			StartNode("Gefenia");
+				AddMap("Gefenia - Lvl 1", "gefenia01", 40, 103);
+				AddMap("Gefenia - Lvl 2", "gefenia02", 203, 34);
+				AddMap("Gefenia - Lvl 3", "gefenia03", 266, 168);
+				AddMap("Gefenia - Lvl 4", "gefenia04", 130, 272);
+			EndNode();
+			StartNode("Geffen Dungeon");
+				AddMap("Geffen Dungeon - Lvl 1", "gef_dun00", 104, 99);
+				AddMap("Geffen Dungeon - Lvl 2", "gef_dun01", 115, 236);
+				AddMap("Geffen Dungeon - Lvl 3", "gef_dun02", 106, 132);
+				AddMap("Geffen Dungeon - Lvl 4", "gef_dun03", 203, 200);
+			EndNode();
+			StartNode("Glast Heim");
+				AddMap("Glast Heim - Entrance", "glast_01", 375, 304);
+				AddMap("Glast Heim - Castle 1", "gl_cas01", 199, 29);
+				AddMap("Glast Heim - Castle 2", "gl_cas02", 104, 25);
+				AddMap("Glast Heim - Chivalry 1", "gl_knt01", 150, 15);
+				AddMap("Glast Heim - Chivalry 2", "gl_knt02", 157, 287);
+				AddMap("Glast Heim - Churchyard", "gl_chyard", 147, 15);
+				AddMap("Glast Heim - Culvert 1", "gl_sew01", 258, 255);
+				AddMap("Glast Heim - Culvert 2", "gl_sew02", 108, 291);
+				AddMap("Glast Heim - Culvert 3", "gl_sew03", 171, 283);
+				AddMap("Glast Heim - Culvert 4", "gl_sew04", 68, 277);
+				AddMap("Glast Heim - St.Abbey", "gl_church", 156, 7);
+				AddMap("Glast Heim - Staircase Dungeon", "gl_step", 12, 7);
+				AddMap("Glast Heim - UG Cave 1", "gl_dun01", 133, 271);
+				AddMap("Glast Heim - UG Cave 2", "gl_dun02", 224, 274);
+				AddMap("Glast Heim - UG Prison 1", "gl_prison", 14, 70);
+				AddMap("Glast Heim - UG Prison 2", "gl_prison1", 150, 14);
+			EndNode();
+			StartNode("Gonryun Dungeon");
+				AddMap("Gonryun Dungeon - Lvl 1", "gon_dun01", 153, 53);
+				AddMap("Gonryun Dungeon - Lvl 2", "gon_dun02", 28, 113);
+				AddMap("Gonryun Dungeon - Lvl 3", "gon_dun03", 68, 16);
+			EndNode();
+			StartNode("Hidden Dungeon");
+				AddMap("Hidden Dungeon - Lvl 1", "prt_maze01", 176, 7);
+				AddMap("Hidden Dungeon - Lvl 2", "prt_maze02", 94, 9);
+				AddMap("Hidden Dungeon - Lvl 3", "prt_maze03", 23, 8);
+			EndNode();
+			StartNode("Ice Dungeon");
+				AddMap("Ice Dungeon - Lvl 1", "ice_dun01", 157, 14);
+				AddMap("Ice Dungeon - Lvl 2", "ice_dun02", 151, 155);
+				AddMap("Ice Dungeon - Lvl 3", "ice_dun03", 149, 22);
+				AddMap("Ice Dungeon - Lvl 4", "ice_dun04", 33, 158);
+			EndNode();
+			StartNode("Juperos Dungeons");
+				AddMap("Juperos Dungeons - Lvl 1", "juperos_01", 53, 247);
+				AddMap("Juperos Dungeons - Lvl 2", "juperos_02", 37, 63);
+				AddMap("Juperos Dungeons - Core", "jupe_core", 150, 285);
+			EndNode();
+			StartNode("Kiel Dungeons");
+				AddMap("Kiel Dungeons - Lvl 1", "kh_dun01", 28, 226);
+				AddMap("Kiel Dungeons - Lvl 2", "kh_dun02", 41, 198);
+			EndNode();
+			StartNode("Lighthalzen Dungeons");
+				AddMap("Lighthalzen Dungeons - Lvl 1", "lhz_dun01", 150, 288);
+				AddMap("Lighthalzen Dungeons - Lvl 2", "lhz_dun02", 150, 18);
+				AddMap("Lighthalzen Dungeons - Lvl 3", "lhz_dun03", 140, 130);
+			EndNode();
+			StartNode("Louyang Dungeons");
+				AddMap("The Royal Tomb", "lou_dun01", 218, 196);
+				AddMap("Inside the Royal Tomb", "lou_dun02", 282, 20);
+				AddMap("Suei Long Gon", "lou_dun03", 165, 38);
+			EndNode();
+			StartNode("Magma Dungeon");
+				AddMap("Magma Dungeon - Lvl 1", "mag_dun01", 126, 68);
+				AddMap("Magma Dungeon - Lvl 2", "mag_dun02", 47, 30);
+			EndNode();
+			StartNode("Moscovia Dungeons");
+				AddMap("Les Forest", "mosk_dun01", 132, 124);
+				AddMap("Temny Forest", "mosk_dun02", 155, 123);
+				AddMap("Dremuci Forest", "mosk_dun03", 122, 130);
+			EndNode();
+			StartNode("Orc Dungeon");
+				AddMap("Orc Dungeon - Lvl 1", "orcsdun01", 32, 170);
+				AddMap("Orc Dungeon - Lvl 2", "orcsdun02", 21, 185);
+			EndNode();
+			StartNode("Payon Dungeon");
+				AddMap("Payon Dungeon - Lvl 1", "pay_dun00", 21, 183);
+				AddMap("Payon Dungeon - Lvl 2", "pay_dun01", 19, 33);
+				AddMap("Payon Dungeon - Lvl 3", "pay_dun02", 19, 63);
+				AddMap("Payon Dungeon - Lvl 4", "pay_dun03", 155, 159);
+				AddMap("Payon Dungeon - Lvl 5", "pay_dun04", 201, 204);
+			EndNode();
+			StartNode("Pyramids");
+				AddMap("Pyramids - Lvl 1", "moc_pryd01", 192, 9);
+				AddMap("Pyramids - Lvl 2", "moc_pryd02", 10, 192);
+				AddMap("Pyramids - Lvl 3", "moc_pryd03", 100, 92);
+				AddMap("Pyramids - Lvl 4", "moc_pryd04", 181, 11);
+				AddMap("Pyramids - Basement 1", "moc_pryd05", 94, 96);
+				AddMap("Pyramids - Basement 2", "moc_pryd06", 192, 8);
+			EndNode();
+			StartNode("Rachel Sanctuary");
+				AddMap("Rachel Sanctuary - Lvl 1", "ra_san01", 140, 11);
+				AddMap("Rachel Sanctuary - Lvl 2", "ra_san02", 32, 21);
+				AddMap("Rachel Sanctuary - Lvl 3", "ra_san03", 4, 149);
+				AddMap("Rachel Sanctuary - Lvl 4", "ra_san04", 204, 218);
+				AddMap("Rachel Sanctuary - Lvl 5", "ra_san05", 150, 9);
+			EndNode();
+			StartNode("Sphinx");
+				AddMap("Sphinx - Lvl 1", "in_sphinx1", 288, 9);
+				AddMap("Sphinx - Lvl 2", "in_sphinx2", 149, 81);
+				AddMap("Sphinx - Lvl 3", "in_sphinx3", 210, 54);
+				AddMap("Sphinx - Lvl 4", "in_sphinx4", 10, 222);
+				AddMap("Sphinx - Lvl 5", "in_sphinx5", 100, 99);
+			EndNode();
+			StartNode("Sunken Ship");
+				AddMap("Sunken Ship - Lvl 1", "treasure01", 69, 24);
+				AddMap("Sunken Ship - Lvl 2", "treasure02", 102, 27);
+			EndNode();
+			StartNode("Thanatos Tower");
+				AddMap("Thanatos Tower - Lvl 1", "tha_t01", 150, 39);
+				AddMap("Thanatos Tower - Lvl 2", "tha_t02", 150, 136);
+				AddMap("Thanatos Tower - Lvl 3", "tha_t03", 220, 158);
+				AddMap("Thanatos Tower - Lvl 4", "tha_t04", 59, 143);
+				AddMap("Thanatos Tower - Lvl 5", "tha_t05", 62, 11);
+				AddMap("Thanatos Tower - Lvl 6", "tha_t06", 89, 221);
+				AddMap("Thanatos Tower - Lvl 7", "tha_t07", 35, 166);
+				AddMap("Thanatos Tower - Lvl 8", "tha_t08", 93, 148);
+				AddMap("Thanatos Tower - Lvl 9", "tha_t09", 29, 107);
+				AddMap("Thanatos Tower - Lvl 10", "tha_t10", 159, 138);
+				AddMap("Thanatos Tower - Lvl 11", "tha_t11", 19, 20);
+				AddMap("Thanatos Tower - Lvl 12", "tha_t12", 130, 52);
+			EndNode();
+			StartNode("Thor Volcano");
+				AddMap("Thor Volcano - Lvl 1", "thor_v01", 21, 228);
+				AddMap("Thor Volcano - Lvl 2", "thor_v02", 75, 205);
+				AddMap("Thor Volcano - Lvl 3", "thor_v03", 34, 272);
+			EndNode();
+			StartNode("Toy Factory");
+				AddMap("Toy Factory - Lvl 1", "xmas_dun01", 205, 15);
+				AddMap("Toy Factory - Lvl 2", "xmas_dun02", 129, 133);
+			EndNode();
+			StartNode("Turtle Dungeon");
+				AddMap("Turtle Dungeon - Entrance", "tur_dun01", 154, 49);
+				AddMap("Turtle Dungeon - Lvl 1", "tur_dun02", 148, 261);
+				AddMap("Turtle Dungeon - Lvl 2", "tur_dun03", 132, 189);
+				AddMap("Turtle Dungeon - Lvl 3", "tur_dun04", 100, 192);
+			EndNode();
+			StartNode("Umbala Dungeons");
+				AddMap("Carpenter's Shop in the Tree", "um_dun01", 42, 31);
+				AddMap("Passage to a Foreign World", "um_dun01", 48, 30);
+				AddMap("Hvergermil's Fountain", "yggdrasil01", 204, 78);
+			EndNode();
+		EndNode();
+		StartNode("Guild Dungeons");
+			AddMap("Baldur Guild Dungeon", "gld_dun01", 119, 93);
+			AddMap("Luina Guild Dungeon", "gld_dun02", 39, 161);
+			AddMap("Valkyrie Guild Dungeon", "gld_dun03", 50, 44);
+			AddMap("Britoniah Guild Dungeon", "gld_dun04", 116, 45);
+		EndNode();
+		StartNode("Castles");
+			StartNode("Aldebaran Castles");
+				AddMap("Neuschwanstein(Aldebaran)", "alde_gld", 48, 83, "mapUsers", "aldeg_cas01");
+				AddMap("Hohenschwangau(Aldebaran)", "alde_gld", 95, 249, "mapUsers", "aldeg_cas02");
+				AddMap("Nuenberg(Aldebaran)", "alde_gld", 142, 85, "mapUsers", "aldeg_cas03");
+				AddMap("Wuerzburg(Aldebaran)", "alde_gld", 239, 242, "mapUsers", "aldeg_cas04");
+				AddMap("Rothenburg(Aldebaran)", "alde_gld", 264, 90, "mapUsers", "aldeg_cas05");
+			EndNode();
+			StartNode("Geffen Castles");
+				AddMap("Repherion(Geffen)", "gef_fild13", 214, 75, "mapUsers", "gefg_cas01");
+				AddMap("Eeyolbriggar(Geffen)", "gef_fild13", 308, 240, "mapUsers", "gefg_cas02");
+				AddMap("Yesnelph(Geffen)", "gef_fild13", 143, 240, "mapUsers", "gefg_cas03");
+				AddMap("Bergel(Geffen)", "gef_fild13", 193, 278, "mapUsers", "gefg_cas04");
+				AddMap("Mersetzdeitz(Geffen)", "gef_fild13", 305, 87, "mapUsers", "gefg_cas05");
+			EndNode();
+			StartNode("Payon Castles");
+				AddMap("Bright Arbor(Payon)", "pay_gld", 121, 233, "mapUsers", "payg_cas01");
+				AddMap("Scarlet Palace(Payon)", "pay_gld", 295, 116, "mapUsers", "payg_cas02");
+				AddMap("Holy Shadow(Payon)", "pay_gld", 317, 293, "mapUsers", "payg_cas03");
+				AddMap("Sacred Altar(Payon)", "pay_gld", 140, 160, "mapUsers", "payg_cas04");
+				AddMap("Bamboo Grove Hill(Payon)", "pay_gld", 204, 266, "mapUsers", "payg_cas05");
+			EndNode();
+			StartNode("Prontera Castles");
+				AddMap("Kriemhild(Prontera)", "prt_gld", 134, 65, "mapUsers", "prtg_cas01");
+				AddMap("Swanhild(Prontera)", "prt_gld", 240, 128, "mapUsers", "prtg_cas02");
+				AddMap("Fadhgridh(Prontera)", "prt_gld", 153, 137, "mapUsers", "prtg_cas03");
+				AddMap("Skoegul(Prontera)", "prt_gld", 111, 240, "mapUsers", "prtg_cas04");
+				AddMap("Gondul(Prontera)", "prt_gld", 208, 240, "mapUsers", "prtg_cas05");
+			EndNode();
+			StartNode("Schwaltzvalt Castles");
+				AddMap("Himinn(Schwaltzvalt)", "sch_gld", 293, 100, "mapUsers", "schg_cas01");
+				AddMap("Andlangr(Schwaltzvalt)", "sch_gld", 288, 252, "mapUsers", "schg_cas02");
+				AddMap("Viblainn(Schwaltzvalt)", "sch_gld", 97, 196, "mapUsers", "schg_cas03");
+				AddMap("Hljod(Schwaltzvalt)", "sch_gld", 137, 90, "mapUsers", "schg_cas04");
+				AddMap("Skidbladnir(Schwaltzvalt)", "sch_gld", 71, 315, "mapUsers", "schg_cas05");
+			EndNode();
+			StartNode("Arunafeltz Castles");
+				AddMap("Mardol(Arunafeltz)", "aru_gld", 158, 272, "mapUsers", "arug_cas01");
+				AddMap("Cyr(Arunafeltz)", "aru_gld", 83, 47, "mapUsers", "arug_cas02");
+				AddMap("Horn(Arunafeltz)", "aru_gld", 68, 155, "mapUsers", "arug_cas03");
+				AddMap("Gefn(Arunafeltz)", "aru_gld", 299, 345, "mapUsers", "arug_cas04");
+				AddMap("Bandis(Arunafeltz)", "aru_gld", 292, 107, "mapUsers", "arug_cas05");
+			EndNode();
+		StartNode("Other");
+			AddMap("Casino", "cmd_in02", 179, 129);
+		EndNode();
+
+		debugmes "TOASTYWARPER - Map Data Loaded: " + .mapCount + " maps, " + (gettimetick(0) - .@startLoadTime) + "ms";
+		cleararray(.buildStack$[0], "", 128);
+		//debugmes "gotos: " + .gotoCount;
+		sleep(1);
+	end;
+
+	//-----------------------------------------------------------
+	//TEST FUNCTIONS
+	//-----------------------------------------------------------
+	function TestMenus {
+		sleep2(1);
+		set @gotoCount, 1;
+		while(.@i < .nodeCount) {
+			
+			set .@nodePtr$, ".menu_" + .@i + "$";
+			set .@menu$, ComputeMenu(.@nodePtr$);
+			if(getstrlen(.@menu$) >= 2000) {
+				set .@check, 1;
+				mes "Menu (" + getd(.@nodePtr$ + "[0]") + ") may overflow (" + getstrlen(.@menu$) + " chars)";
+			}
+			set .@i, .@i + 1;
+
+			set @gotoCount, @gotoCount + 2;
+			sleep2(@gotoCount >= .gotoLimit);
+			set @gotoCount, @gotoCount * (@gotoCount < .gotoLimit);
+		}
+		if(.@check == 0)
+			mes "No overflows detected";
+
+		next;
+	}
+
+	//-----------------------------------------------------------
+	//TREE MAPPING FUNCTIONS
+	//-----------------------------------------------------------
+
+	function AddLastWarpsNode {
+		set .@parentNodePtr$, .buildStack$[.stackLevel - 1];
+		
+		//add to parent node
+		setd(.@parentNodePtr$ + "[1]", getd(.@parentNodePtr$ + "[1]") + "Last Warp" + ":");
+		setd(.@parentNodePtr$ + "[" + getarraysize(getd(.@parentNodePtr$)) + "]", .mapOffset);
+
+		//infinte loop check
+		set .gotoCount, .gotoCount + 3;
+		sleep(.gotoCount >= .gotoLimit);
+		set .gotoCount, .gotoCount * (.gotoCount < .gotoLimit);
+	}
+
+	function StartNode {
+		set .@header$, getarg(0, "");
+
+		set .nodeCount, .nodeCount + 1;
+		set .@nodePtr$, ".menu_" + .nodeCount + "$";
+
+		set .@parentNodePtr$, .buildStack$[.stackLevel - 1];
+
+		//clear the node just in case there was something in it
+		cleararray(getd(.@nodePtr$), "", 128);
+
+		//add to parent node
+		setd(.@parentNodePtr$ + "[1]", getd(.@parentNodePtr$ + "[1]") + .@header$ + ":");
+		setd(.@parentNodePtr$ + "[" + getarraysize(getd(.@parentNodePtr$)) + "]", .nodeCount);
+		setd(.@nodePtr$ + "[0]", .@header$);
+
+		//carry down node data
+		set .@node_zeny, .stack_zeny[.stackLevel - 1];
+		set .@node_gm, .stack_gm[.stackLevel - 1];
+		set .@node_woe, .stack_woe[.stackLevel - 1];
+		set .@node_job, .stack_job[.stackLevel - 1];
+		set .@node_upper, .stack_upper[.stackLevel - 1];
+		set .@node_gender, .stack_gender[.stackLevel - 1];
+		set .@node_blvl, .stack_blvl[.stackLevel - 1];
+		set .@node_mapUsers$, .stack_mapUsers$[.stackLevel - 1];
+		set .@node_flag$, .stack_flag$[.stackLevel - 1];
+		set .@node_function$, .stack_function$[.stackLevel - 1];
+
+		//check for modifiers
+		set .@i, 1;
+		while((getarg(.@i, "") + "") != "" && (getarg(.@i + 1, "") + "") != "") {
+			set .@modIndex, getd(".modifier_" + getarg(.@i));
+			setd(.tempModPtrs$[.@modIndex], getarg(.@i + 1));
+			
+			set .@i, .@i + 2;
+			set .gotoCount, .gotoCount + 1;
+		}
+		set .gotoCount, .gotoCount + 1;
+		
+		setarray .buildStack$[.stackLevel], .@nodePtr$;	//add to stack
+
+		//push data to stack
+		setarray .stack_zeny[.stackLevel], .@node_zeny;
+		setarray .stack_gm[.stackLevel], .@node_gm;
+		setarray .stack_woe[.stackLevel], .@node_woe;
+		setarray .stack_job[.stackLevel], .@node_job;
+		setarray .stack_upper[.stackLevel], .@node_upper;
+		setarray .stack_gender[.stackLevel], .@node_gender;
+		setarray .stack_blvl[.stackLevel], .@node_blvl;
+		setarray .stack_mapUsers$[.stackLevel], .@node_mapUsers$;
+		setarray .stack_flag$[.stackLevel], .@node_flag$;
+		setarray .stack_function$[.stackLevel], .@node_function$;
+
+		//store node applicable mods
+		set .@a$, "_" + (.nodeCount / 128) + "[" + (.nodeCount % 128) + "]";
+		set .@b$, "_" + (.nodeCount / 128) + "$[" + (.nodeCount % 128) + "]";
+		setd(".menus_gm" + .@a$, .@node_gm);
+		setd(".menus_woe" + .@a$, .@node_woe);
+		setd(".menus_job" + .@a$, .@node_job);
+		setd(".menus_upper" + .@a$, .@node_upper);
+		setd(".menus_gender" + .@a$, .@node_gender);
+		setd(".menus_blvl" + .@a$, .@node_blvl);
+		setd(".menus_flag" + .@b$, .@node_flag$);
+		setd(".menus_function" + .@b$, .@node_function$);
+
+		set .stackLevel, .stackLevel + 1;
+
+		//infinte loop check
+		set .gotoCount, .gotoCount + 3;
+		sleep(.gotoCount >= .gotoLimit);
+		set .gotoCount, .gotoCount * (.gotoCount < .gotoLimit);
+	}
+
+	function EndNode {
+		set .stackLevel, .stackLevel - 1;
+		set .@nodePtr$, .buildStack$[.stackLevel];
+		setd(.@nodePtr$ + "[1]", getd(.@nodePtr$ + "[1]") + "Back");	//add back option to menu
+
+		setarray .buildStack$[.stackLevel], "";	//remove from stack
+
+		//pop the stack
+		setarray .stack_zeny[.stackLevel], .@node_zeny;
+		setarray .stack_gm[.stackLevel], 0;
+		setarray .stack_woe[.stackLevel], 0;
+		setarray .stack_job[.stackLevel], 0x0FFFFFFF;
+		setarray .stack_upper[.stackLevel], 8;
+		setarray .stack_gender[.stackLevel], 2;
+		setarray .stack_blvl[.stackLevel], 0;
+		setarray .stack_mapUsers$[.stackLevel], "";
+		setarray .stack_flag$[.stackLevel], "";
+		setarray .stack_function$[.stackLevel], "";
+
+		//infinte loop check
+		set .gotoCount, .gotoCount + 2;
+		sleep(.gotoCount >= .gotoLimit);
+		set .gotoCount, .gotoCount * (.gotoCount < .gotoLimit);
+	}
+
+	function AddMap {
+		set .@nodePtr$, .buildStack$[.stackLevel - 1];
+
+		if(getmapusers(getarg(1)) >= 0) { //makes sure it's a real map
+			//add to map arrays (basically 4x SetArrayValue calls..but put inline to prevent infinite loop error)
+			set .@a$, "_" + (.mapCount / 128) + "[" + (.mapCount % 128) + "]";
+			set .@b$, "_" + (.mapCount / 128) + "$[" + (.mapCount % 128) + "]";
+
+			setd ".maps_name" + .@b$, getarg(0);
+			setd ".maps_map" + .@b$, getarg(1);
+			setd ".maps_x" + .@a$, getarg(2);
+			setd ".maps_y" + .@a$, getarg(3);
+
+			//carry down node data
+			set .@node_zeny, .stack_zeny[.stackLevel - 1];
+			set .@node_gm, .stack_gm[.stackLevel - 1];
+			set .@node_woe, .stack_woe[.stackLevel - 1];
+			set .@node_job, .stack_job[.stackLevel - 1];
+			set .@node_upper, .stack_upper[.stackLevel - 1];
+			set .@node_gender, .stack_gender[.stackLevel - 1];
+			set .@node_blvl, .stack_blvl[.stackLevel - 1];
+			set .@node_mapUsers$, .stack_mapUsers$[.stackLevel - 1];
+			set .@node_flag$, .stack_flag$[.stackLevel - 1];
+			set .@node_function$, .stack_function$[.stackLevel - 1];
+
+			//check for modifiers
+			set .@i, 4;
+			while((getarg(.@i, "") + "") != "" && (getarg(.@i + 1, "") + "") != "") {
+				set .@modIndex, getd(".modifier_" + getarg(.@i));
+				setd(.tempModPtrs$[.@modIndex], getarg(.@i + 1));
+				set .@i, .@i + 2;
+				set .gotoCount, .gotoCount + 1;
+			}
+			set .gotoCount, .gotoCount + 1;
+			
+			//store map applicable modifiers
+			setd(".maps_zeny" + .@a$, .@node_zeny);
+			setd(".maps_gm" + .@a$, .@node_gm);
+			setd(".maps_woe" + .@a$, .@node_woe);
+			setd(".maps_job" + .@a$, .@node_job);
+			setd(".maps_upper" + .@a$, .@node_upper);
+			setd(".maps_gender" + .@a$, .@node_gender);
+			setd(".maps_blvl" + .@a$, .@node_blvl);
+			setd(".maps_mapUsers" + .@b$, .@node_mapUsers$);
+			setd(".maps_flag" + .@b$, .@node_flag$);
+			setd(".maps_function" + .@b$, .@node_function$);
+
+			//add to parent node
+			setd(.@nodePtr$ + "[1]", getd(.@nodePtr$ + "[1]") + "- " + getarg(0) + ":");
+			setd(.@nodePtr$ + "[" + getarraysize(getd(.@nodePtr$)) + "]", .mapCount + .mapOffset);
+
+			//set index lookup for map
+			setd(".map_" + getarg(1), .mapCount); 
+			
+			set .mapCount, .mapCount + 1;
+		} else {
+			debugmes("TOASTYWARPER - BADMAP: " + getarg(0) + " - " + getarg(1));
+		}
+
+		//infinte loop check
+		set .gotoCount, .gotoCount + 3;
+		sleep(.gotoCount >= .gotoLimit);
+		set .gotoCount, .gotoCount * (.gotoCount < .gotoLimit);
+	}
+
+	//-----------------------------------------------------------
+	//INFINITE ARRAY FUNCTIONS
+	//-----------------------------------------------------------
+	function SetArrayValue {// <arrayname>, <index>, <value>{, <isString> = 0}
+		//debugmes("setarrayvalue: " + (getarg(0) + "_" + (getarg(1) / 128) + "[" + (getarg(1) % 128) + "]"));
+		setd getarg(0) + "_" + (getarg(1) / 128) + (getarg(3, 0)?"$":"") + "[" + (getarg(1) % 128) + "]", getarg(2);
+		return;
+	}
+
+	function GetArrayValue {	// <arrayname>, <index>{, <isString> = 0}
+		//debugmes("getarrayvalue: " + getarg(0) + "_" + (getarg(1) / 128) + (getarg(2, 0)?"$":"") + "[" + (getarg(1) % 128) + "]");
+		return getd(getarg(0) + "_" + (getarg(1) / 128) + (getarg(2, 0)?"$":"") + "[" + (getarg(1) % 128) + "]");
+	}
+
+	function WipeArray {		//<arrayname>, <num_indices>{{, <value> = 0}, <isString> = 0}
+		set .@count, getarg(1) / 128 + 1;
+		for(set .@i, 0; .@i < .@count; set .@i, .@i + 1)
+			cleararray(getd(getarg(0) + "_" + .@i + (getarg(3, 0)?"$":"") + "[0]"), getarg(2, 0), 128);
+		return;
+	}
+
+	//-----------------------------------------------------------
+	//LAST WARPS STORAGE FUNCTIONS
+	//-----------------------------------------------------------
+
+	function PrepLastWarpsMenu {
+		set @menu_lastwarps$[0], "Last Warps";
+
+		while(.@i < 128 && .@count < .numLastWarps) {
+			set .@map, @toasty_savedMaps[(@toasty_stackStart + .@i) % 128] - 1;
+			if(.@map > 0 && .@map < .mapCount) {
+				set .@mapName$, getd(".maps_name_" + (.@map / 128) + "$" + "[" + (.@map % 128) + "]");
+				set @menu_lastwarps$[.@count + 2], .@map + .mapOffset;
+
+				set .@count, .@count + 1;
+				set .@menu$, .@menu$ + .@mapName$ + ":";
+			}
+			set .@i, .@i + 1;
+		}
+		set @menu_lastwarps$[1], .@menu$ + "Back";
+		return;
+	}
+
+	function InitialiseMapData {
+		while(.@i < getarraysize(@toasty_savedMaps)) {
+			setd("@toasty_map" + @toasty_savedMaps[.@i], (@toasty_savedMaps[.@i] > 0)?.@i + 1:0);
+			set .@i, .@i + 1;
+		}
+		PrepLastWarpsMenu();
+		return;
+	}
+
+	function AddMapToList { //<mapIndex>
+		set .@map, getarg(0);
+
+		if(getd("@toasty_map" + .@map) > 0) {
+			if(@toasty_savedMaps[getd("@toasty_map" + .@map) - 1] == .@map) { //double checking
+				set @toasty_savedMaps[getd("@toasty_map" + .@map) - 1], 0;
+			}
+		}
+		set @toasty_stackStart, (@toasty_stackStart + 127) % 128;
+
+		set @toasty_savedMaps[@toasty_stackStart], .@map;
+		setd("@toasty_map" + .@map, @toasty_stackStart + 1);
+
+		set toasty_mapSave$, GenerateMapSaveString();
+		return;
+	}
+
+	function ListMaps { //debug
+		while(.@i < 128 && .@count < .numLastWarps) {
+			if( @toasty_savedMaps[(@toasty_stackStart + .@i) % 128] > 0) {
+				set .@count, .@count + 1;
+				set .@out$, .@out$ + @toasty_savedMaps[(@toasty_stackStart + .@i) % 128] + ", ";
+			}
+			set .@i, .@i + 1;
+		}
+		return .@out$;
+	}
+
+	function GenerateMapSaveString {
+		while(.@i < 128 && .@count < .numLastWarps) {
+			set .@index, (@toasty_stackStart + .@i) % 128;
+			if( @toasty_savedMaps[(@toasty_stackStart + .@i) % 128] > 0) {
+				set .@count, .@count + 1;
+				set .@out$, .@out$ + .char$[(@toasty_savedMaps[.@index] % 64)] + .char$[(@toasty_savedMaps[.@index] / 64)];
+			}
+			set .@i, .@i + 1;
+		}
+		return .@out$;
+	}
+
+	function ConvertStringToChrArray {
+		if ( getstrlen( getarg(0) ) > 128 ) return 0;
+			set .@charsize, getarraysize(.char$);
+			set .@str$, getarg(0);
+			set .@len, getstrlen(.@str$);
+
+			sleep2 1;
+
+			do {
+				set .@range[0], .@charsize;
+				set .@range[1], 0;
+
+				//ignore repetiton, it keeps the gotos down
+				set .@range[(.@str$ > (.@temp$ + .char$[(.@range[0] + .@range[1]) / 2] + "ÿ"))], (.@range[0] + .@range[1]) / 2;
+				set .@range[(.@str$ > (.@temp$ + .char$[(.@range[0] + .@range[1]) / 2] + "ÿ"))], (.@range[0] + .@range[1]) / 2;
+				set .@range[(.@str$ > (.@temp$ + .char$[(.@range[0] + .@range[1]) / 2] + "ÿ"))], (.@range[0] + .@range[1]) / 2;
+				set .@range[(.@str$ > (.@temp$ + .char$[(.@range[0] + .@range[1]) / 2] + "ÿ"))], (.@range[0] + .@range[1]) / 2;
+				set .@range[(.@str$ > (.@temp$ + .char$[(.@range[0] + .@range[1]) / 2] + "ÿ"))], (.@range[0] + .@range[1]) / 2;
+				set .@range[(.@str$ > (.@temp$ + .char$[(.@range[0] + .@range[1]) / 2] + "ÿ"))], (.@range[0] + .@range[1]) / 2;
+				set .@range[(.@str$ > (.@temp$ + .char$[(.@range[0] + .@range[1]) / 2] + "ÿ"))], (.@range[0] + .@range[1]) / 2;
+
+				set .@charIndex, (.@range[0] + .@range[1]) / 2 + (.@str$ > (.@temp$ + .char$[(.@range[0] + .@range[1]) / 2] + "ÿ"));
+
+				set .@temp$, .@temp$ + .char$[.@charIndex];
+				set .@arr[.@i / 2], .@arr[.@i / 2] + .@charIndex * (1 + 63 * (.@i % 2));
+
+				set .@i, .@i + 1;
+			} while( .@i < .@len );
+
+			sleep2 1; //used alot of gotos..sleep for good measure
+
+			deletearray getd(getarg(1));
+			copyarray getd(getarg(1)), .@arr, .@len / 2;
+
+			return .@len / 2;
+	}
+	end;
+}
+
+prontera,155,195,5	script	Portal#toasty	10007,{
+	doevent "toastywarperbase::OnStartNPC";
+}
+
+rachel.gat,108,148,4	duplicate(Portal#toasty)	Portal#toasty2-2	10007
+alberta,98,137,4	duplicate(Portal#toasty)	Portal#toasty3-1	10007
+aldebaran,146,114,4	duplicate(Portal#toasty)	Portal#toasty4-1	10007
+amatsu,190,86,1	duplicate(Portal#toasty)	Portal#toasty5-1	10007
+ayothaya,147,123,6	duplicate(Portal#toasty)	Portal#toasty6-1	10007
+comodo,209,143,4	duplicate(Portal#toasty)	Portal#toasty7-1	10007
+einbech,196,83,4	duplicate(Portal#toasty)	Portal#toasty8-1	10007
+einbroch,64,200,4	duplicate(Portal#toasty)	Portal#toasty9-1	10007
+einbroch,243,189,2	duplicate(Portal#toasty)	Portal#toasty9-2	10007
+hugel,88,151,5	duplicate(Portal#toasty)	Portal#toasty10-1	10007
+lighthalzen,165,94,6	duplicate(Portal#toasty)	Portal#toasty11-1	10007
+geffen,116,59,0	duplicate(Portal#toasty)	Portal#toasty12-1	10007
+izlude,122,94,3	duplicate(Portal#toasty)	Portal#toasty13-1	10007
+xmas,149,136,4	duplicate(Portal#toasty)	Portal#toasty14-1	10007
+morocc,156,95,4	duplicate(Portal#toasty)	Portal#toasty15-1	10007
+payon,148,228,4	duplicate(Portal#toasty)	Portal#toasty16-1	10007
+yuno,160,170,4	duplicate(Portal#toasty)	Portal#toasty17-1	10007
+moc_fild04.gat,207,331,4	duplicate(Portal#toasty)	Portal#toasty18-1	10007
+izlu2dun.gat,104,82,4	duplicate(Portal#toasty)	Portal#toasty19-1	10007
+mjolnir_02.gat,85,363,4	duplicate(Portal#toasty)	Portal#toasty20-1	10007
+prt_fild05.gat,273,215,4	duplicate(Portal#toasty)	Portal#toasty21-1	10007
+glast_01.gat,370,308,4	duplicate(Portal#toasty)	Portal#toasty22-1	10007
+yuno_fild03.gat,37,135,4	duplicate(Portal#toasty)	Portal#toasty23-1	10007
+gef_fild10.gat,71,339,4	duplicate(Portal#toasty)	Portal#toasty24-1	10007
+pay_arche.gat,39,135,4	duplicate(Portal#toasty)	Portal#toasty25-1	10007
+moc_ruins.gat,64,166,4	duplicate(Portal#toasty)	Portal#toasty26-1	10007
+moc_fild19.gat,106,97,4	duplicate(Portal#toasty)	Portal#toasty27-1	10007
+alb2trea.gat,73,101,4	duplicate(Portal#toasty)	Portal#toasty28-1	10007
+tur_dun01.gat,148,239,4	duplicate(Portal#toasty)	Portal#toasty29-1	10007
+gonryun,162,122,4	duplicate(Portal#toasty)	Portal#toasty30-1	10007
+louyang,221,120,4	duplicate(Portal#toasty)	Portal#toasty31-1	10007
+umbala,95,164,4	duplicate(Portal#toasty)	Portal#toasty32-1	10007
+moscovia,220,198,4	duplicate(Portal#toasty)	Portal#toasty33-1	10007
+veins,217,127,4	duplicate(Portal#toasty)	Portal#toasty34-1	10007
+rachel,133,115,4	duplicate(Portal#toasty)	Portal#toasty35-1	10007

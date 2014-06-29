@@ -1,0 +1,95 @@
+//======Name========================================
+// Daily Monster Hunt
+//======Version=====================================
+// 1.2
+//======Author(s)===================================
+// Sandbox
+//======Comments====================================
+// This NPC allows your player to hunt a random amount
+// of a random monster, within a random time
+// *randomception!*
+// If the player successfully hunts the monster
+// within the time limit, he'll receive a reward!
+//======Credits=====================================
+// KeyWorld, nanakiwurtz, NeoMind, Kido
+// Thanks for helping me out guize!
+//==================================================
+ 
+prontera,102,210,3	script	Yuvert	521,{
+ 
+mes .Npc_Name$;
+	if(Hunter) {
+	mes "You have killed ^880000"+HuntCount+"^000000/^0000FF"+Amt
+ 
++"^000000 "+getmonsterinfo(Hunt,0)+"s, keep it up!";
+	close;
+	}
+	if(gettimetick(2) < HuntDelay) {
+		mes "You can only do this quest once a day!";
+		close;
+	}
+
+mes "Hello, do you want to take on the Monster Hunting Challenge?","I will give you a random time limit to kill a random amount of a monster, If you manage to kill them within the given time, you'll receive a reward!"; 
+if(select("Bring it on!:How about no?")==2) {
+	mes .Npc_Name$;
+	mes "Fine!";
+	close;
+}
+ 
+next;
+mes .Npc_Name$;
+	Hunt = .Mob_List[rand(getarraysize(.Mob_List))];
+	Time = rand(60,99); //Timer
+	Amt = rand (50,100); //Amount of mob to hunt
+	Hunter++;
+ 
+mes "You have to hunt ^0000FF"+Amt+" "+getmonsterinfo(Hunt,0)+"^000000 in ^AA0000"+Time+"^000000 seconds!";
+next;
+mes .Npc_Name$;
+mes "Go go go!";
+close2;
+	showdigit Time,3;
+	HuntDelay = gettimetick(2)+86400; //Once a day only.
+	HuntStart = gettimetick(2)+Time;
+sleep2 1000*Time;
+	if(Hunter) dispbottom strnpcinfo(1)+": I'm sorry, you didn't make it!";
+	HuntStart = 0; //Reset all variables
+	Hunt = 0;
+	Hunter = 0;
+	HuntCount = 0;
+	Time = 0;
+	Amt = 0;
+end;
+
+ 
+//----------Config----------
+ 
+OnInit:
+	.Npc_Name$ = "[^0000FF NPC ^000000]";
+	setarray .Mob_List[0],1002,1007,1063; //Mobs to hunt. Default: Poring, Fabre, Lunatic
+	.Reward = 607; //Reward ID
+	.RewAmt = 10; //Reward Amount
+	end;
+ 
+OnNPCKillEvent:
+	if(Hunter > 0) {
+		if(gettimetick(2) < HuntStart) {
+			if(killedrid == Hunt) {
+				HuntCount++;
+				dispbottom "You have killed "+HuntCount+"/"+Amt+" "+getmonsterinfo(Hunt,0)+"s, keep it up!";
+				if(HuntCount >= Amt) {
+					dispbottom strnpcinfo(1)+": Congratulations! You did it!";
+					getitem .Reward,.RewAmt;
+					HuntStart = 0;
+					Hunt = 0;
+					Hunter = 0;
+					HuntCount = 0;
+					Time = 0;
+					Amt = 0;
+					showdigit 1,3;
+				}
+			}
+		}
+	}
+end;
+}

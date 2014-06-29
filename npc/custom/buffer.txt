@@ -1,0 +1,61 @@
+prontera,162,193,5	script	Priest Eira	501,{
+
+if (gettimetick(1) < @timer) {
+dispbottom "Please try again after 3 seconds";
+end;
+}
+
+if (BaseLevel <= 50) {
+	specialeffect2 313;
+	percentheal 100,100;
+	sc_start 30,240000,10; specialeffect2 42; //Blessing
+	sc_start 32,240000,10; specialeffect2 37; //Agi Up
+	sc_start 39,240000,10; specialeffect2 112; // Kyrie
+	sc_start 41,240000,3; specialeffect2 75; // Gloria
+	sc_start 40,240000,5; specialeffect2 76; // Magnificat 
+	specialeffect2 EF_IMPOSITIO; sc_start SC_IMPOSITIO,240000,10; 
+	repairall;
+	}
+if (BaseLevel >= 51 && BaseLevel <= 90) {
+	specialeffect2 313;
+	percentheal 100,100;
+	sc_start 30,240000,10; specialeffect2 42; //Blessing
+	sc_start 32,240000,10; specialeffect2 37; //Agi Up
+	repairall;
+	}
+if (BaseLevel >= 91) {
+	specialeffect2 EF_HEAL2;
+	percentheal 100,100;
+	mes "[Buffer Eira]";
+	mes "Please select an option.";
+	mes " ";
+	mes "Cost:";
+	mes "Normal Buff: 1,500z";
+	mes "1 Hour Buff: 200,000z";
+	next;
+	menu "Normal Buff",-,"1 Hour Buff",One_Hour;
+
+	if (Zeny < 1500) goto Zeny_Lack;
+	sc_start 30,240000,10; specialeffect2 42; //Blessing
+	sc_start 32,240000,10; specialeffect2 37; //Agi Up
+	repairall;
+	set Zeny, Zeny-1500;
+
+	}
+	set @timer, gettimetick(1)+3;
+	close;
+	
+One_Hour:
+	if (Zeny < 200000) goto Zeny_Lack;
+	sc_start 30,3600000,10; specialeffect2 42; //Blessing
+	sc_start 32,3600000,10; specialeffect2 37; //Agi Up
+	repairall;
+	set Zeny, Zeny - 200000;
+	set @timer, gettimetick(1)+3;
+	close;
+
+Zeny_Lack:
+	mes "[Buffer Eira]";
+	mes "You don't have enough Zeny";
+	close;
+}
