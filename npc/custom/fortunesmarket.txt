@@ -1,0 +1,42 @@
+//Ragnarok Tales - Fortune's Market
+
+prntvend	mapflag	autotrade
+prntvend	mapflag	nopenalty
+prntvend	mapflag	noteleport
+prntvend	mapflag	nobranch
+prntvend	mapflag	nightenabled
+
+prntvend,83,78,4	script	Mary Kaufman	601,{
+
+mes "^008A93[Mary Kaufman]^000000";
+mes "Welcome to the ^0000FFFortune's Market HQ^000000";
+mes "We're the merchant organization that focuses on the sales of goods and limited services!";
+next;
+
+mes "^008A93[Mary Kaufman]^000000";
+mes "This is the vending area for all merchants.";
+mes "";
+mes "^0000FFRemember:^000000";
+mes "You can only vend on the ^ff0000Dark Grey^000000 tiles.";
+next;
+
+mes "^008A93[Mary Kaufman]^000000";
+mes "You may also use the ^FF0000@autotrade^000000 command here so your character is still vending while you're offline";
+mes "";
+mes "We hope you can find all you need... good luck!";
+close;
+
+}
+
+
+-	script	Vending_Engine	-1,{
+	end;
+
+OnInit:
+	setcell "prntvend",0,0,512,512,cell_novending,1;
+	setcell "prntvend",76,71,76,71,cell_novending,0;
+	setcell "prntvend",69,72,69,72,cell_novending,0;
+	setcell "prntvend",68,73,68,73,cell_novending,0;
+	setcell "prntvend",67,78,67,78,cell_novending,0;
+
+}
