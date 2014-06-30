@@ -1,12 +1,12 @@
 //Ragnarok Tales - Fortune's Market
 
-prntvend	mapflag	autotrade
-prntvend	mapflag	nopenalty
-prntvend	mapflag	noteleport
-prntvend	mapflag	nobranch
-prntvend	mapflag	nightenabled
+market	mapflag	autotrade
+market	mapflag	nopenalty
+market	mapflag	noteleport
+market	mapflag	nobranch
+market	mapflag	nightenabled
 
-prntvend,83,78,4	script	Mary Kaufman	601,{
+market,83,78,4	script	Mary Kaufman	601,{
 
 mes "^008A93[Mary Kaufman]^000000";
 mes "Welcome to the ^0000FFFortune's Market HQ^000000";
@@ -33,10 +33,10 @@ close;
 	end;
 
 OnInit:
-	setcell "prntvend",0,0,512,512,cell_novending,1;
-	setcell "prntvend",76,71,76,71,cell_novending,0;
-	setcell "prntvend",69,72,69,72,cell_novending,0;
-	setcell "prntvend",68,73,68,73,cell_novending,0;
-	setcell "prntvend",67,78,67,78,cell_novending,0;
+	setcell "market",0,0,512,512,cell_novending,1;
+	setcell "market",76,71,76,71,cell_novending,0;
+	setcell "market",69,72,69,72,cell_novending,0;
+	setcell "market",68,73,68,73,cell_novending,0;
+	setcell "market",67,78,67,78,cell_novending,0;
 
 }
