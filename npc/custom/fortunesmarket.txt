@@ -38,5 +38,116 @@ OnInit:
 	setcell "market",69,72,69,72,cell_novending,0;
 	setcell "market",68,73,68,73,cell_novending,0;
 	setcell "market",67,78,67,78,cell_novending,0;
+	setcell "market",67,92,67,92,cell_novending,0;
+	setcell "market",65,92,65,92,cell_novending,0;
+	setcell "market",63,92,63,92,cell_novending,0;
+	setcell "market",67,78,67,78,cell_novending,0;
+	setcell "market",61,92,61,92,cell_novending,0;
+	setcell "market",67,78,67,78,cell_novending,0;
+	setcell "market",67,78,67,78,cell_novending,0;
+	setcell "market",59,92,59,92,cell_novending,0;
+	setcell "market",57,92,57,92,cell_novending,0;
+	setcell "market",55,92,55,92,cell_novending,0;
+	setcell "market",54,93,54,93,cell_novending,0;
+	setcell "market",54,95,54,95,cell_novending,0;
+	setcell "market",54,97,54,97,cell_novending,0;
+	setcell "market",54,99,54,99,cell_novending,0;
+	setcell "market",54,101,54,101,cell_novending,0;
+	setcell "market",54,103,54,103,cell_novending,0;
+	setcell "market",54,105,54,105,cell_novending,0;
+	setcell "market",54,109,54,109,cell_novending,0;
+	setcell "market",54,111,54,111,cell_novending,0;
+	setcell "market",54,113,54,113,cell_novending,0;
+	setcell "market",54,115,54,115,cell_novending,0;
+	setcell "market",56,115,56,115,cell_novending,0;
+	setcell "market",58,115,58,115,cell_novending,0;
+	setcell "market",60,115,60,115,cell_novending,0;
+	setcell "market",62,115,62,115,cell_novending,0;
+	setcell "market",64,115,64,115,cell_novending,0;
+	setcell "market",66,115,66,115,cell_novending,0;
+	setcell "market",68,115,68,115,cell_novending,0;
+	setcell "market",68,115,68,115,cell_novending,0;
+	setcell "market",70,115,70,115,cell_novending,0;
+	setcell "market",72,115,72,115,cell_novending,0;
+	setcell "market",74,115,74,115,cell_novending,0;
+	setcell "market",76,115,76,115,cell_novending,0;
+	setcell "market",77,114,77,114,cell_novending,0;
+	setcell "market",77,112,77,112,cell_novending,0;
+	setcell "market",77,110,77,110,cell_novending,0;
+	setcell "market",77,108,77,108,cell_novending,0;
+	setcell "market",77,106,77,106,cell_novending,0;
+	setcell "market",77,104,77,104,cell_novending,0;
+	setcell "market",77,102,77,102,cell_novending,0;
+	setcell "market",75,102,75,102,cell_novending,0;
+	setcell "market",74,103,74,103,cell_novending,0;
+	setcell "market",74,105,74,105,cell_novending,0;
+	setcell "market",74,107,74,107,cell_novending,0;
+	setcell "market",74,109,74,109,cell_novending,0;
+	setcell "market",74,111,74,111,cell_novending,0;
+	setcell "market",74,105,74,105,cell_novending,0;
+	setcell "market",73,112,73,112,cell_novending,0;
+	setcell "market",71,112,71,112,cell_novending,0;
+	setcell "market",69,112,69,112,cell_novending,0;
+	setcell "market",67,112,67,112,cell_novending,0;
+	setcell "market",65,112,65,112,cell_novending,0;
+	setcell "market",73,112,73,112,cell_novending,0;
+	setcell "market",63,112,63,112,cell_novending,0;
+	setcell "market",61,112,61,112,cell_novending,0;
+	setcell "market",59,112,59,112,cell_novending,0;
+	setcell "market",57,110,57,110,cell_novending,0;
+	setcell "market",57,108,57,108,cell_novending,0;
+	setcell "market",57,106,57,106,cell_novending,0;
+	setcell "market",57,104,57,104,cell_novending,0;
+	setcell "market",57,102,57,102,cell_novending,0;
+	setcell "market",57,100,57,100,cell_novending,0;
+	setcell "market",57,98,57,98,cell_novending,0;
+	setcell "market",58,95,58,95,cell_novending,0;
+	setcell "market",60,95,60,95,cell_novending,0;
+	setcell "market",62,95,62,95,cell_novending,0;
+	setcell "market",64,95,64,95,cell_novending,0;
+	setcell "market",66,95,66,95,cell_novending,0;
+	setcell "market",67,94,67,94,cell_novending,0;
+	setcell "market",68,100,68,100,cell_novending,0;
+	setcell "market",66,100,66,100,cell_novending,0;
+	setcell "market",66,102,66,102,cell_novending,0;
+	setcell "market",67,103,67,103,cell_novending,0;
+	setcell "market",69,103,69,103,cell_novending,0;
+	setcell "market",69,101,69,101,cell_novending,0;
+
+//UPPER RIGHT (LARGE)
+
+	setcell "market",89,102,89,102,cell_novending,0;
+
+//UPPER RIGHT (MEDIUM)
+
+	setcell "market",69,101,69,101,cell_novending,0;
+
+//UPPER RIGHT (SMALL)
+
+	setcell "market",69,101,69,101,cell_novending,0;
+
+//LOWER RIGHT (LARGE)
+
+	setcell "market",69,101,69,101,cell_novending,0;
+
+//LOWER RIGHT (MEDIUM)
+
+	setcell "market",69,101,69,101,cell_novending,0;
+
+//LOWER RIGHT (SMALL)
+
+	setcell "market",69,101,69,101,cell_novending,0;
+
+//LOWER LEFT (LARGE)
+
+	setcell "market",69,101,69,101,cell_novending,0;
+
+//LOWER LEFT (MEDIUM)
+
+	setcell "market",69,101,69,101,cell_novending,0;
+
+//LOWER LEFT (SMALL)
+
+	setcell "market",69,101,69,101,cell_novending,0;
 
 }
