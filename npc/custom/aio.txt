@@ -151,7 +151,7 @@ function Get_Platinum; function Equip_Menu; function Cm;
 						resetlvl(1);
 					specialeffect2 EF_ANGEL2;
 					specialeffect2 EF_ELECTRIC;
-					if (.Platinum)
+					if (.platinum)
 						Get_Platinum;
 					close;
 				}
@@ -591,7 +591,7 @@ OnInit:
 	set .SNovice,45;			// Minimum base level to turn into Super Novice
 	set .LastJob,1;				// Enforce linear class changes? (1: yes / 0: no)
 	set .SkillPointCheck,0;		// Force player to use up all skill points? (1: yes / 0: no)
-	set .Platinum,1;			// Get platinum skills automatically? (1: yes / 0: no)
+	set .platinum,1;			// Get platinum skills automatically? (1: yes / 0: no)
 
 	set .EnrichedRefine,1;					// Allow enriched refiner option? (1: yes / 0: no)
 	setarray .RP[0],2000,50,200,5000,20000;	// Zeny for armor, lv1, lv2, lv3, lv4 refines
