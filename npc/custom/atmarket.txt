@@ -1,0 +1,17 @@
+//===== Hercules Script ============================================
+//= Market atcommand
+//===== By: =======================================================
+//= Snaehild
+//==================================================================
+
+-	script	AtMarket	-1,{
+
+OnInit:
+	bindatcmd "market", strnpcinfo(0)+"::OnMCommand", 99,100;
+	end;
+	
+OnMCommand:
+	warp "market", 83, 57;
+	end;
+
+}
