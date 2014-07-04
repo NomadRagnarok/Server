@@ -1,4 +1,4 @@
-prontera,167,200,5	script	Elize	504,{
+prontera,165,200,5	script	Elize	504,{
 function ManageBuild;
 
 mes "^FF0000[Elize]^000000";

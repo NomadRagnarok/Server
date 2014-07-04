@@ -1,4 +1,4 @@
-prontera,162,193,5	script	Priest Eira	501,{
+prontera,162,194,5	script	Priest Eira	501,{
 
 if (gettimetick(1) < @timer) {
 dispbottom "Please try again after 3 seconds";

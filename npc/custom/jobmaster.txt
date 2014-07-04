@@ -16,7 +16,7 @@
 //      Baby Novice job change. [Haru]
 //============================================================
 
-prontera,148,194,3	script	Vesperia	666,{
+prontera,149,194,3	script	Vesperia	666,{
 	function Job_Menu; function A_An;
 
 	mes "[^FF3355Vesperia^000000]";
