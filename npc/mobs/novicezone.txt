@@ -1,0 +1,48 @@
+//===== Hercules Script ======================================
+//= Novice Zone Spawn Script
+//===== By: ==================================================
+//= Snaehild
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= Spawns monsters in Ymir Forest.
+//===== Additional Comments: =================================
+//= 1.0 First version.
+//============================================================
+
+//==================================================
+// Ymir Forest - novice Zone
+//==================================================
+
+	ymirforest,106,113,178,185	monster	Poring	1002,100,0,0,0;
+	ymirforest,106,113,178,185	monster	Poporing	1031,50,0,0,0
+	
+-	script	NovZone	-1,{
+
+OnInit:
+//	disablenpc "The Secret Cat#NovZone";
+	monster "ymirforest",146,206,"Leaf Cat",974,5,"NovZone::OnCatDead";
+	end;
+
+OnCatDead:
+//	enablenpc "The Secret Cat#NovZone";
+	mes "[The Secret Cat]";
+	mes "The real challenges awaits you in Prontera.";
+	close2;
+	warp "ymirhut",0,0;
+	getitem 501, 1; // configure prize here
+	disablenpc "The Secret Cat#NovZone";
+	monster "ymirforest",146,206,"Leaf Cat",1586,1,"NovZone::OnCatDead";
+	end;
+}
+//ymirforest,146,206,6	script	The Secret Cat#NovZone	544,{
+//	mes "[The Secret Cat]";
+//	mes "The real challenges awaits you in Prontera.";
+//	close2;
+//	warp "ymirhut",0,0;
+//	getitem 501, 1; // configure prize here
+//	disablenpc "The Secret Cat#NovZone";
+//	monster "ymirforest",146,206,"Leaf Cat",1586,1,"NovZone::OnCatDead";
+//	end;
+//
+//}

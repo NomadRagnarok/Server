@@ -8,7 +8,7 @@
 //to claim their vote points
 //====================================================================================
 
-prontera,119,161,5	script	VoteForPoints	89,{
+prontera,152,200,3	script	VoteForPoints	564,{
 
 //Function Prototypes
 function garbagecol;//Garbage collection for the Character variables
