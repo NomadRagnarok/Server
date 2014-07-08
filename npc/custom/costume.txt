@@ -24,12 +24,12 @@
 //  in order to use this script.
 //============================================================
 -	script	Costume Clown	-1,{
-	mes "[Clown]";
+	mes "[Leymon]";
 	mes "Here you can convert your headgears into a Costume Headgear or restore to its Original form.";
 	switch(select("I want to convert.:I want to restore.:No thanks.")) {
 	case 1:
 			next;
-			mes "[Clown]";
+			mes "[Leymon]";
 			mes "Please, select what to convert.";
 			mes "Remember, cards and refine will be removed.";
 			next;
@@ -47,16 +47,16 @@
 			set .@ref, getequiprefinerycnt(.@Part);
 			if( !getequipisequiped(.@Part) )
 			{
-				mes "[Clown]";
+				mes "[Leymon]";
 				mes "Your not wearing anything there...";
 				close;
 			}
-			mes "[Clown]";
+			mes "[Leymon]";
 			mes "You want to Costume your " + getitemname(getequipid(.@Part)) + "?";
 			next;
 			if( select("Yes, proceed:No, I am sorry.") == 2 )
 			{
-				mes "[Clown]";
+				mes "[Leymon]";
 				mes "Need some time to think about it, huh?";
 				mes "Alright, I can understand.";
 				close;
@@ -64,7 +64,7 @@
 			for(set .@i,0; .@i<4; set .@i,.@i+1)
 				set .@slot[.@i], getequipcardid(.@Part,.@i);
 			if (.@slot[0]>4000 && .@slot[0]<5000) { // If it has card don't convert
-				mes "[Clown]";
+				mes "[Leymon]";
 				mes "A card? Here?!";
 				mes "As I said before, I don't convert headgear with cards.";
 				emotion e_hmm;
@@ -73,20 +73,20 @@
 			getinventorylist;
 			for(set .@i,0; .@i<@inventorylist_count; set .@i,.@i+1)
 				if (@inventorylist_expire[.@i] != 0 && @inventorylist_equip[.@i] != 0) { // If rental don't convert
-				mes "[Clown]";
+				mes "[Leymon]";
 				mes "Sorry, I don't convert a rental headgear!";
 				emotion e_hmm;
 				close;
 				}
 				if (.@ref > 0) { // If refine don't convert
-				mes "[Clown]";
+				mes "[Leymon]";
 				mes "Sorry please keep in mind.";
 				mes "I don't convert headgear with refine.";
 				emotion e_hmm;
 				close;
 				}
 			if (!countitem(.@id)) { 
-				mes "[Clown]";
+				mes "[Leymon]";
 				mes "Where is "+getitemname(@id)+"...?";
 				npctalk "You're a snoozy cheater!";
 				logmes "CHEATER: Tried to sign an item not having it: "+getitemname(@id);
@@ -94,7 +94,7 @@
 				close;
 			}
 			costume .@Part; // Convert the Headgear
-			mes "[Clown]";
+			mes "[Leymon]";
 			mes "Done, enjoy your costume headgear.";
 			close;
 	case 2:
@@ -114,16 +114,16 @@
 			set .@Part, .@Position[ select(.@Menu$) ];
 			if( !getequipisequiped(.@Part) )
 			{
-				mes "[Clown]";
+				mes "[Leymon]";
 				mes "Your not wearing anything there...";
 				close;
 			}
-			mes "[Clown]";
+			mes "[Leymon]";
 			mes "You want to restore your " + getitemname(getequipid(.@Part)) + "?";
 			next;
 			if( select("Yes, proceed:No, I am sorry.") == 2 )
 			{
-				mes "[Clown]";
+				mes "[Leymon]";
 				mes "Need some time to think about it, huh?";
 				mes "Alright, I can understand.";
 				close;
@@ -132,11 +132,11 @@
 			delitem a,1;
 			getitem a,1;
 			
-			mes "[Clown]";
+			mes "[Leymon]";
 			mes "Done, enjoy your restored headgear.";
 			close;
 	case 3:
-		mes "[Clown]";
+		mes "[Leymon]";
 		mes "Very well. Return at once if you seek my services.";
 		close;
 	}
@@ -144,4 +144,4 @@
 // --------------------------------------------------------------------------
 // Use duplicates to put your npc on different cities
 // --------------------------------------------------------------------------
-prontera,155,181,4	duplicate(Costume Clown)	Costume Clown#1	715
+prontera,142,231,5	duplicate(Costume Clown)	Leymon#1	509
