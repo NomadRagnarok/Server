@@ -7,39 +7,46 @@
 //their ingame cash points
 //====================================================================================
 
-prontera,108,183,3	script	Donation Sync	564,{
+prontera,107,190,4	script	Mint Adenade	920,{
 
 //Function Prototypes
 function garbagecol;//Garbage collection for the Character variables
 garbagecol();
 function getPoints;//This will return the points of the player stored in the database
 function updatePoints;//This will updates the points of the player stored in the database
+function getvPoints;//This will return the points of the player stored in the database
+function updatevPoints;//This will updates the points of the player stored in the database
 
 //NPC Name
-set .npcname$,"[ Rassius]";
+set .npcname$,"[^FF3355 Mint Adenade ^000000]";
 
-//Script Start	
+//Script Start
 	mes .npcname$;
-	mes "Hi! Do you want to synchronize your Cash Credits to Cash Ponts?:";
+	mes "Hi! Do you want to synchronize your Cash & Vote Credits to Points?";
 	switch(select("Yes, I want to synchronize my points:I just want to check my credits"))
 	{
 		case 1:
 		next;
 		mes .npcname$;
 		set .points_var$,"#CASHPOINTS";				// Points variable
+		set .vpoints_var$,"#KAFRAPOINTS";				// Points variable
 		set .@points,getPoints(getcharid(3));
+		set .@vpoints,getvPoints(getcharid(3));
 		setd .points_var$, getd(.points_var$) + .@points;  ///TESTING
+		setd .vpoints_var$, getd(.vpoints_var$) + .@vpoints;  ///TESTING
 		updatePoints(getcharid(3),.@points);
+		updatevPoints(getcharid(3),.@vpoints);
 		mes "Cash Points Synchronized! Thank you! We appreciate your continued support for Ragnarok Tales.";
 		mes "";
-		mes ""+.@points+" pt(s). have been added to your cash points";		
+		mes "^0096ff"+.@points+"^000000 cash pt(s). & ^19b019"+.@vpoints+"^000000 vote pt(s) have been added to your account";		
 		garbagecol();
 		close;
 		case 2:
 			next;
 			mes .npcname$;			
-			set .@points,getPoints(getcharid(3));			
-			mes "You currently have "+.@points+" credit(s).";
+			set .@points,getPoints(getcharid(3));
+			set .@vpoints,getvPoints(getcharid(3));
+			mes "You currently have ^0096ff"+.@points+"^000000 cash credit(s) and ^19b019"+.@vpoints+"^000000 vote credit(s).";
 			garbagecol();
 		close;
 	}
@@ -52,6 +59,13 @@ end;
 		query_sql("UPDATE `cp_credits` SET balance=(balance-"+.@usedPoints+") WHERE account_id='"+.@account_id+"'");
 		return;
 	}
+	
+	function updatevPoints {
+		set .@account_id,getarg(0);
+		set .@usedvPoints,getarg(1);
+		query_sql("UPDATE `cp_v4p_voters` SET points=(points-"+.@usedvPoints+") WHERE account_id='"+.@account_id+"'");
+		return;
+	}
 
 	function getPoints {
 		set .@account_id,getarg(0);
@@ -59,6 +73,14 @@ end;
 		if(getarraysize(.@points)==0)
 			return 0;		
 		return .@points[0];
+	}
+	
+	function getvPoints {
+		set .@account_id,getarg(0);
+		query_sql("SELECT `points` FROM `cp_v4p_voters` WHERE account_id="+.@account_id+" LIMIT 1",.@vpoints);
+		if(getarraysize(.@vpoints)==0)
+			return 0;		
+		return .@vpoints[0];
 	}
 
 	function garbagecol{
