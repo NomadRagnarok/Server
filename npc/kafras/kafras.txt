@@ -308,7 +308,7 @@ prontera,163,175,3	script	Kafra Employee::kaf_prontera6	4_F_KAFRA9,{
 	mes "are always on your side.";
 	mes "How may I assist you?";
 	callfunc "F_Kafra",5,0,0,40,800;
-	savepoint "prontera",116,73;
+	savepoint "prontera",173,203;
 	callfunc "F_KafEnd",0,1,"in the city of Prontera";
 }
 
