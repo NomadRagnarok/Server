@@ -18,16 +18,16 @@ function getvPoints;//This will return the points of the player stored in the da
 function updatevPoints;//This will updates the points of the player stored in the database
 
 //NPC Name
-set .npcname$,"[^FF3355 Mint Adenade ^000000]";
+set .npcName$,"[^FF3355 Mint Adenade ^000000]";
 
 //Script Start
-	mes .npcname$;
+	mes .npcName$;
 	mes "Hi! Do you want to synchronize your Cash & Vote Credits to Points?";
 	switch(select("Yes, I want to synchronize my points:I just want to check my credits"))
 	{
 		case 1:
 		next;
-		mes .npcname$;
+		mes .npcName$;
 		set .points_var$,"#CASHPOINTS";				// Points variable
 		set .vpoints_var$,"#KAFRAPOINTS";				// Points variable
 		set .@points,getPoints(getcharid(3));
@@ -43,7 +43,7 @@ set .npcname$,"[^FF3355 Mint Adenade ^000000]";
 		close;
 		case 2:
 			next;
-			mes .npcname$;			
+			mes .npcName$;			
 			set .@points,getPoints(getcharid(3));
 			set .@vpoints,getvPoints(getcharid(3));
 			mes "You currently have ^0096ff"+.@points+"^000000 cash credit(s) and ^19b019"+.@vpoints+"^000000 vote credit(s).";
