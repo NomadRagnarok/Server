@@ -1,14 +1,13 @@
 //====================================================================================
-//Script Name: Vote For Points NPC Script for FluxCP
-//SVN: Tested in rAthena r156513
-//Developed By: JayPee Mateo
+//FluxCP Cash Sync NPC
+//SVN: Tested in Hercules f39c3ede84afa6be6145e0949d15c1ff96a5e9c1
+//Based on JayPee Mateo & Mumbles
 //Version: 1.0
-//Requirement(s): FluxCP V4P Addon
-//Description: This is a npc script for FluxCP Vote for points in order for the players
-//to claim their vote points
+//Description: NPC script so synchronize the player's donation credits in Flux with
+//their ingame cash points
 //====================================================================================
 
-prontera,108,183,3	script	Donation Test	564,{
+prontera,108,183,3	script	Donation Sync	564,{
 
 //Function Prototypes
 function garbagecol;//Garbage collection for the Character variables
@@ -17,52 +16,30 @@ function getPoints;//This will return the points of the player stored in the dat
 function updatePoints;//This will updates the points of the player stored in the database
 
 //NPC Name
-set .npcname$,"[ Donation Test ]";
-	
+set .npcname$,"[ Rassius]";
+
 //Script Start	
 	mes .npcname$;
-	mes "Hi! Do you want to exchange your vote points?:";
-	switch(select("Yes, I want to exchange my points:See my points"))
+	mes "Hi! Do you want to synchronize your Cash Credits to Cash Ponts?:";
+	switch(select("Yes, I want to synchronize my points:I just want to check my credits"))
 	{
 		case 1:
 		next;
-			mes .npcname$;						
-			set .@ritemid,7179;
-			set .@rquantity,1;
-			set .@rpoints,1;
-			mes "Item ID:"+.@ritemid;
-			mes "Item Name: "+getitemname(.@ritemid);
-			mes "Item Quantity: "+.@rquantity+" pc(s).";
-			mes "Required Points: "+.@rpoints+" pt(s).";
-			mes "\n";
-			mes "Do you want to this item?";
-			if(select("Yes:No")==1)
-			{
-				set .@points,getPoints(getcharid(3));
-				if(.@points>=.@rpoints)
-				{
-					next;
-					mes .npcname$;			
-					updatePoints(getcharid(3),.@rpoints);
-					getitem .@ritemid,.@rquantity;
-					mes "Here you go!. Thank you for voting. Don't forget to vote again. :D";
-				}
-				else
-					mes "Sorry, you do not have enough points for this item.";				
-			}
-			else
-			{
-				next;
-				mes .npcname$;			
-				mes "Okay bye!";
-			}			
-			garbagecol();
+		mes .npcname$;
+		set .points_var$,"#CASHPOINTS";				// Points variable
+		set .@points,getPoints(getcharid(3));
+		setd .points_var$, getd(.points_var$) + .@points;  ///TESTING
+		updatePoints(getcharid(3),.@points);
+		mes "Cash Points Synchronized! Thank you! We appreciate your continued support for Ragnarok Tales.";
+		mes "";
+		mes ""+.@points+" pt(s). have been added to your cash points";		
+		garbagecol();
 		close;
 		case 2:
 			next;
 			mes .npcname$;			
 			set .@points,getPoints(getcharid(3));			
-			mes "You currently have "+.@points+" pt(s).";
+			mes "You currently have "+.@points+" credit(s).";
 			garbagecol();
 		close;
 	}
@@ -85,8 +62,6 @@ end;
 	}
 
 	function garbagecol{
-		deletearray @itemID[0],128;
-		deletearray @itemQ[0],128;
 		deletearray @points[0],128;	
 		return;
 	}
