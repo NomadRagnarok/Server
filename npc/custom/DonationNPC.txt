@@ -7,7 +7,7 @@ prontera,110,190,4	script	Elrane	987,{
 	
 	// NPC Name to display during chat.
 	// Default: "[Donor Rewards Redeemer]"
-	set .npcName$,"[[^FF3355 Elrane ^000000]";
+	set .npcName$,"[^FF3355 Elrane ^000000]";
 	
 	// DO NOT CHANGE THIS!
 	// Default: "cp_redeemlog"
