@@ -1,0 +1,73 @@
+﻿Build started 7/4/2014 10:47:13 PM.
+Project "C:\ProjectRO\vcproj-11\login-server.vcxproj" on node 2 (Rebuild target(s)).
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\3rdparty\libconfig /I..\3rdparty\mysql\include /I..\3rdparty\msinttypes\include /I..\3rdparty\mt19937ar /ZI /nologo /W3 /WX- /MP /Od /Oy- /D WIN32 /D _WIN32 /D __WIN32 /D _DEBUG /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D FD_SETSIZE=4096 /D WITH_SQL /D LIBCONFIG_STATIC /D YY_USE_CONST /D _VC80_UPGRADE=0x0710 /D _MBCS /Gm- /RTC1 /MTd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"login-server\Debug\\" /Fd"login-server\Debug\vc110.pdb" /Gd /TC /wd4100 /wd4800 /analyze- /errorReport:prompt ..\3rdparty\libconfig\grammar.c ..\3rdparty\libconfig\libconfig.c ..\3rdparty\libconfig\scanctx.c ..\3rdparty\libconfig\scanner.c ..\3rdparty\libconfig\strbuf.c ..\src\common\mutex.c ..\src\common\thread.c ..\src\login\account_sql.c ..\src\login\ipban_sql.c ..\src\login\login.c ..\src\login\loginlog_sql.c ..\src\common\conf.c ..\src\common\core.c ..\src\common\console.c ..\src\common\db.c ..\src\common\ers.c ..\src\common\HPM.c ..\src\common\malloc.c ..\src\common\md5calc.c ..\src\common\nullpo.c ..\src\common\random.c ..\src\common\showmsg.c ..\src\common\socket.c ..\src\common\sql.c ..\src\common\strlib.c ..\src\common\sysinfo.c ..\src\common\timer.c ..\src\common\utils.c ..\3rdparty\mt19937ar\mt19937ar.c
+  grammar.c
+  libconfig.c
+  scanctx.c
+  scanner.c
+  strbuf.c
+  mutex.c
+  thread.c
+  account_sql.c
+  ipban_sql.c
+  login.c
+  loginlog_sql.c
+  conf.c
+  core.c
+  console.c
+  db.c
+  ers.c
+  HPM.c
+  malloc.c
+  md5calc.c
+  nullpo.c
+  Generating Code...
+  Compiling...
+  random.c
+  showmsg.c
+  socket.c
+  sql.c
+  strlib.c
+  sysinfo.c
+  timer.c
+  utils.c
+  mt19937ar.c
+  Generating Code...
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\login-server.exe" /INCREMENTAL /NOLOGO /LIBPATH:..\3rdparty\mysql\lib libcmtd.lib oldnames.lib ws2_32.lib libmysql.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"..\login-server.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE:NO /IMPLIB:"..\login-server.lib" /MACHINE:X86 /SAFESEH:NO "login-server\Debug\grammar.obj"
+  "login-server\Debug\libconfig.obj"
+  "login-server\Debug\scanctx.obj"
+  "login-server\Debug\scanner.obj"
+  "login-server\Debug\strbuf.obj"
+  "login-server\Debug\mutex.obj"
+  "login-server\Debug\thread.obj"
+  "login-server\Debug\account_sql.obj"
+  "login-server\Debug\ipban_sql.obj"
+  "login-server\Debug\login.obj"
+  "login-server\Debug\loginlog_sql.obj"
+  "login-server\Debug\conf.obj"
+  "login-server\Debug\core.obj"
+  "login-server\Debug\console.obj"
+  "login-server\Debug\db.obj"
+  "login-server\Debug\ers.obj"
+  "login-server\Debug\HPM.obj"
+  "login-server\Debug\malloc.obj"
+  "login-server\Debug\md5calc.obj"
+  "login-server\Debug\nullpo.obj"
+  "login-server\Debug\random.obj"
+  "login-server\Debug\showmsg.obj"
+  "login-server\Debug\socket.obj"
+  "login-server\Debug\sql.obj"
+  "login-server\Debug\strlib.obj"
+  "login-server\Debug\sysinfo.obj"
+  "login-server\Debug\timer.obj"
+  "login-server\Debug\utils.obj"
+  "login-server\Debug\mt19937ar.obj"
+     Creating library ..\login-server.lib and object ..\login-server.exp
+  login-server.vcxproj -> C:\ProjectRO\vcproj-11\..\login-server.exe
+Done Building Project "C:\ProjectRO\vcproj-11\login-server.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:03:38.27

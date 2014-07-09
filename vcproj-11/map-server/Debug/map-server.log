@@ -1,0 +1,153 @@
+﻿Build started 7/4/2014 10:50:52 PM.
+Project "C:\ProjectRO\vcproj-11\map-server.vcxproj" on node 2 (Rebuild target(s)).
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\3rdparty\mysql\include /I..\3rdparty\zlib\include /I..\3rdparty\pcre\include /I..\3rdparty\msinttypes\include /I..\3rdparty\mt19937ar /I..\3rdparty\libconfig /ZI /nologo /W3 /WX- /MP /Od /Oy- /D WIN32 /D _WIN32 /D __WIN32 /D _DEBUG /D PCRE_SUPPORT /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D FD_SETSIZE=4096 /D LIBCONFIG_STATIC /D YY_USE_CONST /D _MBCS /Gm- /RTC1 /MTd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"map-server\Debug\\" /Fd"map-server\Debug\vc110.pdb" /Gd /TC /wd4018 /wd4100 /wd4800 /analyze- /errorReport:prompt ..\3rdparty\libconfig\grammar.c ..\3rdparty\libconfig\libconfig.c ..\3rdparty\libconfig\scanctx.c ..\3rdparty\libconfig\scanner.c ..\3rdparty\libconfig\strbuf.c ..\3rdparty\mt19937ar\mt19937ar.c ..\src\common\conf.c ..\src\common\core.c ..\src\common\console.c ..\src\common\db.c ..\src\common\des.c ..\src\common\ers.c ..\src\common\grfio.c ..\src\common\HPM.c ..\src\common\malloc.c ..\src\common\mapindex.c ..\src\common\md5calc.c ..\src\common\mutex.c ..\src\common\nullpo.c ..\src\common\random.c ..\src\common\showmsg.c ..\src\common\socket.c ..\src\common\sql.c ..\src\common\strlib.c ..\src\common\sysinfo.c ..\src\common\thread.c ..\src\common\timer.c ..\src\common\utils.c ..\src\map\atcommand.c ..\src\map\battle.c ..\src\map\battleground.c ..\src\map\buyingstore.c ..\src\map\chat.c ..\src\map\chrif.c ..\src\map\clif.c ..\src\map\date.c ..\src\map\duel.c ..\src\map\elemental.c ..\src\map\guild.c ..\src\map\intif.c "..\src\map\irc-bot.c" ..\src\map\itemdb.c ..\src\map\log.c ..\src\map\mail.c ..\src\map\map.c ..\src\map\mapreg_sql.c ..\src\map\homunculus.c ..\src\map\HPMmap.c ..\src\map\instance.c ..\src\map\mercenary.c ..\src\map\mob.c ..\src\map\npc.c ..\src\map\npc_chat.c ..\src\map\party.c ..\src\map\path.c ..\src\map\pc.c ..\src\map\pc_groups.c ..\src\map\pet.c ..\src\map\quest.c ..\src\map\script.c ..\src\map\searchstore.c ..\src\map\skill.c ..\src\map\status.c ..\src\map\storage.c ..\src\map\trade.c ..\src\map\unit.c ..\src\map\vending.c
+  grammar.c
+  libconfig.c
+  scanctx.c
+  scanner.c
+  strbuf.c
+  mt19937ar.c
+  conf.c
+  core.c
+  console.c
+  db.c
+  des.c
+  ers.c
+  grfio.c
+  HPM.c
+  malloc.c
+  mapindex.c
+  md5calc.c
+  mutex.c
+  nullpo.c
+  random.c
+  Generating Code...
+  Compiling...
+  showmsg.c
+  socket.c
+  sql.c
+  strlib.c
+  sysinfo.c
+  thread.c
+  timer.c
+  utils.c
+  atcommand.c
+  battle.c
+  battleground.c
+  buyingstore.c
+  chat.c
+  chrif.c
+  clif.c
+  date.c
+  duel.c
+  elemental.c
+  guild.c
+  intif.c
+  Generating Code...
+  Compiling...
+  irc-bot.c
+  itemdb.c
+  log.c
+  mail.c
+  map.c
+  mapreg_sql.c
+  homunculus.c
+  HPMmap.c
+  instance.c
+  mercenary.c
+  mob.c
+  npc.c
+  npc_chat.c
+  party.c
+  path.c
+  pc.c
+  pc_groups.c
+  pet.c
+  quest.c
+  script.c
+  Generating Code...
+  Compiling...
+  searchstore.c
+  skill.c
+  status.c
+  storage.c
+  trade.c
+  unit.c
+  vending.c
+  Generating Code...
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\map-server.exe" /INCREMENTAL /NOLOGO /LIBPATH:..\3rdparty\mysql\lib /LIBPATH:..\3rdparty\zlib\lib /LIBPATH:..\3rdparty\pcre\lib libcmtd.lib oldnames.lib ws2_32.lib libmysql.lib zdll.lib pcre.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"..\map-server.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE:NO /IMPLIB:"..\map-server.lib" /MACHINE:X86 /SAFESEH:NO "map-server\Debug\grammar.obj"
+  "map-server\Debug\libconfig.obj"
+  "map-server\Debug\scanctx.obj"
+  "map-server\Debug\scanner.obj"
+  "map-server\Debug\strbuf.obj"
+  "map-server\Debug\mt19937ar.obj"
+  "map-server\Debug\conf.obj"
+  "map-server\Debug\core.obj"
+  "map-server\Debug\console.obj"
+  "map-server\Debug\db.obj"
+  "map-server\Debug\des.obj"
+  "map-server\Debug\ers.obj"
+  "map-server\Debug\grfio.obj"
+  "map-server\Debug\HPM.obj"
+  "map-server\Debug\malloc.obj"
+  "map-server\Debug\mapindex.obj"
+  "map-server\Debug\md5calc.obj"
+  "map-server\Debug\mutex.obj"
+  "map-server\Debug\nullpo.obj"
+  "map-server\Debug\random.obj"
+  "map-server\Debug\showmsg.obj"
+  "map-server\Debug\socket.obj"
+  "map-server\Debug\sql.obj"
+  "map-server\Debug\strlib.obj"
+  "map-server\Debug\sysinfo.obj"
+  "map-server\Debug\thread.obj"
+  "map-server\Debug\timer.obj"
+  "map-server\Debug\utils.obj"
+  "map-server\Debug\atcommand.obj"
+  "map-server\Debug\battle.obj"
+  "map-server\Debug\battleground.obj"
+  "map-server\Debug\buyingstore.obj"
+  "map-server\Debug\chat.obj"
+  "map-server\Debug\chrif.obj"
+  "map-server\Debug\clif.obj"
+  "map-server\Debug\date.obj"
+  "map-server\Debug\duel.obj"
+  "map-server\Debug\elemental.obj"
+  "map-server\Debug\guild.obj"
+  "map-server\Debug\intif.obj"
+  "map-server\Debug\irc-bot.obj"
+  "map-server\Debug\itemdb.obj"
+  "map-server\Debug\log.obj"
+  "map-server\Debug\mail.obj"
+  "map-server\Debug\map.obj"
+  "map-server\Debug\mapreg_sql.obj"
+  "map-server\Debug\homunculus.obj"
+  "map-server\Debug\HPMmap.obj"
+  "map-server\Debug\instance.obj"
+  "map-server\Debug\mercenary.obj"
+  "map-server\Debug\mob.obj"
+  "map-server\Debug\npc.obj"
+  "map-server\Debug\npc_chat.obj"
+  "map-server\Debug\party.obj"
+  "map-server\Debug\path.obj"
+  "map-server\Debug\pc.obj"
+  "map-server\Debug\pc_groups.obj"
+  "map-server\Debug\pet.obj"
+  "map-server\Debug\quest.obj"
+  "map-server\Debug\script.obj"
+  "map-server\Debug\searchstore.obj"
+  "map-server\Debug\skill.obj"
+  "map-server\Debug\status.obj"
+  "map-server\Debug\storage.obj"
+  "map-server\Debug\trade.obj"
+  "map-server\Debug\unit.obj"
+  "map-server\Debug\vending.obj"
+     Creating library ..\map-server.lib and object ..\map-server.exp
+  map-server.vcxproj -> C:\ProjectRO\vcproj-11\..\map-server.exe
+Done Building Project "C:\ProjectRO\vcproj-11\map-server.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:08:47.51

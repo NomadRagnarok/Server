@@ -1,0 +1,91 @@
+﻿Build started 7/4/2014 10:46:05 PM.
+Project "C:\ProjectRO\vcproj-11\char-server.vcxproj" on node 2 (Rebuild target(s)).
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\3rdparty\libconfig /I..\3rdparty\mysql\include /I..\3rdparty\msinttypes\include /I..\3rdparty\mt19937ar /ZI /nologo /W3 /WX- /MP /Od /Oy- /D WIN32 /D _WIN32 /D __WIN32 /D _DEBUG /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D FD_SETSIZE=4096 /D LIBCONFIG_STATIC /D YY_USE_CONST /D _VC80_UPGRADE=0x0710 /D _MBCS /Gm- /RTC1 /MTd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"char-server\Debug\\" /Fd"char-server\Debug\vc110.pdb" /Gd /TC /wd4800 /analyze- /errorReport:prompt ..\3rdparty\libconfig\grammar.c ..\3rdparty\libconfig\libconfig.c ..\3rdparty\libconfig\scanctx.c ..\3rdparty\libconfig\scanner.c ..\3rdparty\libconfig\strbuf.c ..\3rdparty\mt19937ar\mt19937ar.c ..\src\common\conf.c ..\src\common\core.c ..\src\common\console.c ..\src\common\db.c ..\src\common\ers.c ..\src\common\HPM.c ..\src\common\malloc.c ..\src\common\mapindex.c ..\src\common\mutex.c ..\src\common\nullpo.c ..\src\common\random.c ..\src\common\showmsg.c ..\src\common\socket.c ..\src\common\sql.c ..\src\common\strlib.c ..\src\common\sysinfo.c ..\src\common\thread.c ..\src\common\timer.c ..\src\common\utils.c ..\src\char\char.c ..\src\char\int_auction.c ..\src\char\int_elemental.c ..\src\char\int_guild.c ..\src\char\int_homun.c ..\src\char\int_mail.c ..\src\char\int_mercenary.c ..\src\char\int_party.c ..\src\char\int_pet.c ..\src\char\int_quest.c ..\src\char\int_storage.c ..\src\char\inter.c ..\src\char\pincode.c
+  grammar.c
+  libconfig.c
+  scanctx.c
+  scanner.c
+  strbuf.c
+  mt19937ar.c
+  conf.c
+  core.c
+  console.c
+  db.c
+  ers.c
+  HPM.c
+  malloc.c
+  mapindex.c
+  mutex.c
+  nullpo.c
+  random.c
+  showmsg.c
+  socket.c
+  sql.c
+  Generating Code...
+  Compiling...
+  strlib.c
+  sysinfo.c
+  thread.c
+  timer.c
+  utils.c
+  char.c
+  int_auction.c
+  int_elemental.c
+  int_guild.c
+  int_homun.c
+  int_mail.c
+  int_mercenary.c
+  int_party.c
+  int_pet.c
+  int_quest.c
+  int_storage.c
+  inter.c
+  pincode.c
+  Generating Code...
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\char-server.exe" /INCREMENTAL /NOLOGO /LIBPATH:..\3rdparty\mysql\lib libcmtd.lib oldnames.lib ws2_32.lib libmysql.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"..\char-server.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE:NO /IMPLIB:"..\char-server.lib" /MACHINE:X86 /SAFESEH:NO "char-server\Debug\grammar.obj"
+  "char-server\Debug\libconfig.obj"
+  "char-server\Debug\scanctx.obj"
+  "char-server\Debug\scanner.obj"
+  "char-server\Debug\strbuf.obj"
+  "char-server\Debug\mt19937ar.obj"
+  "char-server\Debug\conf.obj"
+  "char-server\Debug\core.obj"
+  "char-server\Debug\console.obj"
+  "char-server\Debug\db.obj"
+  "char-server\Debug\ers.obj"
+  "char-server\Debug\HPM.obj"
+  "char-server\Debug\malloc.obj"
+  "char-server\Debug\mapindex.obj"
+  "char-server\Debug\mutex.obj"
+  "char-server\Debug\nullpo.obj"
+  "char-server\Debug\random.obj"
+  "char-server\Debug\showmsg.obj"
+  "char-server\Debug\socket.obj"
+  "char-server\Debug\sql.obj"
+  "char-server\Debug\strlib.obj"
+  "char-server\Debug\sysinfo.obj"
+  "char-server\Debug\thread.obj"
+  "char-server\Debug\timer.obj"
+  "char-server\Debug\utils.obj"
+  "char-server\Debug\char.obj"
+  "char-server\Debug\int_auction.obj"
+  "char-server\Debug\int_elemental.obj"
+  "char-server\Debug\int_guild.obj"
+  "char-server\Debug\int_homun.obj"
+  "char-server\Debug\int_mail.obj"
+  "char-server\Debug\int_mercenary.obj"
+  "char-server\Debug\int_party.obj"
+  "char-server\Debug\int_pet.obj"
+  "char-server\Debug\int_quest.obj"
+  "char-server\Debug\int_storage.obj"
+  "char-server\Debug\inter.obj"
+  "char-server\Debug\pincode.obj"
+     Creating library ..\char-server.lib and object ..\char-server.exp
+  char-server.vcxproj -> C:\ProjectRO\vcproj-11\..\char-server.exe
+Done Building Project "C:\ProjectRO\vcproj-11\char-server.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:01:06.48

@@ -1,0 +1,34 @@
+﻿Build started 7/4/2014 10:59:41 PM.
+Project "C:\ProjectRO\vcproj-11\mapcache.vcxproj" on node 2 (Rebuild target(s)).
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\3rdparty\libconfig /I..\3rdparty\zlib\include /I..\3rdparty\msinttypes\include /ZI /nologo /W3 /WX- /MP /Od /Oy- /D WIN32 /D _WIN32 /D __WIN32 /D _DEBUG /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D MINICORE /D LIBCONFIG_STATIC /D YY_USE_CONST /D _MBCS /Gm- /RTC1 /MTd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"mapcache\Debug\\" /Fd"mapcache\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt ..\src\common\core.c ..\src\common\console.c ..\src\common\des.c ..\src\common\grfio.c ..\src\common\malloc.c ..\src\common\showmsg.c ..\src\common\strlib.c ..\src\common\sysinfo.c ..\src\common\utils.c ..\src\common\nullpo.c ..\src\tool\mapcache.c
+  core.c
+  console.c
+  des.c
+  grfio.c
+  malloc.c
+  showmsg.c
+  strlib.c
+  sysinfo.c
+  utils.c
+  nullpo.c
+  mapcache.c
+  Generating Code...
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\mapcache.exe" /INCREMENTAL /NOLOGO /LIBPATH:..\3rdparty\zlib\lib libcmtd.lib oldnames.lib zdll.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"..\mapcache.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE:NO /IMPLIB:"..\mapcache.lib" /MACHINE:X86 /SAFESEH:NO /FIXED:NO mapcache\Debug\core.obj
+  mapcache\Debug\console.obj
+  mapcache\Debug\des.obj
+  mapcache\Debug\grfio.obj
+  mapcache\Debug\malloc.obj
+  mapcache\Debug\showmsg.obj
+  mapcache\Debug\strlib.obj
+  mapcache\Debug\sysinfo.obj
+  mapcache\Debug\utils.obj
+  mapcache\Debug\nullpo.obj
+  mapcache\Debug\mapcache.obj
+  mapcache.vcxproj -> C:\ProjectRO\vcproj-11\..\mapcache.exe
+Done Building Project "C:\ProjectRO\vcproj-11\mapcache.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:18.54
