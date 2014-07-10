@@ -26,8 +26,8 @@ v1.0 - First version.
 
 	OnInit:
 		// Configuration
-		.npc_name$ = "[^0000FFHercules Invasion^000000]";
-		.server_name$ = "Hercules";	// Server name
+		.npc_name$ = "[^0000FFRagnarok Tales Invasion^000000]";
+		.server_name$ = "Ragnarok Tales";	// Server name
 		.map_name$ = "Geffen";		// Invasion map name
 		.map$ = "geffen";	// Invasion map
 		.reward = 7711;	// Event Ticket
@@ -41,8 +41,8 @@ v1.0 - First version.
 								1388,	1582,	1120,	1062,	1090,	1096;
 		
 		// Normal mob amounts
-		setarray .n_mobs[0],	 300,	 300,	 300,	 300,	 300,	 300,
-								  10,	  40,	  40,	 300,	  40,	  40;
+		setarray .n_mobs[0],	 0,	 0,	 0,	 0,	 0,	 0,
+								  0,	  0,	  0,	 0,	  0,	  0;
 		
 		// Prized mob IDs
 		setarray .prized[0],	1002,	1031,	1113,	1242,	1613,	1784,
