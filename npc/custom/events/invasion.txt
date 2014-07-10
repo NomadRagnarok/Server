@@ -26,11 +26,11 @@ v1.0 - First version.
 
 	OnInit:
 		// Configuration
-		.npc_name$ = "[^0000FFRagnarok Tales Invasion^000000]";
+		.Npc_Name$ = "[^0000FFRagnarok Tales Invasion^000000]";
 		.server_name$ = "Ragnarok Tales";	// Server name
 		.map_name$ = "Geffen";		// Invasion map name
 		.map$ = "geffen";	// Invasion map
-		.reward = 7711;	// Event Ticket
+		.Reward = 7711;	// Event Ticket
 		.tiers = 3;		// Amount of tiers
 		.limit = 22;	// Kill limit
 		.delay = 5;		// Announcement delay in seconds
@@ -69,7 +69,7 @@ v1.0 - First version.
 	
 	
 	OnInvasion:
-		mes .npc_name$;
+		mes .Npc_Name$;
 		mes "Hey there, "+ strcharinfo(0) +"!";
 		mes "What would you like to do?";
 		mes " ";
@@ -157,8 +157,8 @@ v1.0 - First version.
 		
 		// Reward and announce winner; increment count
 		if (.@winner) {
-			announce .@tier +" "+ getitemname(.reward) +" won by "+ strcharinfo(0) + ".", bc_map | bc_blue;
-			getitem .reward, .@amount;
+			announce .@tier +" "+ getitemname(.Reward) +" won by "+ strcharinfo(0) + ".", bc_map | bc_blue;
+			getitem .Reward, .@amount;
 			.count++;
 		}
 		
