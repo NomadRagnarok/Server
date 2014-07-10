@@ -13,6 +13,11 @@
 //=============================================================
 prontera,113,143,4	script	Poring Summoner	99,{
 
+OnInit:
+
+	set .SpecialPorings,10;
+ 	set .NormalPorings,10;
+
 mes "[Poring Summoner]";
 if(getgroupid() < 10) {
 	if(.Event) mes "There is no Poring Hunt Event on now.";
@@ -57,8 +62,10 @@ OnMinute31:
 	if ($@ran == 1) set .Map$,"veins";
 			set .Event,1;
 			set .ItemID,7711;
-			set .SpecialPorings[1],10;
- 			set .NormalPorings[1],10;
+			set .SpecialPorings,10;
+ 			set .NormalPorings,10;
+			set .SpecialPorings[1],.SpecialPorings;
+ 			set .NormalPorings[1],.NormalPorings;
 			monster .Map$,0,0,"Poring",1002,.SpecialPorings,"Poring Summoner::OnSpecialKill";
 			monster .Map$,0,0,"Poring",1002,.NormalPorings,"Poring Summoner::OnNormalKill";
 			announce "The Poring Hunt has begun! " + .SpecialPorings + " special Porings are lurking around " + .Map$,bc_all;
