@@ -11,7 +11,7 @@
 				.@y = rand(1,500);
 			} while (!checkcell(.map$,.@x,.@y,cell_chkpass));
 			makeitem .item_id,1,.map$,.@x,.@y;
-			+ announce "An [" +getitemname(.item_id)+ "] has been drop from the sky in map [" +.map$+ "]. Lets get it before it gone..",0;
+			announce "An [" +getitemname(.item_id)+ "] has been drop from the sky in map [" +.map$+ "]. Lets get it before it gone..",0;
 			set .count, 0;
 		}
 		set .count, 0;
