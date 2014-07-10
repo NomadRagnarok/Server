@@ -2,10 +2,14 @@
 	OnInit:
 		set .amount, 10; // amount of item to shower
 		set .item_id, 7227; // item id to shower
-		set .map$, "Prontera"; // map to shower
+		setarray .map$,"prontera",
+				"geffen",
+				"louyang";
+		set .map$[ rand( getarraysize( .map$ ) ) ]; // map to shower
 		end;
-	OnMinute50:
-		announce ""+.amount+" [" +getitemname(.item_id)+ "] has been dropped from the sky in [" +.map$+ "]. Lets get it before it's gone!",0;
+				
+	OnMinute20:
+		announce ""+.amount+" [" +getitemname(.item_id)+ "] has been dropped from the sky in Prontera. Lets get it before it's gone!",0;
 		while ( .count < .amount ) {
 			do {
 				.@x = rand(1,500);
