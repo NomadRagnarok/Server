@@ -1,11 +1,11 @@
 -	script	Sample	-1,{
 	OnInit:
-		set .amount, 40; // amount of item to shower
+		set .amount, 10; // amount of item to shower
 		set .item_id, 7227; // item id to shower
-		set .map$, "prontera"; // map to shower
+		set .map$, "Prontera"; // map to shower
 		end;
-	OnMinute30:
-		announce "An [" +getitemname(.item_id)+ "] has been drop from the sky in map [" +.map$+ "]. Lets get it before it gone..",0;
+	OnMinute50:
+		announce ""+.amount+" [" +getitemname(.item_id)+ "] has been dropped from the sky in [" +.map$+ "]. Lets get it before it's gone!",0;
 		while ( .count < .amount ) {
 			do {
 				.@x = rand(1,500);
