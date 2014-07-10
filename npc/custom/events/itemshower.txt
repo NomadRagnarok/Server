@@ -5,7 +5,7 @@
 		setarray .Maps$[0],"izlude","geffen","morocc","prontera"; // Possible maps
 		end;
 				
-	OnMinute31:
+	OnMinute26:
 		set .map$,.Maps$[rand(getarraysize(.Maps$))];
 		announce ""+.amount+" [" +getitemname(.item_id)+ "] has been dropped from the sky in [" +.map$+ "]. Lets get it before it's gone!",0;
 		while ( .count < .amount ) {
