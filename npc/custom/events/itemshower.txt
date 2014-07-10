@@ -6,8 +6,8 @@
 		set .maps$, rand( getarraysize( .map$ ) );
 		end;
 				
-	OnMinute27:
-		announce ""+.amount+" [" +getitemname(.item_id)+ "] has been dropped from the sky in Prontera. Lets get it before it's gone!",0;
+	OnMinute31:
+		announce ""+.amount+" [" +getitemname(.item_id)+ "] has been dropped from the sky in [" +.maps$+ "]. Lets get it before it's gone!",0;
 		while ( .count < .amount ) {
 			do {
 				.@x = rand(1,500);
