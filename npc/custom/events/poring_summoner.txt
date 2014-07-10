@@ -44,13 +44,9 @@ mes "[Poring Summoner]";
 			goto Main;
 		case 4:
 			mes "Starting the event now...";
-OnHour02: //CHANGE THIS TO THE HOUR YOU WOULD LIKE THIS EVENT TO LOAD!
-OnHour05:
-OnHour09:
-OnHour14:
-OnHour17:
-OnHour20:
-OnHour23:
+//OnHour02: //CHANGE THIS TO THE HOUR YOU WOULD LIKE THIS EVENT TO LOAD!
+//OnHour23:
+OnMinute31:
 	set $@ran, rand(1,7);
 	if ($@ran == 7) set .Map$,"hugel";
 	if ($@ran == 6) set .Map$,"aldebaran";
@@ -60,8 +56,6 @@ OnHour23:
 	if ($@ran == 2) set .Map$,"morocc";
 	if ($@ran == 1) set .Map$,"veins";
 			set .Event,1;
-			set .SpecialPorings,10;
-			set .NormalPorings,30;
 			monster .Map$,0,0,"Poring",1002,.SpecialPorings,"Poring Summoner::OnSpecialKill";
 			monster .Map$,0,0,"Poring",1002,.NormalPorings,"Poring Summoner::OnNormalKill";
 			set .ItemID,7711;
