@@ -2068,6 +2068,7 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 	struct status_data *mstatus;
 	struct block_list *mbl = NULL;
 	int flag=0;
+	int guardup_lv = 0;
 
 	if(opt&SCO_FIRST) { //Set basic level on respawn.
 		if (md->level > 0 && md->level <= MAX_LEVEL && md->level != md->db->lv)
@@ -2083,7 +2084,8 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 	if (md->special_state.size)
 		flag|=2;
 
-	if (md->guardian_data && md->guardian_data->guardup_lv)
+	if( md->guardian_data && md->guardian_data->g
+		&& (guardup_lv = guild->checkskill(md->guardian_data->g,GD_GUARDUP)) )
 		flag|=4;
 
 	if (battle_config.slaves_inherit_speed && md->master_id)
@@ -2218,10 +2220,10 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 				mstatus->mdef += (gc->defense+2)/3;
 			}
 			if(md->class_ != MOBID_EMPERIUM) {
-				mstatus->batk += mstatus->batk * 10*md->guardian_data->guardup_lv/100;
-				mstatus->rhw.atk += mstatus->rhw.atk * 10*md->guardian_data->guardup_lv/100;
-				mstatus->rhw.atk2 += mstatus->rhw.atk2 * 10*md->guardian_data->guardup_lv/100;
-				mstatus->aspd_rate -= 100*md->guardian_data->guardup_lv;
+				mstatus->batk += mstatus->batk * 10*guardup_lv/100;
+				mstatus->rhw.atk += mstatus->rhw.atk * 10*guardup_lv/100;
+				mstatus->rhw.atk2 += mstatus->rhw.atk2 * 10*guardup_lv/100;
+				mstatus->aspd_rate -= 100*guardup_lv;
 			}
 	}
 
@@ -3411,6 +3413,8 @@ int status_calc_npc_(struct npc_data *nd, enum e_status_calc_opt opt) {
 void status_calc_regen(struct block_list *bl, struct status_data *st, struct regen_data *regen) {
 	struct map_session_data *sd;
 	int val, skill_lv, reg_flag;
+	nullpo_retv(bl);
+	nullpo_retv(st);
 
 	if( !(bl->type&BL_REGEN) || !regen )
 		return;
@@ -5980,15 +5984,18 @@ int status_get_guild_id(struct block_list *bl) {
 		if (((TBL_PET*)bl)->msd)
 			return ((TBL_PET*)bl)->msd->status.guild_id;
 		break;
-	case BL_MOB: {
+	case BL_MOB:
+	{
 		struct map_session_data *msd;
 		struct mob_data *md = (struct mob_data *)bl;
-		if (md->guardian_data)	//Guardian's guild [Skotlex]
-			return md->guardian_data->guild_id;
-		if (md->special_state.ai && (msd = map->id2sd(md->master_id)) != NULL)
+		if( md->guardian_data ) { //Guardian's guild [Skotlex]
+			// Guardian guild data may not been available yet, castle data is always set
+			return (md->guardian_data->g)?md->guardian_data->g->guild_id:md->guardian_data->castle->guild_id;
+		}
+		if( md->special_state.ai && (msd = map->id2sd(md->master_id)) != NULL )
 			return msd->status.guild_id; //Alchemist's mobs [Skotlex]
-				 }
-				 break;
+		break;
+	}
 	case BL_HOM:
 		if (((TBL_HOM*)bl)->master)
 			return ((TBL_HOM*)bl)->master->status.guild_id;
@@ -6024,7 +6031,7 @@ int status_get_emblem_id(struct block_list *bl) {
 		struct map_session_data *msd;
 		struct mob_data *md = (struct mob_data *)bl;
 		if (md->guardian_data)	//Guardian's guild [Skotlex]
-			return md->guardian_data->emblem_id;
+			return (md->guardian_data->g) ? md->guardian_data->g->emblem_id:0;
 		if (md->special_state.ai && (msd = map->id2sd(md->master_id)) != NULL)
 			return msd->guild_emblem_id; //Alchemist's mobs [Skotlex]
 				 }
@@ -8095,22 +8102,25 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				}
 				break;
 
-			case SC_COMBOATTACK: {
+			case SC_COMBOATTACK:
+			{
 				//val1: Skill ID
 				//val2: When given, target (for autotargetting skills)
 				//val3: When set, this combo time should NOT delay attack/movement
+				//val3: If set to 2 this combo will delay ONLY attack
 				//val3: TK: Last used kick
 				//val4: TK: Combo time
 				struct unit_data *ud = unit->bl2ud(bl);
-				if (ud && !val3) {
+				if( ud && (!val3 || val3 == 2) ) {
 					tick += 300 * battle_config.combo_delay_rate/100;
 					ud->attackabletime = timer->gettick()+tick;
-					unit->set_walkdelay(bl, timer->gettick(), tick, 1);
+					if( !val3 )
+						unit->set_walkdelay(bl, timer->gettick(), tick, 1);
 				}
 				val3 = 0;
 				val4 = tick;
-								 }
-								 break;
+				break;
+			}
 			case SC_EARTHSCROLL:
 				val2 = 11-val1; //Chance to consume: 11-skill_lv%
 				break;
@@ -9492,7 +9502,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			{
 				struct unit_data *ud = unit->bl2ud(bl);
 				if( ud )
-					ud->state.running = unit->run(bl);
+					ud->state.running = unit->run(bl, NULL, SC_RUN);
 			}
 			break;
 		case SC_CASH_BOSS_ALARM:
@@ -9511,7 +9521,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			{
 				struct unit_data *ud = unit->bl2ud(bl);
 				if( ud )
-					ud->state.running = unit->wugdash(bl, sd);
+					ud->state.running = unit->run(bl, sd, SC_WUGDASH);
 			}
 			break;
 		case SC_COMBOATTACK:
