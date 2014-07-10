@@ -1,0 +1,18 @@
+﻿Build started 7/10/2014 9:42:24 AM.
+Project "C:\RTales\trunk\costumeitem\costumeitem.vcxproj" on node 2 (Rebuild target(s)).
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\src\common /I..\3rdparty\msinttypes\include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D _WINDLL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"costumeitem\\" /Fd"costumeitem\\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt ..\src\plugins\costumeitem.c
+  costumeitem.c
+..\src\plugins\costumeitem.c(99): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdio.h(311) : see declaration of 'sscanf'
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\plugins\\costumeitem.dll" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"..\plugins\costumeitem.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"..\plugins\costumeitem.lib" /MACHINE:X86 /SAFESEH /DLL costumeitem\\costumeitem.obj
+     Creating library ..\plugins\costumeitem.lib and object ..\plugins\costumeitem.exp
+  Generating code
+  Finished generating code
+  costumeitem.vcxproj -> C:\RTales\trunk\costumeitem\..\plugins\costumeitem.dll
+Done Building Project "C:\RTales\trunk\costumeitem\costumeitem.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.09
