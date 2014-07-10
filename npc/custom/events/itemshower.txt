@@ -2,10 +2,11 @@
 	OnInit:
 		set .amount, 10; // amount of item to shower
 		set .item_id, 7227; // item id to shower
-		set .map$, "louyang"; // map to shower
+		setarray .Maps$[0],"izlude","geffen","morocc","prontera"; // Possible maps
 		end;
 				
 	OnMinute31:
+		set .map$,.Maps$[rand(getarraysize(.Maps$))];
 		announce ""+.amount+" [" +getitemname(.item_id)+ "] has been dropped from the sky in [" +.map$+ "]. Lets get it before it's gone!",0;
 		while ( .count < .amount ) {
 			do {
