@@ -62,9 +62,10 @@ OnHour23:
 			set .Event,1;
 			monster .Map$,0,0,"Poring",1002,.SpecialPorings,"Poring Summoner::OnSpecialKill";
 			monster .Map$,0,0,"Poring",1002,.NormalPorings,"Poring Summoner::OnNormalKill";
-			set .SpecialPorings[1],.SpecialPorings;
-			set .NormalPorings[1],.NormalPorings;
-			announce "The Poring Hunt has begun!" + .SpecialPorings + "special Porings are lurking around " + .Map$,bc_all;
+			set .SpecialPorings[1],10;
+			set .NormalPorings[1],30;
+			set .ItemID,7711;
+			announce "The Poring Hunt has begun! " + .SpecialPorings + "special Porings are lurking around " + .Map$,bc_all;
 		//	announce "Location: " + .Map$,bc_all;
 		//	announce "Special Porings: " + .SpecialPorings,bc_all;
 		//	announce "Normal Porings: " + .NormalPorings,bc_all;
@@ -82,7 +83,7 @@ OnTimer216000000:
 
 OnSpecialKill:
 	set .SpecialPorings[1],.SpecialPorings[1]-1;
-	announce strcharinfo(0) + " got a " + getitemname(.ItemID) + "!",bc_map;
+	announce strcharinfo(0) + " killed a special poring & got a " + getitemname(.ItemID) + "!",bc_map;
 	getitem .ItemID,1;
 	goto PoringCount;
 
