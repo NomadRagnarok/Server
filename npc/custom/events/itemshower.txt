@@ -2,18 +2,17 @@
 	OnInit:
 		set .amount, 10; // amount of item to shower
 		set .item_id, 7227; // item id to shower
-		setarray @map$[0],"prontera","geffen","louyang";
-		set .maps$, rand( getarraysize( .map$ ) );
+		set .map$, "louyang"; // map to shower
 		end;
 				
 	OnMinute31:
-		announce ""+.amount+" [" +getitemname(.item_id)+ "] has been dropped from the sky in [" +.maps$+ "]. Lets get it before it's gone!",0;
+		announce ""+.amount+" [" +getitemname(.item_id)+ "] has been dropped from the sky in [" +.map$+ "]. Lets get it before it's gone!",0;
 		while ( .count < .amount ) {
 			do {
 				.@x = rand(1,500);
 				.@y = rand(1,500);
-			} while (!checkcell(.maps$,.@x,.@y,cell_chkpass));
-			makeitem .item_id,1,.maps$,.@x,.@y;
+			} while (!checkcell(.map$,.@x,.@y,cell_chkpass));
+			makeitem .item_id,1,.map$,.@x,.@y;
 			set .count, 0;
 		}
 		set .count, 0;
