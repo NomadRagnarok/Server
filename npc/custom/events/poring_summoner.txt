@@ -52,20 +52,20 @@ OnHour17:
 OnHour20:
 OnHour23:
 	set $@ran, rand(1,7);
-	if ($@ran == 7) set .Map$,"dic_fild01";
-	if ($@ran == 6) set .Map$,"dic_fild02";
-	if ($@ran == 5) set .Map$,"izlude";
+	if ($@ran == 7) set .Map$,"hugel";
+	if ($@ran == 6) set .Map$,"aldebaran";
+	if ($@ran == 5) set .Map$,"einbroch";
 	if ($@ran == 4) set .Map$,"payon";
 	if ($@ran == 3) set .Map$,"geffen";
 	if ($@ran == 2) set .Map$,"morocc";
-	if ($@ran == 1) set .Map$,"prontera";
+	if ($@ran == 1) set .Map$,"veins";
 			set .Event,1;
 			monster .Map$,0,0,"Poring",1002,.SpecialPorings,"Poring Summoner::OnSpecialKill";
 			monster .Map$,0,0,"Poring",1002,.NormalPorings,"Poring Summoner::OnNormalKill";
 			set .SpecialPorings,10;
 			set .NormalPorings,30;
 			set .ItemID,7711;
-			announce "The Poring Hunt has begun! " + .SpecialPorings + "special Porings are lurking around " + .Map$,bc_all;
+			announce "The Poring Hunt has begun! " + .SpecialPorings + " special Porings are lurking around " + .Map$,bc_all;
 		//	announce "Location: " + .Map$,bc_all;
 		//	announce "Special Porings: " + .SpecialPorings,bc_all;
 		//	announce "Normal Porings: " + .NormalPorings,bc_all;
