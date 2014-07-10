@@ -5,7 +5,7 @@
 		setarray .map$,"prontera",
 				"geffen",
 				"louyang";
-		set .map$[ rand( getarraysize( .map$ ) ) ]; // map to shower
+		set .maps$[ rand( getarraysize( .map$ ) ) ]; // map to shower
 		end;
 				
 	OnMinute20:
@@ -14,8 +14,8 @@
 			do {
 				.@x = rand(1,500);
 				.@y = rand(1,500);
-			} while (!checkcell(.map$,.@x,.@y,cell_chkpass));
-			makeitem .item_id,1,.map$,.@x,.@y;
+			} while (!checkcell(.maps$,.@x,.@y,cell_chkpass));
+			makeitem .item_id,1,.maps$,.@x,.@y;
 			set .count, 0;
 		}
 		set .count, 0;
