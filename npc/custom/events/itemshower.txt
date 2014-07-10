@@ -4,14 +4,14 @@
 		set .item_id, 7227; // item id to shower
 		set .map$, "prontera"; // map to shower
 		end;
-	OnMinute00:
+	OnMinute30:
+		announce "An [" +getitemname(.item_id)+ "] has been drop from the sky in map [" +.map$+ "]. Lets get it before it gone..",0;
 		while ( .count < .amount ) {
 			do {
 				.@x = rand(1,500);
 				.@y = rand(1,500);
 			} while (!checkcell(.map$,.@x,.@y,cell_chkpass));
 			makeitem .item_id,1,.map$,.@x,.@y;
-			announce "An [" +getitemname(.item_id)+ "] has been drop from the sky in map [" +.map$+ "]. Lets get it before it gone..",0;
 			set .count, 0;
 		}
 		set .count, 0;
