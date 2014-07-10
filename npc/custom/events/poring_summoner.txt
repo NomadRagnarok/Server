@@ -15,12 +15,12 @@ prontera,113,143,4	script	Poring Summoner	99,{
 
 mes "[Poring Summoner]";
 if(getgroupid() < 10) {
-	if(.Event) mes "There is no Poring Summon Event on now.";
+	if(.Event) mes "There is no Poring Hunt Event on now.";
 	else {
-		mes "There is a Poring Summon Event on now!";
-		mes "Location: " + .Map$;
-		mes "Special Porings: " + .SpecialPorings[1];
-		mes "Normal Porings: " + .NormalPorings[0];
+		mes "There is a Poring Hunt happening now!";
+		mes "" + .SpecialPorings + "special Porings are lurking around " + .Map$;
+	//	mes "Special Porings: " + .SpecialPorings[1];
+	//	mes "Normal Porings: " + .NormalPorings[0];
 	}
 	close;
 }
@@ -64,17 +64,17 @@ OnHour23:
 			monster .Map$,0,0,"Poring",1002,.NormalPorings,"Poring Summoner::OnNormalKill";
 			set .SpecialPorings[1],.SpecialPorings;
 			set .NormalPorings[1],.NormalPorings;
-			announce "The Poring Event has begun!",bc_all;
-			announce "Location: " + .Map$,bc_all;
-			announce "Special Porings: " + .SpecialPorings,bc_all;
-			announce "Normal Porings: " + .NormalPorings,bc_all;
+			announce "The Poring Hunt has begun!" + .SpecialPorings + "special Porings are lurking around " + .Map$,bc_all;
+		//	announce "Location: " + .Map$,bc_all;
+		//	announce "Special Porings: " + .SpecialPorings,bc_all;
+		//	announce "Normal Porings: " + .NormalPorings,bc_all;
 			close;
 		case 5:
 			mes "Ending the event now...";
 			goto EndEvent;
 	}
 OnTimer216000000:
-	announce "Poring Summoner has ended. No one killed the Porings.",bc_all;
+	announce "Poring Hunt has ended. No one killed the Porings.",bc_all;
 	killmonster .Map$,"All";
 	set .Event,0;
 	stopnpctimer;
@@ -96,7 +96,7 @@ PoringCount:
 	end;
 
 EndEvent:
-	if(.Event) announce "The Poring Summon Event is now over!",bc_all;
+	if(.Event) announce "The Poring Hunt is now over!",bc_all;
 	killmonster .Map$,"All";
 	set .Event,0;
 	set .SpecialPorings[1],0;
