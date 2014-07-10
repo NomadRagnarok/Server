@@ -128,7 +128,7 @@ v1.0 - First version.
 		}
 		
 		
-	OnClock0100:
+	OnClock1300:
 	OnClock2100:
 		// Start invasion
 		donpcevent strnpcinfo(3) +"::OnEnable";
