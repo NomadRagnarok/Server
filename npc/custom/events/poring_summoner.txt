@@ -18,7 +18,7 @@ if(getgroupid() < 10) {
 	if(.Event) mes "There is no Poring Hunt Event on now.";
 	else {
 		mes "There is a Poring Hunt happening now!";
-		mes "" + .SpecialPorings + "special Porings are lurking around " + .Map$;
+		mes "" + .SpecialPorings + "special Porings are lurking around " + .map;
 	//	mes "Special Porings: " + .SpecialPorings[1];
 	//	mes "Normal Porings: " + .NormalPorings[0];
 	}
@@ -48,21 +48,21 @@ mes "[Poring Summoner]";
 //OnHour23:
 OnMinute31:
 	set $@ran, rand(1,7);
-	if ($@ran == 7) set .Map$,"hugel";
-	if ($@ran == 6) set .Map$,"aldebaran";
-	if ($@ran == 5) set .Map$,"einbroch";
-	if ($@ran == 4) set .Map$,"payon";
-	if ($@ran == 3) set .Map$,"geffen";
-	if ($@ran == 2) set .Map$,"morocc";
-	if ($@ran == 1) set .Map$,"veins";
+	if ($@ran == 7) set .map,"hugel";
+	if ($@ran == 6) set .map,"aldebaran";
+	if ($@ran == 5) set .map,"einbroch";
+	if ($@ran == 4) set .map,"payon";
+	if ($@ran == 3) set .map,"geffen";
+	if ($@ran == 2) set .map,"morocc";
+	if ($@ran == 1) set .map,"veins";
 			set .Event,1;
 			set .ItemID,7711;
-			monster .Map$,0,0,"Poring",1002,.SpecialPorings,"Poring Summoner::OnSpecialKill";
-			monster .Map$,0,0,"Poring",1002,.NormalPorings,"Poring Summoner::OnNormalKill";
+			monster .map,0,0,"Poring",1002,.SpecialPorings,"Poring Summoner::OnSpecialKill";
+			monster .map,0,0,"Poring",1002,.NormalPorings,"Poring Summoner::OnNormalKill";
 			set .SpecialPorings[1],.SpecialPorings;
  			set .NormalPorings[1],.NormalPorings;
-			announce "The Poring Hunt has begun! " + .SpecialPorings + " special Porings are lurking around " + .Map$,bc_all;
-		//	announce "Location: " + .Map$,bc_all;
+			announce "The Poring Hunt has begun! " + .SpecialPorings + " special Porings are lurking around " + .map,bc_all;
+		//	announce "Location: " + .map,bc_all;
 		//	announce "Special Porings: " + .SpecialPorings,bc_all;
 		//	announce "Normal Porings: " + .NormalPorings,bc_all;
 			close;
@@ -72,7 +72,7 @@ OnMinute31:
 	}
 OnTimer216000000:
 	announce "Poring Hunt has ended. No one killed the Porings.",bc_all;
-	killmonster .Map$,"All";
+	killmonster .map,"All";
 	set .Event,0;
 	stopnpctimer;
 	end;
@@ -94,7 +94,7 @@ PoringCount:
 
 EndEvent:
 	if(.Event) announce "The Poring Hunt is now over!",bc_all;
-	killmonster .Map$,"All";
+	killmonster .map,"All";
 	set .Event,0;
 	set .SpecialPorings[1],0;
 	set .NormalPorings[1],0;
