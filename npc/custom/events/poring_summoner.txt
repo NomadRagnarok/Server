@@ -60,10 +60,10 @@ OnHour23:
 	if ($@ran == 2) set .Map$,"morocc";
 	if ($@ran == 1) set .Map$,"veins";
 			set .Event,1;
-			monster .Map$,0,0,"Poring",1002,.SpecialPorings,"Poring Summoner::OnSpecialKill";
-			monster .Map$,0,0,"Poring",1002,.NormalPorings,"Poring Summoner::OnNormalKill";
 			set .SpecialPorings,10;
 			set .NormalPorings,30;
+			monster .Map$,0,0,"Poring",1002,.SpecialPorings,"Poring Summoner::OnSpecialKill";
+			monster .Map$,0,0,"Poring",1002,.NormalPorings,"Poring Summoner::OnNormalKill";
 			set .ItemID,7711;
 			announce "The Poring Hunt has begun! " + .SpecialPorings + " special Porings are lurking around " + .Map$,bc_all;
 		//	announce "Location: " + .Map$,bc_all;
