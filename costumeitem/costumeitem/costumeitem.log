@@ -1,4 +1,4 @@
-﻿Build started 7/10/2014 9:42:24 AM.
+﻿Build started 7/11/2014 1:21:04 PM.
 Project "C:\RTales\trunk\costumeitem\costumeitem.vcxproj" on node 2 (Rebuild target(s)).
 ClCompile:
   C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\src\common /I..\3rdparty\msinttypes\include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D _WINDLL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"costumeitem\\" /Fd"costumeitem\\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt ..\src\plugins\costumeitem.c
@@ -15,4 +15,4 @@ Done Building Project "C:\RTales\trunk\costumeitem\costumeitem.vcxproj" (Rebuild
 
 Build succeeded.
 
-Time Elapsed 00:00:01.09
+Time Elapsed 00:00:01.40
