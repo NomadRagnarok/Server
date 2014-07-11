@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking", "vcproj
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "costumeitem", "costumeitem\costumeitem.vcxproj", "{5374C116-4C20-48D0-995C-BEA4E1CD5DD2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "setbgid", "setbgid\setbgid.vcxproj", "{E51D993F-9DCB-434A-9231-2E7802C3427E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -49,6 +51,10 @@ Global
 		{5374C116-4C20-48D0-995C-BEA4E1CD5DD2}.Debug|Win32.Build.0 = Debug|Win32
 		{5374C116-4C20-48D0-995C-BEA4E1CD5DD2}.Release|Win32.ActiveCfg = Release|Win32
 		{5374C116-4C20-48D0-995C-BEA4E1CD5DD2}.Release|Win32.Build.0 = Release|Win32
+		{E51D993F-9DCB-434A-9231-2E7802C3427E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E51D993F-9DCB-434A-9231-2E7802C3427E}.Debug|Win32.Build.0 = Debug|Win32
+		{E51D993F-9DCB-434A-9231-2E7802C3427E}.Release|Win32.ActiveCfg = Release|Win32
+		{E51D993F-9DCB-434A-9231-2E7802C3427E}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
