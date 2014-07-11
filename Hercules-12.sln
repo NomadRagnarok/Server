@@ -1,6 +1,7 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Windows Desktop
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "char-server", "vcproj-12\char-server.vcxproj", "{D356871D-58E1-450B-967A-E4E9646175AF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "login-server", "vcproj-12\login-server.vcxproj", "{D356871D-58E1-450B-967A-E5E9646175AF}"
@@ -12,10 +13,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-sample", "vcproj-12\plugin-sample.vcxproj", "{E64C56D3-CDFB-483B-900B-A62D216B6D2F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking", "vcproj-12\plugin-HPMHooking.vcxproj", "{745D4A8C-6A68-4721-A43A-D81BF59860A1}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "costumeitem", "costumeitem\costumeitem.vcxproj", "{5374C116-4C20-48D0-995C-BEA4E1CD5DD2}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "setbgid", "setbgid\setbgid.vcxproj", "{E51D993F-9DCB-434A-9231-2E7802C3427E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,14 +44,6 @@ Global
 		{745D4A8C-6A68-4721-A43A-D81BF59860A1}.Debug|Win32.Build.0 = Debug|Win32
 		{745D4A8C-6A68-4721-A43A-D81BF59860A1}.Release|Win32.ActiveCfg = Release|Win32
 		{745D4A8C-6A68-4721-A43A-D81BF59860A1}.Release|Win32.Build.0 = Release|Win32
-		{5374C116-4C20-48D0-995C-BEA4E1CD5DD2}.Debug|Win32.ActiveCfg = Debug|Win32
-		{5374C116-4C20-48D0-995C-BEA4E1CD5DD2}.Debug|Win32.Build.0 = Debug|Win32
-		{5374C116-4C20-48D0-995C-BEA4E1CD5DD2}.Release|Win32.ActiveCfg = Release|Win32
-		{5374C116-4C20-48D0-995C-BEA4E1CD5DD2}.Release|Win32.Build.0 = Release|Win32
-		{E51D993F-9DCB-434A-9231-2E7802C3427E}.Debug|Win32.ActiveCfg = Debug|Win32
-		{E51D993F-9DCB-434A-9231-2E7802C3427E}.Debug|Win32.Build.0 = Debug|Win32
-		{E51D993F-9DCB-434A-9231-2E7802C3427E}.Release|Win32.ActiveCfg = Release|Win32
-		{E51D993F-9DCB-434A-9231-2E7802C3427E}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

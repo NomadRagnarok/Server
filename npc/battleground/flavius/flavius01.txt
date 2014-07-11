@@ -85,7 +85,7 @@ OnReadyCheck:
 		donpcevent "#bat_b01_timer::OnStop";
 		end;
 	}
-	if( .@Guillaume < 1 || .@Croix < 1 )
+	if( .@Guillaume < 10 || .@Croix < 10 )
 		end;
 	set $@FlaviusBG1, 1;
 	set $@FlaviusBG1_Victory, 0;

@@ -98,7 +98,7 @@ aldebaran,136,135,4	duplicate(SmileHelper)	Smile Assistance#alde	4_F_03
 geffen,119,107,4	duplicate(SmileHelper)	Smile Assistance#gef	4_F_03
 moc_ruins,59,154,3	duplicate(SmileHelper)	Smile Assistance#moc	4_F_03
 payon,186,104,5	duplicate(SmileHelper)	Smile Assistance#pay	4_F_03
-prontera,165,237,4	duplicate(SmileHelper)	Smile Assistance#prt	4_F_03
+prontera,157,187,4	duplicate(SmileHelper)	Smile Assistance#prt	4_F_03
 
 //============================================================
 // Old changelog

@@ -543,23 +543,6 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 				return 1;
 			}
 			break;
-		case BS_GREED:
-		case WS_CARTBOOST:
-		case BS_HAMMERFALL:
-		case BS_ADRENALINE:
-		case MC_CARTREVOLUTION:
-		case MC_MAMMONITE:
-		case WS_MELTDOWN:
-		case MG_SIGHT:
-		case TF_HIDING:
-			/**
-			 * These skills cannot be used while in mado gear (credits to Xantara)
-			 **/
-			if( pc_ismadogear(sd) ) {
-				clif->skill_fail(sd,skill_id,USESKILL_FAIL_MADOGEAR_RIDE,0);
-				return 1;
-			}
-			break;
 
 		case SC_MANHOLE:
 		case WM_SOUND_OF_DESTRUCTION:
@@ -1262,7 +1245,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			sc_start(src, bl, SC_STUN, 1 + skill_lv, skill_lv, skill->get_time(skill_id, skill_lv));
 			break;
 		case SR_FALLENEMPIRE:
-			sc_start(src, bl, SC_STOP, 100, skill_lv, skill->get_time(skill_id, skill_lv));
+			sc_start(src, bl, SC_FALLENEMPIRE, 100, skill_lv, skill->get_time(skill_id, skill_lv));
 			break;
 		case SR_WINDMILL:
 			if( dstsd )
@@ -5039,6 +5022,21 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		}
 	}
 
+	// Supportive skills that can't be cast in users with mado
+	if( sd && dstsd && pc_ismadogear(dstsd) ) {
+		switch( skill_id ) {
+			case AL_HEAL:
+			case AL_INCAGI:
+			case AL_DECAGI:
+			case AB_RENOVATIO:
+			case AB_HIGHNESSHEAL:
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_TOTARGET,0);
+				return 0;
+			default:
+				break;
+		}
+	}
+
 	tstatus = status->get_status_data(bl);
 	sstatus = status->get_status_data(src);
 
@@ -5057,10 +5055,6 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case AB_RENOVATIO:
 		case AB_HIGHNESSHEAL:
 		case AL_INCAGI:
-			if( sd && dstsd && pc_ismadogear(dstsd) ){
-				clif->skill_fail(sd,skill_id,USESKILL_FAIL_TOTARGET,0);
-				return 0;
-			}
 		case ALL_RESURRECTION:
 		case PR_ASPERSIO:
 			//Apparently only player casted skills can be offensive like this.
@@ -9461,7 +9455,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			heal = 5 * status->get_lv(&hd->bl) + status->base_matk(&hd->battle_status, status->get_lv(&hd->bl));
 			status->heal(bl, heal, 0, 0);
 			clif->skill_nodamage(src, src, skill_id, skill_lv, clif->skill_nodamage(src, bl, AL_HEAL, heal, 1));
-			status->change_start(src, bl, SC_SILENCE, 100, skill_lv, 0,0,0, skill->get_time(skill_id, skill_lv),1|2|8);
+			status->change_start(src, src, type, 1000, skill_lv, 0, 0, 0, skill->get_time(skill_id,skill_lv), 1|2|8);
+			status->change_start(src, bl,  type, 1000, skill_lv, 0, 0, 0, skill->get_time(skill_id,skill_lv), 1|2|8);
 		}
 			break;
 
@@ -12674,6 +12669,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 	// Check the skills that can be used while mounted on a warg
 	if( pc_isridingwug(sd) ) {
 		switch( skill_id ) {
+			// Hunter skills
 			case HT_SKIDTRAP:
 			case HT_LANDMINE:
 			case HT_ANKLESNARE:
@@ -12683,43 +12679,39 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			case HT_FREEZINGTRAP:
 			case HT_BLASTMINE:
 			case HT_CLAYMORETRAP:
-			case HT_SPRINGTRAP:
-			case RA_DETONATOR:
-			case RA_CLUSTERBOMB:
 			case HT_TALKIEBOX:
+			// Ranger skills
+			case RA_DETONATOR:
+			case RA_ELECTRICSHOCKER:
+			case RA_CLUSTERBOMB:
+			case RA_MAGENTATRAP:
+			case RA_COBALTTRAP:
+			case RA_MAIZETRAP:
+			case RA_VERDURETRAP:
 			case RA_FIRINGTRAP:
 			case RA_ICEBOUNDTRAP:
 			case RA_WUGDASH:
 			case RA_WUGRIDER:
 			case RA_WUGSTRIKE:
+			// Other
+			case BS_GREED:
 				break;
 			default: // in official there is no message.
 				return 0;
 		}
 
 	}
+
+	// Check the skills that can be used whiled using mado
 	if( pc_ismadogear(sd) ) {
-		switch( skill_id ) { //None Mado skills are unusable when Mado is equipped. [Jobbie]
-			case BS_REPAIRWEAPON:
-			case WS_MELTDOWN:
-			case BS_HAMMERFALL:
-			case WS_CARTBOOST:
-			case BS_ADRENALINE:
-			case WS_WEAPONREFINE:
-			case BS_WEAPONPERFECT:
-			case WS_CARTTERMINATION:
-			case BS_OVERTHRUST:
-			case WS_OVERTHRUSTMAX:
-			case BS_MAXIMIZE:
-			case BS_ADRENALINE2:
-			case BS_UNFAIRLYTRICK:
-			case BS_GREED:
-				clif->skill_fail(sd,skill_id,USESKILL_FAIL_MADOGEAR,0);
-				return 0;
-			default: //Only Mechanic exclusive skill can be used.
-				break;
+		if( !(skill_id > NC_MADOLICENCE && skill_id <= NC_DISJOINT)
+			&& skill_id != NC_MAGMA_ERUPTION
+			&& skill_id != BS_GREED ) {
+			clif->skill_fail(sd,skill_id,USESKILL_FAIL_MADOGEAR,0);
+			return 0;
 		}
 	}
+
 	if( skill_lv < 1 || skill_lv > MAX_SKILL_LEVEL )
 		return 0;
 	

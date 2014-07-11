@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _COMMON_MMO_H_
-#define _COMMON_MMO_H_
+#ifndef COMMON_MMO_H
+#define COMMON_MMO_H
 
 #include <time.h>
 
@@ -105,7 +105,7 @@
 //Official Limit: 2.1b ( the var that stores the money doesn't go much higher than this by default )
 #define MAX_BANK_ZENY 2100000000
 
-#define MAX_LEVEL 99
+#define MAX_LEVEL 175
 #define MAX_FAME 1000000000
 #define MAX_CART 100
 #define MAX_SKILL 1478
@@ -932,4 +932,4 @@ enum e_pc_reg_loading {
 #error MAX_ZENY is too big
 #endif
 
-#endif /* _COMMON_MMO_H_ */
+#endif /* COMMON_MMO_H */

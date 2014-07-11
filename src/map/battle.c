@@ -6027,13 +6027,6 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 	if( (s_bl = battle->get_master(src)) == NULL )
 		s_bl = src;
 
-	if ( s_bl->type == BL_PC && t_bl->type == BL_MOB ) {
-		TBL_PC *sd = BL_CAST( BL_PC, s_bl );
-		if ( ( ( (TBL_MOB*)target )->class_ == 1288 && !strcmp( mapindex_id2name(sd->mapindex), "guild_vs1" ) ) &&
-			( sd->status.guild_id == mapreg->readreg( script->add_str("$koegid") ) || battle_getcurrentskill(src) > 0 ) )
-		return 0;
-	}
-
 	if ( s_bl->type == BL_PC ) {
 		switch( t_bl->type ) {
 			case BL_MOB: // Source => PC, Target => MOB
@@ -6157,7 +6150,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 			struct mob_data *md = BL_CAST(BL_MOB, t_bl);
 
 			if( !((map->agit_flag || map->agit2_flag) && map->list[m].flag.gvg_castle)
- 				&& md->guardian_data && (md->guardian_data->g || md->guardian_data->castle->guild_id) )
+				&& md->guardian_data && (md->guardian_data->g || md->guardian_data->castle->guild_id) )
 				return 0; // Disable guardians/emperiums owned by Guilds on non-woe times.
 			break;
 		}
@@ -6218,7 +6211,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 		{
 			struct mob_data *md = BL_CAST(BL_MOB, s_bl);
 			if( !((map->agit_flag || map->agit2_flag) && map->list[m].flag.gvg_castle)
- 				&& md->guardian_data && (md->guardian_data->g || md->guardian_data->castle->guild_id) )
+				&& md->guardian_data && (md->guardian_data->g || md->guardian_data->castle->guild_id) )
 				return 0; // Disable guardians/emperium owned by Guilds on non-woe times.
 
 			if( !md->special_state.ai )
@@ -6364,7 +6357,7 @@ bool battle_check_range(struct block_list *src, struct block_list *bl, int range
 	return path->search_long(NULL,src->m,src->x,src->y,bl->x,bl->y,CELL_CHKWALL);
 }
 
-static const struct _battle_data {
+static const struct battle_data {
 	const char* str;
 	int* val;
 	int defval;

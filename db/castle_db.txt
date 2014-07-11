@@ -72,5 +72,3 @@
 31,arug_cas03,Horn,Manager#arug_cas03,1               // kRO : Horn
 32,arug_cas04,Gefn,Manager#arug_cas04,1               // kRO : Gefn
 33,arug_cas05,Bandis,Manager#arug_cas05,1             // kRO : Bandis
-
-100,guild_vs1,King of Emperium Hill,koe,1

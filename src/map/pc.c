@@ -6230,7 +6230,7 @@ int pc_maxparameterincrease(struct map_session_data* sd, int type) {
  * Subtracts status points according to the cost of the increased stat points.
  *
  * @param sd       The target character.
- * @param type     The stat to change (see enum _sp)
+ * @param type     The stat to change (see enum status_point_types)
  * @param increase The stat increase (strictly positive) amount.
  * @retval true  if the stat was increased by any amount.
  * @retval false if there were no changes.
@@ -6289,7 +6289,7 @@ bool pc_statusup(struct map_session_data* sd, int type, int increase) {
  * Does not subtract status points for the cost of the modified stat points.
  *
  * @param sd   The target character.
- * @param type The stat to change (see enum _sp)
+ * @param type The stat to change (see enum status_point_types)
  * @param val  The stat increase (or decrease) amount.
  * @return the stat increase amount.
  * @retval 0 if no changes were made.
@@ -8118,19 +8118,18 @@ int pc_setriding(TBL_PC* sd, int flag)
 	return 0;
 }
 
-/*==========================================
- * Give player a mado
- *------------------------------------------*/
-int pc_setmadogear(TBL_PC* sd, int flag)
-{
-	if( flag ){
-		if( pc->checkskill(sd,NC_MADOLICENCE) > 0 )
+/**
+ * Gives player a mado
+ * @param flag 1 Set mado
+ **/
+void pc_setmadogear( struct map_session_data *sd, int flag ) {
+	if( flag ) {
+		if( (sd->class_&MAPID_THIRDMASK) == MAPID_MECHANIC )
 			pc->setoption(sd, sd->sc.option|OPTION_MADOGEAR);
-	} else if( pc_ismadogear(sd) ){
-			pc->setoption(sd, sd->sc.option&~OPTION_MADOGEAR);
-	}
+	} else if( pc_ismadogear(sd) )
+		pc->setoption(sd, sd->sc.option&~OPTION_MADOGEAR);
 
-	return 0;
+	return;
 }
 
 /**
@@ -8154,7 +8153,8 @@ bool pc_can_attack( struct map_session_data *sd, int target_id ) {
 		sd->sc.data[SC_TRICKDEAD] ||
 		(sd->sc.data[SC_SIREN] && sd->sc.data[SC_SIREN]->val2 == target_id) ||
 		sd->sc.data[SC_BLADESTOP] ||
-		sd->sc.data[SC_DEEP_SLEEP] )
+		sd->sc.data[SC_DEEP_SLEEP] ||
+		sd->sc.data[SC_FALLENEMPIRE] )
 			return false;
 
 	return true;

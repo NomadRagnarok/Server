@@ -4,10 +4,9 @@
 //-----------------------------------------
 //grf: C:\Program Files\Gravity\RO\rdata.grf
 //grf: C:\Program Files\Gravity\RO\data.grf
-grf: C:\Program Files\Gravity\RO\ragnaroktales.grf
 
 //-----------------------------------------
 // Data Directory
 // Use the base folder, not the data\ path.
 //-----------------------------------------
-data_dir: C:\
+//data_dir: C:\Program Files\Gravity\RO\

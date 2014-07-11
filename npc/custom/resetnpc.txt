@@ -13,14 +13,14 @@
 //= 1.3 All statuses removed upon skill reset. [Euphy]
 //============================================================
 
-prontera,146,199,3	script	Leia	803,{
+prontera,150,193,4	script	Reset Girl	4_F_TELEPORTER,{
 
 	set .@ResetStat,5000;	// Zeny for stat reset
 	set .@ResetSkill,5000;	// Zeny for skill reset
 	set .@ResetBoth,9000;	// Zeny for resetting both together
 
-	mes "[^FF3355Leia^000000]";
-	mes "Hi, I'm Leia - the Reset Manager.";
+	mes "[Reset Girl]";
+	mes "I am the Reset Girl.";
 	mes "Reset Stats: "+ .@ResetStat +"z";
 	mes "Reset Skills: "+ .@ResetSkill +"z";
 	mes "Reset Both: "+ .@ResetBoth +"z";
@@ -39,7 +39,7 @@ prontera,146,199,3	script	Leia	803,{
 		mes "There you go!";
 		close;
 	case 2:
-		mes "[^FF3355Leia^000000]";
+		mes "[Reset Girl]";
 		if (Zeny < .@ResetStat) {
 			mes "Sorry, you don't have enough Zeny.";
 			close;
@@ -49,7 +49,7 @@ prontera,146,199,3	script	Leia	803,{
 		mes "There you go!";
 		close;
 	case 3:
-		mes "[^FF3355Leia^000000]";
+		mes "[Reset Girl]";
 		if (Zeny < .@ResetBoth) {
 			mes "Sorry, you don't have enough Zeny.";
 			close;
