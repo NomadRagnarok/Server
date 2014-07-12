@@ -1,0 +1,10 @@
+-	script	PoringCatcherController	-1,{
+
+OnInit:
+	disablenpc "Poring Chase Warper";
+	end;
+
+OnClock1833: // put all the start timer here
+	enablenpc "Poring Chase Warper";
+	end;
+}

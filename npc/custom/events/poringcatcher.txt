@@ -1,0 +1,150 @@
+//======Name========================================
+// Poring Chase Event
+//======Version=====================================
+// 1.0
+//======Author(s)===================================
+// Sandbox, Clydelion
+//======Comments====================================
+// In loving memory of AstralRO
+//==================================================
+prontera,155,224,3	script	Poring Chase Warper	723,{
+	if ( getgmlevel() >= .gmsetting ) {
+		if ( !.start ) {
+			mes "start the event ?";
+			next;
+			if ( select( "Yes", "No" ) == 2 ) close;
+			donpcevent strnpcinfo(0)+"::OnStart";
+			close;
+		}
+		else {
+			mes "Join or Abort the event ?";
+			next;
+			if ( select( "Join", "Abort" ) == 1 ) {
+				warp "poring_c01", rand(102,104), 101;
+				end;
+			}
+			.skip = 1;
+			awake strnpcinfo(0);
+		//	donpcevent strnpcinfo(0)+"::OnEnd";
+			close;
+		}
+	}
+	else if ( .start == 1 ) {
+		mes "Do you want to join the Poring Chase Event?";
+		select ( "Yes" );
+		warp "poring_c01", rand(102,104), 101;
+		end;
+	}
+	else if ( .start == 2 ) {
+		mes "Too late, the event has already started";
+		close;
+	}
+	mes "No Event right now";
+	close;
+
+OnInit:
+	.eventlasting = 30*60; // how many seconds the event will last ? default : 30*60 = 30 minutes
+	.gmsetting = 60; // in which level the GMs can control this event ?
+	.fakes = 1; // the amount of fakes poring * 12 * number of players in the maps
+	
+	setarray .rewardwin, 7711, 1; // edit the reward items here
+
+	.seconds = 1000; // for debug purpose only, how many mili-second = 1 second ?
+
+	bindatcmd "poring_catcher", strnpcinfo(0)+"::OnStart", .gmsetting, 100;
+	.rewardwinsize = getarraysize( .rewardwin );
+	getmapxy .Map$, .x, .y, 1;
+	mapwarp "poring_c01", .Map$, .x, .y;
+	end;	
+
+OnClock1834: // put all the start timer here
+OnClock2000:
+OnStart:
+	.start = 1;
+	announce "Poring Chase Event is about to start.",bc_all,0xFF7F50;
+	sleep 1 * .seconds * !.skip;
+	announce "For those who want to join, go to Prontera - North of the fountain.",bc_all,0xFF7F50; //Edit to where would you place the warper
+	sleep 1 * .seconds * !.skip;
+	announce "The portal would be open for 1 minute",bc_all,0xFF7F50;
+	sleep 30 * .seconds * !.skip;
+	announce "30 seconds left before the portal for Poring Chase event disappear.",bc_all,0xFF7F50;
+	sleep 30 * .seconds * !.skip;
+	announce "Poring Chase Event Portal is now Closed.",bc_all,0xFF7F50;
+	if ( !getmapusers( "poring_c01" ) ) goto OnEnd;
+	.start = 2;
+	mapannounce "poring_c01","We are about to start the Poring Chase Event.",bc_blue;
+	sleep 1 * .seconds * !.skip;
+	mapannounce "poring_c01","Rules are simple:",bc_blue;
+	sleep 1 * .seconds * !.skip;
+	mapannounce "poring_c01","In a few seconds we're going to spawn tons of porings..",bc_blue;
+	sleep 1 * .seconds * !.skip;
+	mapannounce "poring_c01","..All you need to do is kill the Poring with the right name..",bc_blue;
+	sleep 1 * .seconds * !.skip;
+	mapannounce "poring_c01","..Which would be Poring.",bc_blue;
+	sleep 1 * .seconds * !.skip;
+	mapannounce "poring_c01","If you kill the wrong one, you're out!",bc_blue;
+	sleep 3 * .seconds * !.skip;
+	mapannounce "poring_c01","That's it.. Now let's get this on!",bc_blue;
+	sleep 3 * .seconds * !.skip;
+	mapannounce "poring_c01","Ready...",bc_blue;
+	sleep 1 * .seconds * !.skip;
+	mapannounce "poring_c01","Get Set..",bc_blue;
+	sleep 1 * .seconds * !.skip;
+	mapannounce "poring_c01","Go!",bc_blue;
+	sleep 1 * .seconds * !.skip;
+	areamonster "poring_c01",95,108,113,87,"Poring",1002,1, strnpcinfo(0)+"::OnCorrectKilled";
+	areamonster "poring_c01",95,108,113,87,"Poking",1002,3*getmapusers("poring_c01"), strnpcinfo(0)+"::OnFakeKilled";
+	areamonster "poring_c01",95,108,113,87,"Poiring",1002,3*getmapusers("poring_c01"), strnpcinfo(0)+"::OnFakeKilled";
+	areamonster "poring_c01",95,108,113,87,"Poling",1002,3*getmapusers("poring_c01"), strnpcinfo(0)+"::OnFakeKilled";
+	areamonster "poring_c01",95,108,113,87,"Porng",1002,3*getmapusers("poring_c01"), strnpcinfo(0)+"::OnFakeKilled";
+	areamonster "poring_c01",95,108,113,87,"pH0ur1n6",1002,3*getmapusers("poring_c01"), strnpcinfo(0)+"::OnFakeKilled";
+	areamonster "poring_c01",95,108,113,87,"P0ring",1002,3*getmapusers("poring_c01"), strnpcinfo(0)+"::OnFakeKilled";
+	areamonster "poring_c01",95,108,113,87,"Porong",1002,3*getmapusers("poring_c01"), strnpcinfo(0)+"::OnFakeKilled";
+	areamonster "poring_c01",95,108,113,87,"Powing",1002,3*getmapusers("poring_c01"), strnpcinfo(0)+"::OnFakeKilled";
+	areamonster "poring_c01",95,108,113,87,"Poriing",1002,3*getmapusers("poring_c01"), strnpcinfo(0)+"::OnFakeKilled";
+	areamonster "poring_c01",95,108,113,87,"Boring",1002,3*getmapusers("poring_c01"), strnpcinfo(0)+"::OnFakeKilled";
+	areamonster "poring_c01",95,108,113,87,"Lolwut!?",1002,3*getmapusers("poring_c01"), strnpcinfo(0)+"::OnFakeKilled";
+	areamonster "poring_c01",95,108,113,87,"Kill me to win!",1002,3*getmapusers("poring_c01"), strnpcinfo(0)+"::OnFakeKilled";
+	sleep .eventlasting * .seconds * !.skip;
+	.skip = 0;
+	if ( getmapusers( "poring_c01" ) ) goto OnEnd;
+	end;
+OnEnd:
+	announce "No one won the Poring Chase Event!",bc_all,0xFF7F50;
+	killmonsterall "poring_c01";
+	mapwarp "poring_c01", .Map$, .x, .y;
+	.start = 0;
+	disablenpc "Poring Chase Warper";
+	end;
+OnCorrectKilled:
+	for ( .@i = 0; .@i < .rewardwinsize; .@i += 2 )
+		getitem .rewardwin[ .@i ], .rewardwin[ .@i +1 ];
+	announce strcharinfo(0) +" won the Poring Chase Event!",bc_all,0xFF7F50;
+	killmonsterall "poring_c01";
+	mapwarp "poring_c01", .Map$, .x, .y;
+	.start = 0;
+	awake strnpcinfo(0);
+	disablenpc "Poring Chase Warper";
+	end;
+OnFakeKilled:
+//	dispbottom "You killed the wrong Poring! Yerrrrrrrrrrrr out!";
+//	warp .Map$, .x, .y;
+//	if ( !getmapusers( "poring_c01" ) ) goto OnEnd;
+	dispbottom "You killed the wrong Poring!";
+	sc_start2 SC_FREEZE, 9000,0,10000; // 9 seconds to freeze
+//	sc_start2 SC_STONE, 9000,0,10000;
+//	sc_start2 SC_STUN, 9000,0,10000;
+//	sc_start2 SC_SLEEP, 9000,0,10000;
+	end;
+}
+
+poring_c01	mapflag	nopenalty
+poring_c01	mapflag	noloot
+poring_c01	mapflag	noskill
+poring_c01	mapflag	nowarpto
+poring_c01	mapflag	nowarp
+poring_c01	mapflag	noteleport
+poring_c01	mapflag	nomemo
+poring_c01	mapflag	nosave	SavePoint
+poring_c01	mapflag	nobranch
+poring_c01	mapflag	nodrop
