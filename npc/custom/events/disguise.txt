@@ -1,5 +1,5 @@
 //===== Hercules Script ======================================
-//= Disguise Event
+//= Master of Disguise
 //===== By: ==================================================
 //= GmOcean
 //===== Current Version: =====================================
@@ -9,20 +9,21 @@
 //= 5.0 Last update by GmOcean.
 //= 5.1 Cleaned and standardized, mostly. [Euphy]
 //============================================================
-
-prontera,160,155,4	script	Disguise Event	4_M_NFDEADMAN,{
+prontera,237,87,4	script	Master of Disguise	548,{
 
 	// Currently set to run every two hours.
 	// To change times, edit the OnClock labels below.
 
 	set .@GMLevel,60;	// GM level required to access NPC.
-	set .@n$,"[^0000FFDisguise NPC^000000]";
+	set .@n$,"[^0000FFMaster of Disguise^000000]";
 
-	if (getgmlevel()>=.@GMLevel) {
+	if (getgmlevel()>=.@GMLevel) 
+	{
 		mes .@n$;
 		mes "Select an option.";
 		next;
-		switch(select("Turn ON/OFF Event:Event Settings")) {
+		switch(select("Turn ON/OFF Event:Event Settings")) 
+		{
 		case 1:
 			mes .@n$;
 			if (.EventON) {
@@ -36,15 +37,14 @@ prontera,160,155,4	script	Disguise Event	4_M_NFDEADMAN,{
 			if (.EventON) {
 				set .EventON,0; set .Timer,0;
 				setnpctimer 0; stopnpctimer;
-				announce "A GM has decided to turn the Disguise Event off. As a result no further prizes will be given.",bc_map | bc_blue;
+				announce "A GM has decided to turn the Master of Disguise off. As a result no further prizes will be given.",bc_map | bc_blue;
 				deletepset 1;
-				setnpcdisplay "Disguise Event", 4_M_NFDEADMAN;
+				setnpcdisplay "Master of Disguise", 548;
 				close;
 			}
 			set .EventON,1; set .Timer,1; setnpctimer 0; initnpctimer;
 			set .ResetCounter,.ResetCounter+1;
-			announce "The Disguise Event will begin in 3 minutes.",bc_all | bc_blue;
-			announce "The Event is being held in Prontera.",bc_all | bc_blue;
+			announce "The Master of Disguise Event will begin in 3 minutes",bc_all | bc_blue;
 			close;
 		case 2:
 			mes .@n$;
@@ -124,7 +124,7 @@ OnInit:
 	set .Winner,0;
 	set .ResetCounter,0;
 	set .Rounds,10;
-	set .Prize,512;
+	set .Prize,7711;
 	set .PrizeAmt,1;
 	set .Rule,1;
 	setarray .MVP[0], OSIRIS, BAPHOMET, DOPPELGANGER, MISTRESS, GOLDEN_BUG, ORK_HERO, DRAKE, EDDGA, MAYA, MOONLIGHT,
@@ -132,7 +132,7 @@ OnInit:
 		DARK_SNAKE_LORD, INCANTATION_SAMURAI, PORING_V, AMON_RA, TAO_GUNKA, RSX_0806, BACSOJIN_, B_SEYREN, B_EREMES, B_HARWORD,
 		B_MAGALETA, B_SHECIL, B_KATRINN, B_YGNIZEM, APOCALIPS_H, LADY_TANEE, THANATOS, DETALE, KIEL_, RANDGRIS,
 		GLOOMUNDERNIGHT, KTULLANUX, ATROCE, G_MAGALETA_, IFRIT, FALLINGBISHOP, BEELZEBUB_, GOPINICH, MOROCC_, KUBLIN,
-		S_NYDHOG, BOITATA, QUEEN_SCARABA, LOST_DRAGON, LEAK, I_QUEEN_SCARABA;
+		S_NYDHOG, BOITATA;
 	set .Blacklist$, "1003,1006,1017,1021,1022,1027,1043,1075,1136,1137,1168," +
 	    "1171,1172,1173,1181,1187,1210,1217,1218,1222,1223,1224,1225,1226,1227,1228," +
 	    "1233,1284,1407,1411,1414,1495,1501,1900,1996,2000,2001,2002,2003,2004," +
@@ -156,12 +156,12 @@ OnClock1600:
 OnClock1800:
 OnClock2000:
 OnClock2200:
+OnClock1347:
 	set .ResetCounter,.ResetCounter+1;
 	set .EventON,1;
 	set .Timer,1;
 	set .Wait,1;
-	announce "The Disguise Event will begin in 3 minutes.",bc_all | bc_blue;
-	announce "The Event is being held in Prontera.",bc_all | bc_blue;
+	announce "The Master of Disguise will begin in 3 minutes.",bc_all | bc_blue;
 	setnpctimer 0;
 	initnpctimer;
 	end;
@@ -173,7 +173,7 @@ OnTimer10000:
 OnTimer30000:
 	if (.Timer) end;
 	set .Change,0;
-	setnpcdisplay "Disguise Event", 4_M_NFDEADMAN;
+	setnpcdisplay "Master of Disguise", 548;
 	npctalk "You took too long to guess what I was. Please wait 10 seconds while I disguise again.";
 	specialeffect 725;
 	set $MonsterName$,"";
@@ -182,20 +182,29 @@ OnTimer30000:
 	setnpctimer 0;
 	initnpctimer;
 	end;
+OnTimer20000:
+	if (.Timer!=1) end;
+	announce "Visit the Master of Disguise at South East of Prontera City.",bc_all | bc_blue;
+	end;
 OnTimer60000:
 	if (.Timer!=1) end;
-	announce "The Disguise Event will begin in 2 minutes.",bc_all | bc_blue;
-	announce "The Event is being held in Prontera.",bc_all | bc_blue;
+	announce "The Master of Disguise Event will begin in 2 minutes.",bc_all | bc_blue;
+	end;
+OnTimer80000:
+	if (.Timer!=1) end;
+	announce "Visit the Master of Disguise at South East of Prontera City.",bc_all | bc_blue;
 	end;
 OnTimer120000:
 	if (.Timer!=1) end;
-	announce "The Disguise Event will begin 1 minute.",bc_all | bc_blue;
-	announce "The Event is being held in Prontera.",bc_all | bc_blue;
+	announce "The Master of Disguise Event will begin 1 minute.",bc_all | bc_blue;
+	end;
+OnTimer140000:
+	if (.Timer!=1) end;
+	announce "Visit the Master of Disguise at South East of Prontera City.",bc_all | bc_blue;
 	end;
 OnTimer180000:
 	if (.Timer!=1) end;
-	announce "The Disguise Event has begun!",bc_all | bc_blue;
-	announce "The Event is being held in Prontera.",bc_all | bc_blue;
+	announce "The Master of Disguise Event has begun!",bc_all | bc_blue;
 	set .Timer,0; stopnpctimer;
 	setnpctimer 0; initnpctimer;
 iDisguise:
@@ -215,8 +224,8 @@ iDisguise:
 	deletepset 1;
 	defpattern 1,"([^:]+):.\\s*"+$MonsterName$+".*", "iCorrect";
 	activatepset 1;
-	if (.Rule==1) setnpcdisplay "Disguise Event",.@monster;
-	if (.Rule==2) setnpcdisplay "Disguise Event",.MVP[.@monster];
+	if (.Rule==1) setnpcdisplay "Master of Disguise",.@monster;
+	if (.Rule==2) setnpcdisplay "Master of Disguise",.MVP[.@monster];
 	set .Change,1;
 	setnpctimer 0;
 	end;
@@ -232,13 +241,14 @@ iCorrect:
 	getitem .Prize,.PrizeAmt;
 	announce strcharinfo(0)+" is correct! I was disguised as: "+$MonsterName$+"",bc_map | bc_blue;
 	if (.RoundCount>=.Rounds) {
-		setnpcdisplay "Disguise Event", 4_M_NFDEADMAN;
+		setnpcdisplay "Master of Disguise", 548;
 		set .RoundCount,0; set .Change,0; set .EventON,0;
 		setnpctimer 0; stopnpctimer;
-		npctalk "Thank you all for playing. That was the last round of the Disguise Event. Come play again later.";
+		npctalk "Thank you all for playing. That was the last round of the Master of Disguise. Come play again later.";
+		announce "The Master of Disguise Event has ended.",bc_all | bc_blue;
 		end;
 	}
-	setnpcdisplay "Disguise Event", 4_M_NFDEADMAN;
+	setnpcdisplay "Master of Disguise", 548;
 	set .Change,0;
 	setnpctimer 0;
 	end;
