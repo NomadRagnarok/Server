@@ -1,0 +1,72 @@
+//===== Hercules Script =======================================
+//= Poring Summoner
+//===== Created By: ===========================================
+//= Mysterious
+//===== Current Version: ======================================
+//= 1.2
+//===== Link: =================================================
+//= Old - http://www.eathena.ws/board/index.php?showtopic=236779
+//===== Description: ==========================================
+//= Basically what this event does is summon a set of Normal
+//= and Special Porings. Normal Porings don't drop anything,
+//= Special Porings do.
+//=============================================================
+-	script	Poring Summoner	99,{
+
+OnClock2251:
+OnHour02: //CHANGE THIS TO THE HOUR YOU WOULD LIKE THIS EVENT TO LOAD!
+OnHour05:
+OnHour09:
+OnHour14:
+OnHour17:
+OnHour20:
+OnHour23:
+	set .ItemID,7711;
+	set .SpecialPorings,10;
+	set .NormalPorings,20;
+	set $@ran, rand(1,7);
+	if ($@ran == 7) set .Map$,"lighthalzen";
+	if ($@ran == 6) set .Map$,"rachel";
+	if ($@ran == 5) set .Map$,"louyang";
+	if ($@ran == 4) set .Map$,"payon";
+	if ($@ran == 3) set .Map$,"geffen";
+	if ($@ran == 2) set .Map$,"morocc";
+	if ($@ran == 1) set .Map$,"alberta";
+			set .Event,1;
+			monster .Map$,0,0,"Baphomet Jr.",1729,.SpecialPorings,"Poring Summoner::OnSpecialKill";
+			monster .Map$,0,0,"Baphomet Jr. ",1729,.NormalPorings,"Poring Summoner::OnNormalKill";
+			set .SpecialPorings[1],.SpecialPorings;
+			set .NormalPorings[1],.NormalPorings;
+			announce "The Baphomet Jr. Hunt has begun at " + .Map$,bc_all;
+			end;
+
+OnTimer216000000:
+	announce "Baphomet Jr. Hunt has ended.",bc_all;
+	killmonster .Map$,"All";
+	set .Event,0;
+	stopnpctimer;
+	end;
+
+OnSpecialKill:
+	set .SpecialPorings[1],.SpecialPorings[1]-1;
+	announce strcharinfo(0) + " got an " + getitemname(.ItemID) + "!",bc_map;
+	getitem .ItemID,1;
+	goto PoringCount;
+
+OnNormalKill:
+	set .NormalPorings[1],.NormalPorings[1]-1;
+	goto PoringCount;
+
+PoringCount:
+	announce "Special Baphomet Jr.: " + .SpecialPorings[1] + " || Normal Baphomet Jr.: " + .NormalPorings[1],bc_map;
+	if(!.SpecialPorings[1]) goto EndEvent;
+	end;
+
+EndEvent:
+	if(.Event) announce "The Baphomet Jr. Hunt is now over!",bc_all;
+	killmonster .Map$,"All";
+	set .Event,0;
+	set .SpecialPorings[1],0;
+	set .NormalPorings[1],0;
+	close;
+}
