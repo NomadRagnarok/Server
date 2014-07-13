@@ -19,7 +19,7 @@
 	ymirforest,106,113,178,185	monster	Spore	1014,20,0,0,0;
 	ymirforest,106,113,178,185	monster	Frog	1012,20,0,0,0;
 	ymirforest,106,113,178,185	monster	Poporing	1031,20,0,0,0
-	
+
 ymirforest,145,84,4	script	Norma Beatty	558,{
 
     if( .NoviceFreebieA )
@@ -27,6 +27,7 @@ ymirforest,145,84,4	script	Norma Beatty	558,{
 		mes "[Norma Beatty]";
 		emotion	e_swt2;
 		mes "Hi there! I hope you're not having a hard time here at Ymir Forest. Don't forget to visit Senel Coolidge & Will Raynard as they'll be able to help you out.";
+		announce "Talk to Senel Coolidge & Will Raynard for your other freebies.",bc_self,0x1cc775;
 		close;
 	}
 		else if ( Class < 1 )
@@ -42,17 +43,6 @@ ymirforest,145,84,4	script	Norma Beatty	558,{
 		mes "[Norma Beatty]";
 		mes "Just make sure you will give every single one of them a visit.";
 		next;
-		if ( select("Sure!:Nah~ I don't have time for this")==2)
-		{
-			mes "[Norma Beatty]";
-			emotion	e_omg;
-			mes "Okay, Good Luck on your Journey!";
-			close;
-		}
-		mes "[Norma Beatty]";
-		emotion	e_kis;
-		mes "Please take these items and have a nice day~";
-		next;
 		getitem	2414,1;	//Novice Slippers
 		getitem	2628,1;	//Novice Armlet
 		getitem	13040,1;	//Novice Cutter
@@ -61,6 +51,7 @@ ymirforest,145,84,4	script	Norma Beatty	558,{
 		getitem	12323,20;	//Novice Fly Wing
 		set .NoviceFreebieA, 1;
 		mes "See you soon~";
+		announce "Talk to Senel Coolidge & Will Raynard for your other freebies.",bc_self,0x1cc775;
 		close;
 	}
 }
@@ -72,6 +63,7 @@ ymirforest,117,173,5	script	Senel Coolidge	531,{
 		mes "[Senel Coolidge]";
 		emotion	e_swt2;
 		mes "Hi there! I hope you're not having a hard time here at Ymir Forest. Don't forget to visit Will Raynard for your bubble gums.";
+		announce "Talk to Will Raynard and Norma Beatty for your other freebies.",bc_self,0x1cc775;
 		close;
 	}
 		else if ( Class < 1 )
@@ -94,10 +86,11 @@ ymirforest,117,173,5	script	Senel Coolidge	531,{
 		mes "[Senel Coolidge]";
 		mes "Thank you for your time, please take these beginner field manuals.";
 		next;
-		getitem	12263,5;	//Beginner Field Manual
+		getitem	12263,5;	//Field Manual
 		set .NoviceFreebieB, 1;
 		mes "[Senel Coolidge]";
 		mes "Good Luck Adventurer.";
+		announce "Talk to Will Raynard and Norma Beatty for your other freebies.",bc_self,0x1cc775;
 		close;
 	}
 }
@@ -110,6 +103,7 @@ ymirforest,113,88,5	script	Will Raynard	488,{
 		emotion	e_swt2;
 		mes "Hi there! I hope you're not having a hard time here at Ymir Forest. Don't forget to visit Senel Coolidge for your field manuals.";
 		mes "And yeah, we'll expect your bug reports if there's any.";
+		announce "Talk to Senel Coolidge and Norma Beatty for your other freebies.",bc_self,0x1cc775;
 		close;
 	}
 		else if ( Class < 1 )
@@ -128,12 +122,13 @@ ymirforest,113,88,5	script	Will Raynard	488,{
 		set .NoviceFreebieC, 1;
 		mes "[Will Raynard]";
 		mes "I'll see you soon!";
+		announce "Talk to Senel Coolidge and Norma Beatty for your other freebies.",bc_self,0x1cc775;
 		close;
 	}
 }
 
 ymirforest,145,207,5	script	Chloe Valens	917,{
-	
+
 	mes "[Chloe Valens]";
 	mes "Are you ready to enter the bigger world together with the other players?";
 	next;
@@ -142,6 +137,7 @@ ymirforest,145,207,5	script	Chloe Valens	917,{
 		mes "[Chloe Valens]";
 		emotion	e_omg;
 		mes "Okay, Enjoy your remaining time in this forest!";
+		announce "Senel Coolidge, Will Raynard and Norma Beatty will give you your starting items.",bc_self,0x1cc775;
 		close;
 	}
 	mes "[Chloe Valens]";
