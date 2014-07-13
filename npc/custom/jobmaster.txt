@@ -16,10 +16,10 @@
 //      Baby Novice job change. [Haru]
 //============================================================
 
-prontera,153,193,6	script	Job Master	2_F_MAGICMASTER,{
+prontera,149,194,3	script	Vesperia	666,{
 	function Job_Menu; function A_An;
 
-	mes "[Job Master]";
+	mes "[^FF3355Vesperia^000000]";
 	if (Class > Job_Soul_Linker) {
 		mes "No more jobs are available.";
 		close;
@@ -30,6 +30,7 @@ prontera,153,193,6	script	Job Master	2_F_MAGICMASTER,{
 		close;
 	}
 	if (.skill_point_check && SkillPoint > 0) {
+		mes "Hi, I am Vesperia - The Job Master. I can help you advance your profession in Ragnarok Tales.";
 		mes "Please use all your skill points before proceeding.";
 		close;
 	}
@@ -58,14 +59,14 @@ prontera,153,193,6	script	Job Master	2_F_MAGICMASTER,{
 			.@choice = select(" ~ ^0055FFRebirth^000000:"+(.third_classes ? " ~ ^FF0000Third Class^000000" : "")+": ~ ^777777Cancel^000000");
 			if (.@choice == 3)
 				close;
-			mes "[Job Master]";
+			mes "[^FF3355Vesperia^000000]";
 			mes "Are you sure?";
 			next;
 			if (.@choice == 1)
 				Job_Menu(Job_Novice_High);
 			else
 				Job_Menu(roclass(.@eac|EAJL_THIRD));
-			mes "[Job Master]";
+			mes "[^FF3355Vesperia^000000]";
 		}
 	}
 	.@job1 = roclass(.@eac|EAJL_2_1);
@@ -131,6 +132,8 @@ prontera,153,193,6	script	Job Master	2_F_MAGICMASTER,{
 function Job_Menu {
 	while (true) {
 		if (getargcount() > 1) {
+			mes "Hi, I am Vesperia - The Job Master. I can help you advance your profession in Ragnarok Tales.";
+			mes "";
 			mes "Select a job.";
 			.@menu$ = "";
 			for (.@i = 0; .@i < getargcount(); ++.@i)
@@ -140,18 +143,18 @@ function Job_Menu {
 			.@newjob = getarg(select(.@menu$)-1, 0);
 			if (!.@newjob) close;
 			if ((.@newjob == Job_SuperNovice || .@newjob == Job_Super_Baby) && BaseLevel < .supernovice_level) {
-				mes "[Job Master]";
+				mes "[^FF3355Vesperia^000000]";
 				mes "A base level of "+.supernovice_level+" is required to turn into a "+jobname(.@newjob)+".";
 				close;
 			}
-			mes "[Job Master]";
+			mes "[^FF3355Vesperia^000000]";
 			mes "Are you sure?";
 			next;
 		} else {
 			.@newjob = getarg(0);
 		}
 		if (select(" ~ Change into ^0055FF"+jobname(.@newjob)+"^000000 class: ~ ^777777"+(getargcount() > 1 ? "Go back" : "Cancel")+"^000000") == 1) {
-			mes "[Job Master]";
+			mes "[^FF3355Vesperia^000000]";
 			mes "You are now "+A_An(jobname(.@newjob))+"!";
 			if (.@newjob == Job_Novice_High && .linear_jobchange)
 				lastJob = Class; // Note: This is incompatible with the Valkyrie rebirth script.
@@ -166,7 +169,7 @@ function Job_Menu {
 		}
 		if (getargcount() == 1)
 			return;
-		mes "[Job Master]";
+		mes "[^FF3355Vesperia^000000]";
 	}
 	end;
 }
@@ -249,7 +252,7 @@ OnInit:
 	.rebirth_jlevel = 50;    // Minimum base job level to reborn OR change to third class
 	.jobchange_first = 10;   // Minimum job level to turn into 1st class
 	.jobchange_second = 40;  // Minimum job level to turn into 2nd class
-	.third_classes = 1;      // Enable third classes? (1: yes / 0: no)
+	.third_classes = 0;      // Enable third classes? (1: yes / 0: no)
 	.supernovice_level = 45; // Minimum base level to turn into Super Novice
 	.linear_jobchange = 1;   // Enforce linear class changes? (1: yes / 0: no)
 	.skill_point_check = 1;  // Force player to use up all skill points? (1: yes / 0: no)

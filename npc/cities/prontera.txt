@@ -89,7 +89,7 @@ prontera,160,133,2	script	YuPi#pront	8_F,{
 	close;
 }
 
-prontera,149,202,2	script	YuNa#pront	8_F_GIRL,{
+prontera,136,179,7	script	YuNa#pront	8_F_GIRL,{
 	mes "[YuNa]";
 	mes "Behold...";
 	mes "Mighty Odin!";

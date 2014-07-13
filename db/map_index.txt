@@ -1003,3 +1003,10 @@ c_tower3_
 //
 //mymap	1250
 //mymap-2
+market
+gmroom
+sky_quest
+nov_gar01
+ymirforest
+ymirhut
+ymirshore
