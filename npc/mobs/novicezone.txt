@@ -94,7 +94,7 @@ ymirforest,117,173,5	script	Senel Coolidge	531,{
 		mes "[Senel Coolidge]";
 		mes "Thank you for your time, please take these beginner field manuals.";
 		next;
-		getitem	7803,5;	//Beginner Field Manual
+		getitem	12263,5;	//Beginner Field Manual
 		set .NoviceFreebieB, 1;
 		mes "[Senel Coolidge]";
 		mes "Good Luck Adventurer.";
