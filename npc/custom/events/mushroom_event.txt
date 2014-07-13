@@ -36,7 +36,10 @@ OnInit:
 	setarray .Maps$[0],"alberta","geffen","morocc","louyang"; // Possible maps
 	end;
 
-OnMinute10:	// Start time (every hour)
+OnClock0130:
+OnClock0730:
+OnClock1330:
+OnClock1930:
 	if (.Status) end;
 	set .Status,1;
 	set .Spawn,rand(1,10);	// How many Mushrooms should spawn?

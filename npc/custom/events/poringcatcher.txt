@@ -57,8 +57,10 @@ OnInit:
 	mapwarp "poring_c01", .Map$, .x, .y;
 	end;	
 
-OnClock1834: // put all the start timer here
-OnClock2000:
+OnClock0300:
+OnClock0900:
+OnClock1500:
+OnClock2100:
 OnStart:
 	.start = 1;
 	announce "Poring Chase Event is about to start.",bc_all,0xFF7F50;

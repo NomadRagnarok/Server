@@ -13,14 +13,10 @@
 //=============================================================
 -	script	Poring Summoner	99,{
 
-OnClock2251:
-OnHour02: //CHANGE THIS TO THE HOUR YOU WOULD LIKE THIS EVENT TO LOAD!
-OnHour05:
-OnHour09:
-OnHour14:
-OnHour17:
-OnHour20:
-OnHour23:
+OnClock0430:
+OnClock1030:
+OnClock1630:
+OnClock2230:
 	set .ItemID,7711;
 	set .SpecialPorings,10;
 	set .NormalPorings,20;
