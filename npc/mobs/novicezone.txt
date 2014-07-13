@@ -37,7 +37,7 @@ ymirforest,145,84,4	script	Norma Beatty	558,{
 		next;
 		mes "[Norma Beatty]";
 		mes "You are now here at Ymir Forest and we'll help you get started with your adventures.";
-		mes "You will find a two of my friends on this map that will also give you free stuff.";
+		mes "You will find two of my friends on this map that will also give you free stuff.";
 		next;
 		mes "[Norma Beatty]";
 		mes "Just make sure you will give every single one of them a visit.";
