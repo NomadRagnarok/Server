@@ -10,7 +10,7 @@
 //= 1.1 Switched to 'getbattleflag', credits to Saithis. [Euphy]
 //============================================================
 
-prontera,182,215,3	script	Hilda Rhambling#custom_stylist	646,{
+prontera,182,215,3	script	Hilda Rhambling	646,{
 
 	setarray .@styles[1],getbattleflag("max_cloth_color"),getbattleflag("max_hair_style"),getbattleflag("max_hair_color");
 	setarray .@Look[1],7,1,6;
