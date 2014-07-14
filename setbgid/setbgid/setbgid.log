@@ -1,16 +1,14 @@
-﻿Build started 7/11/2014 1:21:05 PM.
-Project "C:\RTales\trunk\setbgid\setbgid.vcxproj" on node 2 (Rebuild target(s)).
-ClCompile:
-  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\src\common /I..\3rdparty\msinttypes\include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D _WINDLL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"setbgid\\" /Fd"setbgid\\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt ..\plugins\setbgid.c
-  setbgid.c
-Link:
-  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\plugins\\setbgid.dll" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"..\plugins\setbgid.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"..\plugins\setbgid.lib" /MACHINE:X86 /SAFESEH /DLL setbgid\\setbgid.obj
-     Creating library ..\plugins\setbgid.lib and object ..\plugins\setbgid.exp
-  Generating code
-  Finished generating code
-  setbgid.vcxproj -> C:\RTales\trunk\setbgid\..\plugins\setbgid.dll
-Done Building Project "C:\RTales\trunk\setbgid\setbgid.vcxproj" (Rebuild target(s)).
+﻿Build started 7/14/2014 8:54:30 PM.
+     1>Project "C:\Users\Exc\Desktop\RO Tools\Server RT\trunk\setbgid\setbgid.vcxproj" on node 8 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\src\common /I..\3rdparty\msinttypes\include /ZI /nologo /W3 /WX- /Od /Oy- /D _WINDLL /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"setbgid\\" /Fd"setbgid\\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt ..\plugins\setbgid.c
+         setbgid.c
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\plugins\\setbgid.dll" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"..\plugins\setbgid.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"..\plugins\setbgid.lib" /MACHINE:X86 /DLL setbgid\\setbgid.obj
+            Creating library ..\plugins\setbgid.lib and object ..\plugins\setbgid.exp
+         setbgid.vcxproj -> C:\Users\Exc\Desktop\RO Tools\Server RT\trunk\setbgid\..\plugins\setbgid.dll
+     1>Done Building Project "C:\Users\Exc\Desktop\RO Tools\Server RT\trunk\setbgid\setbgid.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.20
+Time Elapsed 00:00:02.45

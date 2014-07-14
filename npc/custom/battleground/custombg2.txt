@@ -1,4 +1,8 @@
 prontera,163,155,5	script	bg_pvp#random	733,{
+
+	mes "fuck you";
+	close;
+	
 OnInit:
 	.minplayer2start = 1;      // minimum players to start (ex. if 3vs3, set to 3)
 	.eventlasting = 20*60;  // event duration before auto-reset (20 minutes * seconds)
