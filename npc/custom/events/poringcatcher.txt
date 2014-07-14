@@ -39,7 +39,7 @@ prontera,155,224,3	script	Poring Chase Warper	723,{
 		mes "Too late, the event has already started";
 		close;
 	}
-	mes "No Event right now";
+	mes "The Poring Chase Event is about to start.";
 	close;
 
 OnInit:
@@ -69,7 +69,7 @@ OnStart:
 	sleep 1 * .seconds * !.skip;
 	announce "The portal would be open for 1 minute",bc_all,0xFF7F50;
 	sleep 30 * .seconds * !.skip;
-	announce "30 seconds left before the portal for Poring Chase event disappear.",bc_all,0xFF7F50;
+	announce "30 seconds left before the portal for Poring Chase event deactivates.",bc_all,0xFF7F50;
 	sleep 30 * .seconds * !.skip;
 	announce "Poring Chase Event Portal is now Closed.",bc_all,0xFF7F50;
 	if ( !getmapusers( "poring_c01" ) ) goto OnEnd;
