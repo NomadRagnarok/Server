@@ -1010,3 +1010,20 @@ nov_gar01
 ymirforest
 ymirhut
 ymirshore
+//------------------------- Custom PVP ---------------------------
+//pvpwait - PlayRO
+pvplobby
+//pvp_area - PlayRO
+pvptales5a
+//volpvp - PlayRO
+pvptales5c
+//------------------------- KoE ---------------------------
+//koe - PlayRO
+cruxis
+//------------------------- Custom BG ---------------------------
+//pvpwait - PlayRO
+bglobby
+//dragon_pvp - Dreamer
+drgonrena3a
+//hero_arena - Dreamer
+pvptales5b

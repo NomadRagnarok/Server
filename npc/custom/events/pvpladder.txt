@@ -1,0 +1,118 @@
+/*
+create table pvpladder (
+char_id int(11) not null default '0' primary key,
+name varchar(30) not null default '',
+kills smallint(6) unsigned not null default '0',
+deaths smallint(6) not null default '0',
+class smallint(6) unsigned not null default '0'
+) engine = myisam;
+create table pvp_record (
+`time` datetime,
+killerid int(11) not null default '0',
+killername varchar(23) not null default '',
+killedid int(11) not null default '0',
+killedname varchar(23) not null default ''
+) engine = archive;
+create table pvpladder_archive (
+`time` datetime,
+name varchar(30) not null default '',
+kills smallint(6) unsigned not null default '0',
+deaths smallint(6) not null default '0',
+class smallint(6) unsigned not null default '0'
+) engine = archive;
+*/
+-	script	job_pvp	-1,{
+OnInit:
+// only 1 config lol
+set .gmnokill, 0; // GMs are not suppose to kill players. A GM with <this number> level or higher will do nothing. IF set to 60, GM60 and above kill any player will not get anything : 0 - off
+if ( .gmnokill <= 0 ) set .gmnokill, 101; // prevent bug
+end;
+OnPCKillEvent:
+// if ( strcharinfo(3) != "guild_vs3" ) end;
+// else if ( getgmlevel() >= .gmnokill ) end;
+    query_sql "insert delayed into pvp_record values ( now() , "+ getcharid(0) +", '"+ escape_sql(strcharinfo(0)) +"', "+ getcharid(0, rid2name(killedrid) ) +", '"+ escape_sql(rid2name(killedrid)) +"' )";
+if ( $pvprank_lastsaved$ != gettimestr("%Y_%m",15) ) {
+  query_sql "insert delayed into pvpladder_archive select now(), name, kills, deaths, class from pvpladder order by kills desc limit 10";
+  query_sql "delete from pvpladder";
+  set $pvprank_lastsaved$, gettimestr("%Y_%m",15);
+  donpcevent "PvP Ranker::OnInit";
+}
+attachrid killedrid;
+if ( pvprank_lastsaved$ != $pvprank_lastsaved$ ) {
+  set pvprank_lastsaved$, $pvprank_lastsaved$;
+  set @pvpl_deaths, 0;
+  set @pvpl_kills, 0;
+}
+set @pvpl_deaths, @pvpl_deaths +1;
+query_sql "replace delayed into pvpladder values ( "+ getcharid(0) +", '"+ escape_sql(strcharinfo(0)) +"', "+ @pvpl_kills +", "+ @pvpl_deaths +", "+ class +" )";
+if ( killerrid == getcharid(3) ) end; // kill himself(like grandcross) doesn't add kills count
+attachrid killerrid;
+if ( pvprank_lastsaved$ != $pvprank_lastsaved$ ) {
+  set pvprank_lastsaved$, $pvprank_lastsaved$;
+  set @pvpl_deaths, 0;
+  set @pvpl_kills, 0;
+}
+set @pvpl_kills, @pvpl_kills +1;
+query_sql "replace delayed into pvpladder values ( "+ getcharid(0) +", '"+ escape_sql(strcharinfo(0)) +"', "+ @pvpl_kills +", "+ @pvpl_deaths +", "+ class +" )";
+donpcevent "PvP Ranker::OnInit";
+end;
+OnPCLoadMapEvent:
+if ( strcharinfo(3) != "guild_vs3" || @pvpl_kills || @pvpl_deaths ) end;
+query_sql "select kills, deaths from pvpladder where char_id = "+ getcharid(0), @pvpl_kills, @pvpl_deaths;
+end;
+}
+guild_vs3	mapflag	loadevent
+
+prontera,156,180,6	script	PvP Ranker	786,{
+while(1) {
+  mes "[PvP Ranker]";
+  mes "Hi, "+ strcharinfo(0);
+  mes "What can I do for you?";
+  next;
+  select
+   "View Top 10 - order by kills",
+   "View Top 10 - order by kill/death ratio",
+   "View previous minute ladder",
+   "Never Mind";
+  if ( @menu == 4 ) {
+   mes "[PvP Ranker]";
+   mes "Oh okay, Have a nice day";
+   close;
+  }
+  else if ( @menu == 1 || @menu == 2 ) {
+   mes "[PvP Ranker]";
+   set .@nb, query_sql("select name, kills, deaths, class from pvpladder order by kills"+( (@menu == 2)?"/deaths":" desc" )+" limit 10", .@name$, .@kills, .@deaths, .@class );
+   if ( .@nb == 0 )
+    mes "ladder is empty";
+   else {
+    for ( set .@i, 0; .@i < .@nb; set .@i, .@i +1 )
+	 mes "^996600"+ (.@i+1) +": ^006699"+ .@name$[.@i] +" ^70AC11{"+ jobname(.@class[.@i]) +"} ^00AA00["+ .@kills[.@i] +"] ^FF0000<"+ .@deaths[.@i] +">^000000";
+   }
+   next;
+  }
+  else {
+   set .@groups, query_sql("select unix_timestamp(time) from pvpladder_archive group by time", .@time);
+   if ( .@groups == 0 ) {
+    mes "[PvP Ranker]";
+    mes "no previous record";
+    next;
+   }
+   else {
+    for ( set .@page, 0; .@page < .@groups; set .@page, .@page +1 ) {
+	 mes "[PvP Ranker]";
+	 set .@nb, query_sql("select date_format(time,'%a %e/%c/%y %r'), name, kills, deaths, class from pvpladder_archive where time = from_unixtime("+ .@time[.@page] +") order by kills desc", .@time$, .@name$, .@kills, .@deaths, .@class);
+	 mes .@time$;
+	 for ( set .@i, 0; .@i < .@nb; set .@i, .@i +1 )
+	  mes "^996600"+ (.@i+1) +": ^006699"+ .@name$[.@i] +" ^70AC11{"+ jobname(.@class[.@i]) +"} ^00AA00["+ .@kills[.@i] +"] ^FF0000<"+ .@deaths[.@i] +">^000000";
+	 next;
+    }
+   }
+  }
+}
+end; // I dont think can get here anyway
+OnInit:
+delwaitingroom strnpcinfo(1);
+set .@nb, query_sql("select name, kills from pvpladder order by kills desc limit 1", .@name$, .@kills );
+waitingroom (.@nb)? ( .@name$ +" ("+ .@kills +")" ):"PVP Ladder", 0;
+end;
+}
