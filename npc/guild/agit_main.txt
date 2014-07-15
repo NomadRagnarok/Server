@@ -106,6 +106,7 @@ OnAgitBreak:
 		donpcevent "Agit#"+strnpcinfo(2)+"::OnStartArena";
 		end;
 	}
+	doevent "UltimateRanker#00::OnEmpBreak";
 	// Adjust Economy Invest Level for Castle
 	set .@Economy,getcastledata(strnpcinfo(2),2) - 5;
 	if (.@Economy < 0) set .@Economy, 0;
