@@ -18,12 +18,14 @@
 //= 1.5 Added GM management function. [Euphy]
 //============================================================
 
+//============== RAGNAROK TALES 5V5 ==========================
+
 // Waiting Room NPCs
 //============================================================
 bat_room,86,227,4	script	Lieutenant Ator	4_M_KY_KNT,{
 	end;
 OnInit:
-	waitingroom "Battle Station",11,"start#bat_b01::OnReadyCheck",1,0,80;
+	waitingroom "Battle Station 5v5",6,"start#bat_b01::OnReadyCheck",1,0,80;
 	end;
 OnEnterBG:
 	set $@FlaviusBG1_id1, waitingroom2bg("bat_b01",10,290,"start#bat_b01::OnGuillaumeQuit","");
@@ -33,7 +35,7 @@ OnEnterBG:
 bat_room,85,204,0	script	Lieutenant Thelokus	4_M_CRU_KNT,{
 	end;
 OnInit:
-	waitingroom "Battle Station",11,"start#bat_b01::OnReadyCheck",1,0,80;
+	waitingroom "Battle Station",6,"start#bat_b01::OnReadyCheck",1,0,80;
 	end;
 OnEnterBG:
 	set $@FlaviusBG1_id2, waitingroom2bg("bat_b01",390,10,"start#bat_b01::OnCroixQuit","");
@@ -85,7 +87,7 @@ OnReadyCheck:
 		donpcevent "#bat_b01_timer::OnStop";
 		end;
 	}
-	if( .@Guillaume < 10 || .@Croix < 10 )
+	if( .@Guillaume < 5 || .@Croix < 5 )
 		end;
 	set $@FlaviusBG1, 1;
 	set $@FlaviusBG1_Victory, 0;

@@ -17,13 +17,15 @@
 //= 1.4 Added GM management function. [Euphy]
 //============================================================
 
+//============== RAGNAROK TALES 3V3 ==========================
+
 // Waiting Room NPCs
 //============================================================
 bat_room,114,227,5	script	Lieutenant Rundel	4_M_KY_KNT,{
 	end;
 
 OnInit:
-	waitingroom "Battle Station",11,"start#bat_a02::OnReadyCheck",1,0,80;
+	waitingroom "Battle Station 3v3",4,"start#bat_a02::OnReadyCheck",1,0,80;
 	end;
 
 OnEnterBG:
@@ -35,7 +37,7 @@ bat_room,114,204,1	script	Lieutenant Guerrit	4_M_CRU_KNT,{
 	end;
 
 OnInit:
-	waitingroom "Battle Station",11,"start#bat_a02::OnReadyCheck",1,0,80;
+	waitingroom "Battle Station 3v3",4,"start#bat_a02::OnReadyCheck",1,0,80;
 	end;
 
 OnEnterBG:
@@ -132,7 +134,7 @@ OnReadyCheck:
 		donpcevent "#bat_a02_timer::OnStop";
 		end;
 	}
-	else if( .@Guillaume < 10 || .@Croix < 10 )
+	else if( .@Guillaume < 3 || .@Croix < 3 )
 		end;
 	set $@TierraBG2,1;
 	donpcevent "Lieutenant Rundel::OnEnterBG";
