@@ -18,7 +18,7 @@ OnClock1030:
 OnClock1630:
 OnClock2230:
 	set .ItemID,7711;
-	set .SpecialPorings,10;
+	set .SpecialPorings,rand(5,10);
 	set .NormalPorings,20;
 	set $@ran, rand(1,7);
 	if ($@ran == 7) set .Map$,"lighthalzen";

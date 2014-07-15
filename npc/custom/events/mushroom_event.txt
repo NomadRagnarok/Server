@@ -42,7 +42,7 @@ OnClock1330:
 OnClock1930:
 	if (.Status) end;
 	set .Status,1;
-	set .Spawn,rand(1,10);	// How many Mushrooms should spawn?
+	set .Spawn,rand(5,10);	// How many Mushrooms should spawn?
 	set .Map$,.Maps$[rand(getarraysize(.Maps$))];
 	killmonster .Map$,"All";
 	monster .Map$,0,0,"Please don't kill me!",1084,.Spawn,strnpcinfo(0)+"::OnMobKilled";
