@@ -18,9 +18,10 @@
 alter table `char` add empbreak int(11) unsigned not null default 0 after unban_time, add index (empbreak);
 */
 
-prontera,161,269,3	script	Emperium Ranking	466,{
+prontera,161,269,3	script	Zagi	512,{
 	mes "["+ strnpcinfo(1) +"]";
-	mes "I can show you Emperium Rankings";
+	mes "Hi, I'm Zagi, assassin member of Leviathan's Claw guild and used to be the Top Emperium Breaker.";
+	mes "I can show you the current Emperium Rankings.";
 	next;
 	switch ( select ( "View Emperium Ranking", "Information", ( getgmlevel() >= .gm_reset )? "Reset Ladder" : "" ) ) {
 	case 1:

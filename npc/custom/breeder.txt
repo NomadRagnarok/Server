@@ -10,7 +10,7 @@
 //= Fixed 'close' issues. [Joseph]
 //============================================================
 
-prontera,127,213,5	script	Universal Rental NPC	4_F_JOB_BLACKSMITH,{
+prontera,127,213,5	script	Tear Grants	4_F_JOB_BLACKSMITH,{
 	if (ismounting()) {
 		message strcharinfo(0),"You must first remove your mount.";
 		end;
