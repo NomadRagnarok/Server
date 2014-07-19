@@ -98,6 +98,7 @@ OnStartArena:
 
 // The Emperium has been broken.
 OnAgitBreak:
+	query_sql "update `char` set empbreak = empbreak +1 where char_id = "+ getcharid(0);
 	set .@GID,getcharid(2);
 	// Show and log error if an unguilded player breaks the Emperium. (Should NEVER happen)
 	if (.@GID <= 0) {

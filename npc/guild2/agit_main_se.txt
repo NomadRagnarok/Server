@@ -600,6 +600,7 @@ OnStop:
 	end;
 
 OnStartArena:
+	query_sql "update `char` set empbreak = empbreak +1 where char_id = "+ getcharid(0);
 	set .@GID,getcharid(2);
 	set .@region$, (compare(strnpcinfo(4),"arug"))?"Valfreyja":"Nithafjoll";
 	// Lower castle Economy

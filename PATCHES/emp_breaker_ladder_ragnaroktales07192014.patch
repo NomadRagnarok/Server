@@ -1,0 +1,24 @@
+Index: guild2/agit_main_se.txt
+===================================================================
+--- guild2/agit_main_se.txt	(revision 128)
++++ guild2/agit_main_se.txt	(working copy)
+@@ -600,6 +600,7 @@
+ 	end;
+ 
+ OnStartArena:
++	query_sql "update `char` set empbreak = empbreak +1 where char_id = "+ getcharid(0);
+ 	set .@GID,getcharid(2);
+ 	set .@region$, (compare(strnpcinfo(4),"arug"))?"Valfreyja":"Nithafjoll";
+ 	// Lower castle Economy
+Index: guild/agit_main.txt
+===================================================================
+--- guild/agit_main.txt	(revision 148)
++++ guild/agit_main.txt	(working copy)
+@@ -98,6 +98,7 @@
+ 
+ // The Emperium has been broken.
+ OnAgitBreak:
++	query_sql "update `char` set empbreak = empbreak +1 where char_id = "+ getcharid(0);
+ 	set .@GID,getcharid(2);
+ 	// Show and log error if an unguilded player breaks the Emperium. (Should NEVER happen)
+ 	if (.@GID <= 0) {

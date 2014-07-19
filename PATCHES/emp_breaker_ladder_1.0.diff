@@ -1,0 +1,28 @@
+ npc/guild/agit_main.txt     | 1 +
+ npc/guild2/agit_main_se.txt | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/npc/guild/agit_main.txt b/npc/guild/agit_main.txt
+index 7bc672e..1ec4245 100644
+--- a/npc/guild/agit_main.txt
++++ b/npc/guild/agit_main.txt
+@@ -98,6 +98,7 @@ OnStartArena:
+ 
+ // The Emperium has been broken.
+ OnAgitBreak:
++	query_sql "update `char` set empbreak = empbreak +1 where char_id = "+ getcharid(0);
+ 	set .@GID,getcharid(2);
+ 	// Show and log error if an unguilded player breaks the Emperium. (Should NEVER happen)
+ 	if (.@GID <= 0) {
+diff --git a/npc/guild2/agit_main_se.txt b/npc/guild2/agit_main_se.txt
+index ecd06d8..d6cf8da 100644
+--- a/npc/guild2/agit_main_se.txt
++++ b/npc/guild2/agit_main_se.txt
+@@ -600,6 +600,7 @@ OnStop:
+ 	end;
+ 
+ OnStartArena:
++	query_sql "update `char` set empbreak = empbreak +1 where char_id = "+ getcharid(0);
+ 	set .@GID,getcharid(2);
+ 	set .@region$, (compare(strnpcinfo(4),"arug"))?"Valfreyja":"Nithafjoll";
+ 	// Lower castle Economy
