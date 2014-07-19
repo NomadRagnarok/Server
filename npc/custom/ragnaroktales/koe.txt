@@ -106,7 +106,7 @@ OnRevKoE:
 cruxis,39,40,7	duplicate(koe_flag)	Cruxis Crystal Holder#2	722
 cruxis,60,40,1	duplicate(koe_flag)	Cruxis Crystal Holder#3	722
 cruxis,60,59,3	duplicate(koe_flag)	Cruxis Crystal Holder#4	722
-prontera,139,174,5	duplicate(koe_flag)	Cruxis Crystal Holder#4	722
+prontera,139,174,5	duplicate(koe_flag)	Cruxis Crystal Holder#5	722
 
 cruxis	mapflag	nobranch
 cruxis	mapflag	nomemo
