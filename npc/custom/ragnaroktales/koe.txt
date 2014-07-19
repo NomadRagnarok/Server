@@ -1,0 +1,120 @@
+//===== eAthena Script ============================================
+//= King of Emperium Hill
+//===== By: =======================================================
+//= AnnieRuru
+//===== Current Version: ==========================================
+//= 1.0
+//===== Compatible With: ==========================================
+//= hercules 2014-02-18
+//===== Description: ==============================================
+//= defends the emperium in the middle of the map until times up
+//===== Topic =====================================================
+//= http://hercules.ws/board/topic/4495-gvg-king-of-emperium-hill/
+//===== Additional Comments: ======================================
+//= Finally there is a topic for this !
+//=================================================================
+
+-	script	KoE	-1,{
+OnInit:
+	disablenpc "Cruxis Guardian#KoE";
+	disablenpc "Exit#KoE";
+	bindatcmd "koe", strnpcinfo(0)+"::OnCommand", 99,100;
+	end;
+
+OnCommand:
+	if ( compare( .@atcmd_parameters$, "on" ) ) goto L_Start;
+	else if ( compare( .@atcmd_parameters$, "off" ) ) goto L_End;
+	else {
+		dispbottom "type - '@koe on' to start the event";
+		dispbottom "type - '@koe off' to end the event";
+	}
+	end;
+OnClock2000: // everyday 8pm starts
+L_Start:
+	if ( .start ) end;
+	gvgon "cruxis";
+	announce "The Cruxis Crystal War has begun!", bc_all;
+	.start = 1;
+	enablenpc "Cruxis Guardian#KoE";
+	disablenpc "Exit#KoE";
+	$koegid = 0;
+	donpcevent "::OnRevKoE";
+	maprespawnguildid "cruxis", $koegid, 7;
+	monster "cruxis",49,49,"Cruxis Crystal",1288,1,"KoE::OnEmpDead";
+	end;
+OnClock2030: // everyday 8:30pm ends
+L_End:
+	gvgoff "cruxis";
+	announce "The Cruxis Crystal War is over!", bc_all;
+	.start = 0;
+	enablenpc "Exit#KoE";
+	disablenpc "Cruxis Guardian#KoE";
+	killmonsterall "cruxis";
+//	maprespawnguildid "cruxis", $koegid, 6; // uncomment this line to kick non-owner off the map when event ends
+	end;
+OnEmpDead:
+	$koegid = getcharid(2);
+	announce "The ["+ strcharinfo(2) +"] guild holds the Cruxis Crystal", bc_all;
+	donpcevent "::OnRevKoE";
+	maprespawnguildid "cruxis", $koegid, 6;
+	sleep 500;
+	if ( .start )
+		monster "cruxis",49,49,"Cruxis Crystal",1288,1,"KoE::OnEmpDead";
+	end;
+}
+
+// KoE Entrance
+prontera,138,171,6	script	Cruxis Guardian#KoE	468,{
+    mes "[The King]";
+	if ( !getcharid(2) ) {
+		mes "You must have a guild to participate in the ^FF0000Cruxis Crystal War^000000.";
+		close;
+	}
+    mes "Hello.";
+    mes "Would you like to participate in the ^FF0000Cruxis Crystal War^000000?";
+	if ( select ( "Yes", "No" ) == 2 ) close;
+    switch( rand(1,4) ){
+        case 1:	warp "cruxis", 86, 16; end;
+        case 2:	warp "cruxis", 12, 16; end;
+        case 3:	warp "cruxis", 12, 84; end;
+        case 4:	warp "cruxis", 86, 84; end;
+	}
+}
+
+// KoE Exit
+cruxis,49,56,5	script	Exit#KoE	51,{
+	mes "[Exit]";
+	mes "See ya.";
+	close2;
+	warp "Save",0,0;
+	if ( getcharid(2) == $koegid )
+		getitem 501, 1; // configure prize here
+	end;
+}
+
+// Flags
+cruxis,39,59,5	script	Cruxis Crystal Holder#1::koe_flag	722,{
+	if ( !$koegid ) end;
+	mes "[Cruxis Crystal War]";
+	mes "The ["+ getguildname($koegid) +"] guild holds the Cruxis Crystal.";
+	close;
+OnInit: // Uncomment this line to make the emblem stay after @reloadscript
+OnRevKoE:
+	flagemblem $koegid;
+	end;
+}
+cruxis,39,40,7	duplicate(koe_flag)	Cruxis Crystal Holder#2	722
+cruxis,60,40,1	duplicate(koe_flag)	Cruxis Crystal Holder#3	722
+cruxis,60,59,3	duplicate(koe_flag)	Cruxis Crystal Holder#4	722
+prontera,139,174,5	duplicate(koe_flag)	Cruxis Crystal Holder#4	722
+
+cruxis	mapflag	nobranch
+cruxis	mapflag	nomemo
+cruxis	mapflag	nopenalty
+cruxis	mapflag	noreturn
+cruxis	mapflag	nosave	SavePoint
+cruxis	mapflag	noteleport
+cruxis	mapflag	gvg_noparty
+cruxis	mapflag	nowarp
+cruxis	mapflag	nowarpto
+cruxis	mapflag	guildlock

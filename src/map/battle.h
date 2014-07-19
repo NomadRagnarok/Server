@@ -6,6 +6,7 @@
 #define MAP_BATTLE_H
 
 #include "map.h" //ELE_MAX
+#include "mapreg.h"
 #include "../common/cbasetypes.h"
 
 /**

@@ -1,0 +1,40 @@
+Index: db/castle_db.txt
+===================================================================
+--- db/castle_db.txt	(revision 128)
++++ db/castle_db.txt	(working copy)
+@@ -72,3 +72,5 @@
+ 31,arug_cas03,Horn,Manager#arug_cas03,1               // kRO : Horn
+ 32,arug_cas04,Gefn,Manager#arug_cas04,1               // kRO : Gefn
+ 33,arug_cas05,Bandis,Manager#arug_cas05,1             // kRO : Bandis
++
++100,cruxis,Cruxis Crystal War,koe,1
+Index: src/map/battle.c
+===================================================================
+--- src/map/battle.c	(revision 153)
++++ src/map/battle.c	(working copy)
+@@ -6027,6 +6027,13 @@
+ 	if( (s_bl = battle->get_master(src)) == NULL )
+ 		s_bl = src;
+ 
++	if (s_bl->type == BL_PC && t_bl->type == BL_MOB) {
++		TBL_PC *sd = BL_CAST(BL_PC, s_bl);
++		if ((((TBL_MOB*)target)->class_ == 1288 && !strcmp(mapindex_id2name(sd->mapindex), "cruxis")) &&
++			(sd->status.guild_id == mapreg->readreg(script->add_str("$koegid")) || battle_getcurrentskill(src) > 0))
++		return 0;
++	}
++
+ 	if ( s_bl->type == BL_PC ) {
+ 		switch( t_bl->type ) {
+ 			case BL_MOB: // Source => PC, Target => MOB
+Index: src/map/battle.h
+===================================================================
+--- src/map/battle.h	(revision 153)
++++ src/map/battle.h	(working copy)
+@@ -6,6 +6,7 @@
+ #define MAP_BATTLE_H
+ 
+ #include "map.h" //ELE_MAX
++#include "mapreg.h"
+ #include "../common/cbasetypes.h"
+ 
+ /**
