@@ -1,0 +1,110 @@
+// ------------------------------------------------------------------------------------------
+// ------ Script Release
+// Title: Premium/ViP Services System
+// Author: Diconfrost VaNz - www.wipeoutgaming.info - etherealruneguard@yahoo.com
+// Version: 2.1
+// Special thanks to the following for helping me making this script
+// Jezu
+// Dastgr
+// clydelion
+// 
+// Note: This is a character-based script. If you want to make this into Account-Based, just put "#" beside "prmm".
+// ------------------------------------------------------------------------------------------
+prontera,155,181,5	script	Clahador	757,{
+
+	mes "[^FF0000Clahador^000000]";
+	mes "Hello "+strcharinfo(0)+", I'm ^FF0000Clahador the butcher^000000.";
+	mes "I will be of help if you need something.";
+next;
+	mes "[^FF0000Clahador^000000]";
+	mes "Oh! you need help?";
+	mes "What kind of help do you need?";
+next;
+	menu "Newbie here",P_New,"I'm a ViP!",P_VIP,"Nevermind",P_NVM;
+
+P_New:
+	mes "[^FF0000Clahador^000000]";
+	mes "Did you already claim your free items in the ^FF0000Freebies NPC^000000???";
+		menu "Yes!",F_Yes,"No!",F_No;
+
+F_No:
+	mes "[^FF0000Clahador^000000]";
+	mes "You should get 'em!.";
+	mes "It will help you on the start.";
+	close;
+
+F_Yes:
+	mes "[^FF0000Clahador^000000]";
+	mes "Haha, i hope you like those items.";
+	next;
+	mes "By the way, you can earn zennies through quests like going to daily quest, request board, and many more!";
+	mes "Did you know that you can have many zennies you want if you gonna hunt more rare items?";
+	mes "Try it!";
+	close;
+
+P_VIP:
+	mes "[^FF0000Clahador^000000]";
+	mes "Oh you avail our ViP Ticket!";
+	mes "Thank you!";
+	next;
+	mes "[^FF0000Clahador^000000]";
+	mes "Your Premium Service will expire after " + callfunc("Time2Str",prmm);
+	mes "You should maximize it";
+	mes "Grind your skills and hunt now!";
+	close;
+
+P_NVM:
+	mes "[^FF0000Clahador^000000]";
+	mes "Thank you!";
+	mes "Come Again!";
+	close;
+}
+
+function	script	getPremium	{
+	set .@ticks, getarg(0);
+	if (.@ticks <= 0)
+	{
+		debugmes "getPremium - tried to set a timer in the past";
+		end;
+	}
+	set prmm, ((prmm > gettimetick(2)) ? prmm : gettimetick(2)) + .@ticks;
+	doevent "login::OnPCLoginEvent";
+	return;
+}
+
+-	script	login	-1,{
+OnPCLoginEvent:
+	if (prmm > gettimetick(2)) {
+		dispbottom "Your Premium Service will expire after " + callfunc("Time2Str",premium);
+		sc_start SC_CASH_PLUSEXP,(( prmm - gettimetick(2) ) * 1000 ),200;
+		sc_start SC_CASH_PLUSONLYJOBEXP,(( prmm - gettimetick(2) ) * 1000 ),200;
+		sc_start SC_CASH_RECEIVEITEM,(( prmm - gettimetick(2) ) * 1000 ),100;
+		atcommand "@adjgroup 1 "+strcharinfo(0);
+		deltimer strnpcinfo(3)+"::OnPCLoginEvent";
+		if ((prmm - gettimetick(2)) < 2147483)
+		{
+			addtimer (prmm - gettimetick(2)) *1000, strnpcinfo(3)+"::OnPCLoginEvent";
+		}
+		else
+		{
+			addtimer 2147483000, strnpcinfo(3)+"::OnPCLoginEvent";
+		}
+	} else if (prmm) {
+		atcommand "@adjgroup 0 "+strcharinfo(0);
+		sc_end SC_CASH_PLUSEXP;
+		sc_end SC_CASH_PLUSONLYJOBEXP;
+		sc_end SC_CASH_RECEIVEITEM;
+		set prmm, 0;
+		dispbottom "Premium Services has ended.";
+	}
+end;
+
+OnAtcommand:
+	dispbottom "Your Premium Service will expire after " + callfunc("Time2Str",prmm);
+	end;
+
+OnInit:
+	bindatcmd "premium",strnpcinfo(3)+"::OnAtcommand";
+	end; 
+
+}
