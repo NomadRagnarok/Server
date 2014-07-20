@@ -30,7 +30,7 @@ prontera,103,272,6	script	Find the Mushroom	BLACK_MUSHROOM,{
 	close;
 
 OnInit:
-	set .Prize,7711;	// Reward item ID
+	set .Prize,7539;	// Reward item ID
 	set .Amount,1;	// Reward item amount
 	set .GM,60;	// GM level required to access NPC
 	setarray .Maps$[0],"alberta","geffen","morocc","louyang"; // Possible maps

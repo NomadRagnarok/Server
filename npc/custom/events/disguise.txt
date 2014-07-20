@@ -124,7 +124,7 @@ OnInit:
 	set .Winner,0;
 	set .ResetCounter,0;
 	set .Rounds,10;
-	set .Prize,7711;
+	set .Prize,7539;
 	set .PrizeAmt,1;
 	set .Rule,1;
 	setarray .MVP[0], OSIRIS, BAPHOMET, DOPPELGANGER, MISTRESS, GOLDEN_BUG, ORK_HERO, DRAKE, EDDGA, MAYA, MOONLIGHT,
