@@ -22,7 +22,7 @@
 
 ymirforest,145,84,4	script	Norma Beatty	558,{
 
-    if( .NoviceFreebieA )
+    if( NoviceFreebieA )
 	{
 		mes "[Norma Beatty]";
 		emotion	e_swt2;
@@ -49,7 +49,7 @@ ymirforest,145,84,4	script	Norma Beatty	558,{
 		getitem	2393,1;	//Novice Adventurer Suit
 		getitem	569,200;	//Novice Potion
 		getitem	12323,20;	//Novice Fly Wing
-		set .NoviceFreebieA, 1;
+		set NoviceFreebieA, 1;
 		mes "See you soon~";
 		announce "Talk to Senel Coolidge & Will Raynard for your other freebies.",bc_self,0x1cc775;
 		close;
@@ -58,7 +58,7 @@ ymirforest,145,84,4	script	Norma Beatty	558,{
 
 ymirforest,117,173,5	script	Senel Coolidge	531,{
 
-    if( .NoviceFreebieB )
+    if( NoviceFreebieB )
 	{
 		mes "[Senel Coolidge]";
 		emotion	e_swt2;
@@ -87,7 +87,7 @@ ymirforest,117,173,5	script	Senel Coolidge	531,{
 		mes "Thank you for your time, please take these beginner field manuals.";
 		next;
 		getitem	12263,5;	//Field Manual
-		set .NoviceFreebieB, 1;
+		set NoviceFreebieB, 1;
 		mes "[Senel Coolidge]";
 		mes "Good Luck Adventurer.";
 		announce "Talk to Will Raynard and Norma Beatty for your other freebies.",bc_self,0x1cc775;
@@ -97,7 +97,7 @@ ymirforest,117,173,5	script	Senel Coolidge	531,{
 
 ymirforest,113,88,5	script	Will Raynard	488,{
 
-    if( .NoviceFreebieC )
+    if( NoviceFreebieC )
 	{
 		mes "[Will Raynard]";
 		emotion	e_swt2;
@@ -119,7 +119,7 @@ ymirforest,113,88,5	script	Will Raynard	488,{
 		mes "I know you're excited to start your journey so here's a few bubble gums that will definitely help you on the hunt.";
 		next;
 		getitem	12210,3;	//Bubble Gum
-		set .NoviceFreebieC, 1;
+		set NoviceFreebieC, 1;
 		mes "[Will Raynard]";
 		mes "I'll see you soon!";
 		announce "Talk to Senel Coolidge and Norma Beatty for your other freebies.",bc_self,0x1cc775;
