@@ -32,13 +32,13 @@ set .npcName$,"[^FF3355 Mint Adenade ^000000]";
 		set .vpoints_var$,"#KAFRAPOINTS";				// Points variable
 		set .@points,getPoints(getcharid(3));
 		set .@vpoints,getvPoints(getcharid(3));
-		setd .points_var$, getd(.points_var$) + .@points;  ///TESTING
+		setd .points_var$, getd(.points_var$) + .@points*10;  ///TESTING
 		setd .vpoints_var$, getd(.vpoints_var$) + .@vpoints;  ///TESTING
 		updatePoints(getcharid(3),.@points);
 		updatevPoints(getcharid(3),.@vpoints);
 		mes "Cash Points Synchronized! Thank you! We appreciate your continued support for Ragnarok Tales.";
 		mes "";
-		mes "^0096ff"+.@points+"^000000 cash pt(s). & ^19b019"+.@vpoints+"^000000 vote pt(s) have been added to your account";		
+		mes "^0096ff"+.@points*10+"^000000 cash pt(s). & ^19b019"+.@vpoints+"^000000 vote pt(s) have been added to your account";		
 		garbagecol();
 		close;
 		case 2:
