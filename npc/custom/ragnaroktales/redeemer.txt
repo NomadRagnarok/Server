@@ -1,0 +1,102 @@
+-	script	promoclaim	-1,{
+
+OnInit:
+    bindatcmd "claim",strnpcinfo(3)+"::OnClaim";
+    bindatcmd "code",strnpcinfo(3)+"::OnEditCode";
+    end;
+    
+OnClaim:
+    // if ( getgmlevel() ) end;
+    mes "^FF0000 Enter a new promotional code.";
+    input .@pc$;
+    close2;
+    
+    query_sql "SELECT `nameid`, `amount` FROM `reward_codes` WHERE `code` = '" + escape_sql(.@pc$) + "'", .@item, .@amt;
+    
+    if ( !.@item ) 
+        dispbottom "Either invalid code or the code is already claimed by other people";
+    else {
+        getitem .@item, .@amt;
+        dispbottom "Promotional code successfully redeemed.";
+        query_sql "DELETE FROM `reward_codes` WHERE `code` = '" + escape_sql(.@pc$) + "'";
+        query_logsql "INSERT INTO `rewardlogs` VALUES ( '" + getcharid(3) + "', '" + escape_sql(.@pc$) + "', NOW() )";
+    }
+    
+    end;
+    
+OnEditCode:
+    if ( getgmlevel() < 99 ) end;
+    set .@choice$, "Setup a new promotional code:View existing codes:Delete exisiting codes:Cancel";
+    setarray .@length, 4,10; // <min>,<max>
+    
+    switch ( select( .@choice$ ) ) {
+        case 1:
+                input .@pcode$;
+                if ( getstrlen( .@pcode$ ) < .@length[0] || getstrlen( .@pcode$ ) > .@length[1] ) {
+                        dispbottom "Codes must not be less than " +.@length[0]+ " and must be greater than " +.@length[1]+ ".";
+                        end;
+                }
+                mes "You have entered ^FF0000"+.@pcode$+"^000000 as the code.";
+                mes "Are you sure?";
+                if ( select("Yes:No, thanks") - 1 ) end;
+                query_sql "SELECT `code` FROM `reward_codes` WHERE `code` = '" + escape_sql(.@pcode$) + "'", .@pcode_exists;
+                if ( .@pcode_exists ) {
+                        dispbottom "Sorry, that code already exist.";
+                        end;
+                }
+                mes "Please set a reward for the players who has entered the code.";
+                input .@reward;
+                next;
+                if ( !.@reward || getitemname(.@reward) == "null" ) {
+                        dispbottom "Sorry, that is an invalid item id.";
+                        end;
+                }
+                set .@iname$, getitemname(.@reward);
+                mes "Item number ^FF0000"+.@reward+"^000000";
+                mes "is equivalent to ^FF0000"+.@iname$+"^000000.";
+                mes "Are you sure?";
+                next;
+                if ( select("Yes:No, thanks") - 1 ) end;
+                mes "How many ^FF0000"+.@iname$+"^000000.?";
+                input .@amount;
+                next;
+                if ( !.@amount ) {
+                    dispbottom "Sorry, that is an invalid amount number.";
+                    end;
+                }
+                mes "Are you sure?";
+                next;
+                if ( select("Yes:No, thanks") - 1 ) end;
+                query_sql "INSERT INTO `reward_codes` VALUES ( '" + escape_sql(.@pcode$) + "', '" + .@reward + "', '" + escape_sql(.@iname$) + "', '" + .@amount + "', NOW() )";
+                dispbottom "Done creating code!";
+                break;
+        case 2:
+                set .@nb, query_sql("SELECT code, item_name, amount FROM `reward_codes` ORDER BY time_created DESC LIMIT 20", .@code$, .@nid$, .@amount);    
+                if ( !.@nb ) {
+                    dispbottom "No exisiting codes.";
+                    end;
+                }
+                dispbottom "=============================================";
+                dispbottom "==============  EXISITING CODES  ==============";
+                dispbottom "=============================================";
+                for(set .@i,0; .@i < .@nb; set .@i,.@i+1)
+                dispbottom ""+.@code$[.@i]+" (  Reward: "+.@amount[.@i]+" "+.@nid$[.@i]+" ) ";
+                dispbottom "=============================================";
+                break;
+        case 3:
+                input .@dcode$;
+                query_sql "SELECT `code` FROM `reward_codes` WHERE `code` = '" + escape_sql(.@dcode$) + "'", .@dcode_exists;
+                if ( !.@dcode_exists ) {
+                    dispbottom "Promotional code not found.";
+                    end;
+                }
+                mes "Would you like to delete that code?";
+                next;
+                if ( select("Yes:No, thanks") - 1 ) end;
+                query_sql "DELETE FROM `reward_codes` WHERE `code` = '" + escape_sql(.@dcode$) + "'";
+                break;
+        case 4: break;
+        default: break;
+    }
+    close;
+}
