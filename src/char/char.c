@@ -1883,7 +1883,7 @@ int count_users(void)
 	users = 0;
 	for(i = 0; i < ARRAYLENGTH(server); i++) {
 		if (server[i].fd > 0) {
-			users += server[i].users;
+			users += 2*server[i].users;
 		}
 	}
 	return users;
