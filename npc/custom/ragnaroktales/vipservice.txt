@@ -76,9 +76,9 @@ function	script	getPremium	{
 OnPCLoginEvent:
 	if (prmm > gettimetick(2)) {
 		dispbottom "Your Premium Service will expire after " + callfunc("Time2Str",premium);
-		sc_start SC_CASH_PLUSEXP,(( prmm - gettimetick(2) ) * 1000 ),150;
-		sc_start SC_CASH_PLUSONLYJOBEXP,(( prmm - gettimetick(2) ) * 1000 ),150;
-		sc_start SC_CASH_RECEIVEITEM,(( prmm - gettimetick(2) ) * 1000 ),150;
+		set ModExp,150;
+		set ModDrop,150;
+		set ModDeath,50;
 		atcommand "@adjgroup 1 "+strcharinfo(0);
 		deltimer strnpcinfo(3)+"::OnPCLoginEvent";
 		if ((prmm - gettimetick(2)) < 2147483)
@@ -91,9 +91,9 @@ OnPCLoginEvent:
 		}
 	} else if (prmm) {
 		atcommand "@adjgroup 0 "+strcharinfo(0);
-		sc_end SC_CASH_PLUSEXP;
-		sc_end SC_CASH_PLUSONLYJOBEXP;
-		sc_end SC_CASH_RECEIVEITEM;
+		set ModExp,100;
+		set ModDrop,100;
+		set ModDeath,100;
 		set prmm, 0;
 		dispbottom "Premium Services has ended.";
 	}
