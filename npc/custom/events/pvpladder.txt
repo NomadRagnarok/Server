@@ -24,7 +24,7 @@ Class smallint(6) unsigned not null default '0'
 -	script	job_pvp	-1,{
 OnInit:
 // only 1 config lol
-set .gmnokill, 50; // GMs are not suppose to kill players. A GM with <this number> level or higher will do nothing. IF set to 60, GM60 and above kill any player will not get anything : 0 - off
+set .gmnokill, 99; // GMs are not suppose to kill players. A GM with <this number> level or higher will do nothing. IF set to 60, GM60 and above kill any player will not get anything : 0 - off
 if ( .gmnokill <= 0 ) set .gmnokill, 101; // prevent bug
 end;
 OnPCKillEvent:

@@ -75,7 +75,7 @@ function	script	getPremium	{
 -	script	login	-1,{
 OnPCLoginEvent:
 	if (prmm > gettimetick(2)) {
-		dispbottom "Your Premium Service will expire after " + callfunc("Time2Str",premium);
+		dispbottom "Your Premium Service is active! Type @premium to check the time remaining.";
 		set ModExp,150;
 		set ModDrop,150;
 		set ModDeath,50;
