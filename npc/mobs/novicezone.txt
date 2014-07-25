@@ -145,5 +145,6 @@ ymirforest,145,207,5	script	Chloe Valens	917,{
 	mes "Okay, Good Luck!";
 	next;
 	warp "prontera",0,0;
+	savepoint "prontera",138,204;
 	close;
 }
