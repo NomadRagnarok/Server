@@ -124,7 +124,7 @@ OnPCKillEvent:
         else if ( @PlayersKilledStreak >= .killingspree )
                 set .@streakname$,"Killing Spree";
         if ( @PlayersKilledStreak >= .killingspree && killerrid == getcharid(3) )
-                announce strcharinfo(0) +" has ended "+( (sex)?"him":"her" )+" own "+ .@streakname$ +"["+ @PlayersKilledStreak +"] streak "+( (.announcemap)?("at "+ .@map$):""),16|.announce;
+                announce strcharinfo(0) +" has ended "+( (Sex)?"him":"her" )+" own "+ .@streakname$ +"["+ @PlayersKilledStreak +"] streak "+( (.announcemap)?("at "+ .@map$):""),16|.announce;
         else if ( @PlayersKilledStreak >= .killingspree )
                 announce rid2name(killerrid) +" has ended "+ strcharinfo(0) +"'s "+ .@streakname$ +"["+ @PlayersKilledStreak +"] streak "+( (.announcemap)?("at "+ .@map$):""),16|.announce;
         else if ( .announcekill && killerrid != getcharid(3) )
@@ -139,10 +139,10 @@ OnPCKillEvent:
                 if ( getd(".dota_sql_"+ .@killed_gid +"_h") )
                         query_sql "replace into ownladder values ( "+ .@killed_gid +", '"+ escape_sql(getguildname(.@killed_gid)) +"', "+ getd(".dota_sql_"+ .@killed_gid +"_c") +", "+ getd(".dota_sql_"+ .@killed_gid +"_h") +", from_unixtime("+ getd(".dota_sql_"+ .@killed_gid +"_t") +") )";
         }
-        if ( killerrid == getcharid(3) || baselevel < .lvltokill ) end;
-        if ( .minlvlrange ) set .@killedlvl, baselevel;
+        if ( killerrid == getcharid(3) || BaseLevel < .lvltokill ) end;
+        if ( .minlvlrange ) set .@killedlvl, BaseLevel;
         attachrid killerrid;
-        if ( .minlvlrange && .@killedlvl + .minlvlrange < baselevel ) end;
+        if ( .minlvlrange && .@killedlvl + .minlvlrange < BaseLevel ) end;
         if ( .counttopunish ) {
                 if ( @sitkillminute != gettime(2) ) {
                         deletearray @sitkillid, 128;
@@ -207,7 +207,7 @@ OnPCKillEvent:
         else if ( @PlayersKilledStreak == .godlike )
                 setarray .@streakname$,"godlike.wav","is GODLIKE","!!!";
         else if ( @PlayersKilledStreak >= .holyshit && ( (@PlayersKilledStreak - .holyshit) % .continue == 0 ) )
-                setarray .@streakname$,"holyshit.wav","is BEYOND GODLIKE",". Someone KILL "+( (sex)?"HIM":"HER" ) +"!!!!!!";
+                setarray .@streakname$,"holyshit.wav","is BEYOND GODLIKE",". Someone KILL "+( (Sex)?"HIM":"HER" ) +"!!!!!!";
         if ( .@streakname$[1] != "" ) {
                 announce strcharinfo(0) +" "+ .@streakname$[1] +"["+ @PlayersKilledStreak +"] "+( (.announcemap)?("at "+ .@map$):"") + .@streakname$[2],16|.announce;
                 if ( .sound == 1 ) soundeffectall .@streakname$[0],0,.@map$;
