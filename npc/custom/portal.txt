@@ -607,7 +607,7 @@ OnStartNPC:
 				AddMap("Sograt Desert 17", "moc_fild17", 208, 238);
 				AddMap("Sograt Desert 18", "moc_fild18", 209, 223);
 				AddMap("Sograt Desert 19", "moc_fild19", 85, 97);
-				AddMap("Sograt Desert 20", "moc_fild20", 85, 97);
+				AddMap("Sograt Desert 20", "moc_fild20", 85, 105);
 				AddMap("Sograt Desert 21", "moc_fild21", 85, 97);
 				AddMap("Sograt Desert 22", "moc_fild22", 85, 97);
 			EndNode();
