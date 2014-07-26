@@ -4,11 +4,9 @@ prontera,156,225,5	script	Mithos Yggdrasill	811,{
 	mes "-----------------------------";
 	for ( .@i = 0; .@i < .admincount; .@i++ ) {
 		mes "^ff0000GM "+ .admin$[.@i]+ "^000000 ["+( ( isloggedin( getcharid( 3, .admin$[.@i] ) ) )? ( ( checkidle( .admin$[.@i] ) > .idletime )? "^eb43edIdle^000000" : "^2dd50cOnline^000000" ) : "^b5b5b5Offline^000000" )+ "]";
-		mes "-----------------------------";
 	}
 	for ( .@i = 0; .@i < .gmcount; .@i++ ) {
 		mes "^ff8c00GM "+ .gm$[.@i]+ "^000000 ["+( ( isloggedin( getcharid( 3, .gm$[.@i] ) ) )? ( ( checkidle( .gm$[.@i] ) > .idletime )? "^eb43edIdle^000000" : "^2dd50cOnline^000000" ) : "^b5b5b5Offline^000000" )+ "]";
-		mes "-----------------------------";
 	}
 	mes gettimestr("%I:%M%p ",10) + gettime(5) + gettimestr(" %B ",15) + gettime(7);
 	close;
@@ -23,7 +21,7 @@ OnInit:
 
 	.idletime = 120; // idle for 60 seconds = idle status
 	setarray .admin$, "Snaehild";
-	setarray .gm$, "LiYen", "Lemz";
+	setarray .gm$, "FryD", "LiYen", "Lemz";
 
 	.admincount = getarraysize( .admin$ );
 	.gmcount = getarraysize( .gm$ );

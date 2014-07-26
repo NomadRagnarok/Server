@@ -577,7 +577,7 @@ OnInit:
 		"Change Sex",		// [256]
 		"Identify All";		// [512]
 
-	set .@MenuOption,2|4|8|16|128|256|512;
+	set .@MenuOption,4|8|128|512;
 
 	setarray .OnClick[0],1,1,1;		// When clicked: heal [0], buff [1], repair [2] (1: yes / 0: no)
 	setarray .Styles[1],			// Maximum dye, hair style, and hair color

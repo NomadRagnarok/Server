@@ -8688,11 +8688,7 @@ ACMD(join) {
 		sprintf(atcmd_output, msg_txt(1438),name); // You cannot join the '%s' channel because you've been banned from it
 		clif->message(fd, atcmd_output);
 		return false;
-	}
-	
-	if( !( channel->opt & hChSys_OPT_ANNOUNCE_JOIN ) ) {
-		sprintf(atcmd_output, msg_txt(1403),name); // You're now in the '%s' channel
-		clif->message(fd, atcmd_output);
+
 	}
 	if( channel->type == hChSys_ALLY ) {
 		struct guild *g = sd->guild, *sg = NULL;

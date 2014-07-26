@@ -1,0 +1,7 @@
+-	script	defaultchannels	-1,{
+OnPCLoginEvent:
+	atcommand "@join #trade";
+	atcommand "@join #main";
+//	message strcharinfo(0),"yes";
+	end;
+}
