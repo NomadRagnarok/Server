@@ -653,7 +653,7 @@ OnStartNPC:
 				AddMap("Abbey, Cursed Monastery - Lvl 3", "abbey03", 120, 10);
 			EndNode();
 			StartNode("Abyss Lakes");
-				AddMap("Abyss Lakes - Lvl 1", "abyss_01", 192, 207);
+				AddMap("Abyss Lakes - Lvl 1", "abyss_01", 82, 95);
 				AddMap("Abyss Lakes - Lvl 2", "abyss_02", 275, 270);
 				AddMap("Abyss Lakes - Lvl 3", "abyss_03", 116, 27);
 			EndNode();
@@ -744,7 +744,7 @@ OnStartNPC:
 			EndNode();
 			StartNode("Hidden Dungeon");
 				AddMap("Hidden Dungeon - Lvl 1", "prt_maze01", 176, 7);
-				AddMap("Hidden Dungeon - Lvl 2", "prt_maze02", 94, 9);
+				AddMap("Hidden Dungeon - Lvl 2", "prt_maze02", 94, 30);
 				AddMap("Hidden Dungeon - Lvl 3", "prt_maze03", 23, 8);
 			EndNode();
 			StartNode("Ice Dungeon");
@@ -852,12 +852,6 @@ OnStartNPC:
 				AddMap("Passage to a Foreign World", "um_dun01", 48, 30);
 				AddMap("Hvergermil's Fountain", "yggdrasil01", 204, 78);
 			EndNode();
-		EndNode();
-		StartNode("Guild Dungeons");
-			AddMap("Baldur Guild Dungeon", "gld_dun01", 119, 93);
-			AddMap("Luina Guild Dungeon", "gld_dun02", 39, 161);
-			AddMap("Valkyrie Guild Dungeon", "gld_dun03", 50, 44);
-			AddMap("Britoniah Guild Dungeon", "gld_dun04", 116, 45);
 		EndNode();
 		StartNode("Castles");
 			StartNode("Aldebaran Castles");
