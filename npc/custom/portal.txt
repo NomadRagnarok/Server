@@ -853,6 +853,10 @@ OnStartNPC:
 				AddMap("Hvergermil's Fountain", "yggdrasil01", 204, 78);
 			EndNode();
 		EndNode();
+		StartNode("PvP");
+			AddMap("PvP Lobby", "pvplobby", 79, 58);
+			AddMap("Battlegrounds Waiting Room", "bat_room", 155, 150);
+		EndNode();
 		StartNode("Castles");
 			StartNode("Aldebaran Castles");
 				AddMap("Neuschwanstein(Aldebaran)", "alde_gld", 48, 83, "mapUsers", "aldeg_cas01");
@@ -899,6 +903,7 @@ OnStartNPC:
 		StartNode("Other");
 			AddMap("Casino", "cmd_in02", 179, 129);
 		EndNode();
+		
 
 		debugmes "TOASTYWARPER - Map Data Loaded: " + .mapCount + " maps, " + (gettimetick(0) - .@startLoadTime) + "ms";
 		cleararray(.buildStack$[0], "", 128);
@@ -1282,3 +1287,4 @@ umbala,95,164,4	duplicate(Portal#toasty)	Portal#toasty32-1	10007
 moscovia,220,198,4	duplicate(Portal#toasty)	Portal#toasty33-1	10007
 veins,217,127,4	duplicate(Portal#toasty)	Portal#toasty34-1	10007
 rachel,133,115,4	duplicate(Portal#toasty)	Portal#toasty35-1	10007
+pvplobby,80,52,4	duplicate(Portal#toasty)	Portal#toasty36-1	10007

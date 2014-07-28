@@ -1,0 +1,32 @@
+pvplobby,80,102,4	script	PvP Officer	683,{
+	callfunc "F_PVP_FSRX";
+	end;
+}
+
+function	script	F_PVP_FSRX	{
+//	if (getargcount()) {
+//		if (BaseLevel < getarg(0) || BaseLevel > getarg(1)) {
+//			mes "[PVP Fight Square Reception Staff]";
+//			mes "Sorry, but you base level has to be between LV "+getarg(0)+" and LV "+getarg(1)+".";
+//			close;
+//		}
+//	}
+//	if (strnpcinfo(4) == "pvp_y_room") {
+//		set .@base$, "pvp_y_"+strnpcinfo(2);
+		setarray .@maps$[0],	"pvp_y_8-2";
+		setarray .@name$[0],	"Free For All";
+		setarray .@Limit[0],	128;
+//	}
+	for(set .@i,0; .@i<1; set .@i,.@i+1)
+		set .@menu$, .@menu$+.@name$[.@i]+" ["+getmapusers(.@maps$[.@i])+" / "+.@Limit[.@i]+"]:";
+	set .@menu$, .@menu$+"Cancel.";
+	set .@i, select(.@menu$)-1;
+	if (.@i == 1) close;
+	if (getmapusers(.@maps$[.@i]) >= .@Limit[.@i]) {
+		mes "[PVP Fight Square Reception Staff]";
+		mes "This map is currently full.";
+		close;
+	}
+	warp .@maps$[.@i],0,0;
+	end;
+}

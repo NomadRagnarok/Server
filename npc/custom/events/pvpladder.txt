@@ -325,7 +325,7 @@ OnPCLoadMapEvent:
         end;
 }
  
-prontera,149,205,4	script	PvP Ranker	470,{
+pvplobby,76,99,5	script	PvP Ranker	470,{
         set .@npcname$, strnpcinfo(0);
         while (1) {
                 mes "["+ .@npcname$ +"]";
