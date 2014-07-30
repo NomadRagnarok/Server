@@ -1,0 +1,86 @@
+function	script	isContain	{
+	set .@str$, getarg(0, "");
+	set .@exc$, getarg(1, "");
+	if (.@str$ == "" || .@exc$ == "")
+		return 0;
+	for (set .@i, 0; .@i < getstrlen(.@exc$); set .@i, .@i+1)
+		if (countstr(.@str$, charat(.@exc$, .@i)) > 0)
+			return 1;
+	return 0;
+}
+
+prontera,149,159,6	script	Name Changer	834,{
+	set .@npcname$, "[^ff0000Genis Sage^000000]";
+
+	while (1) {
+		mes .@npcname$;
+		mes "Would you like to change your name?";
+		mes "";
+		mes "We require the following:";
+		mes "-^b919bfProof of Identification^000000";
+		mes "-^19b9bf10,000,000 Zeny^000000.";
+		next;
+		switch (select("Yes:No")) {
+			case 1:
+			{
+				if (countitem(7623) < 1 || Zeny < 10000000) {
+					mes .@npcname$;
+					mes "You're missing something!";
+					mes "Come back when you already have both ^b919bfProof of Identification^000000 & ^19b9bf10,000,000 Zeny^000000.";
+					close; }
+				mes .@npcname$;
+				mes "Very well. Input what you'd like to change it to.";
+				input .@newname$;
+				next;
+				query_sql("SELECT `char_id` FROM `char` WHERE `name`='" + escape_sql(.@newname$) + "'", .@id);
+				if (.@id[0] > 0) {
+					mes .@npcname$;
+					mes "Someone already used this name..";
+					next;
+					select("Back");
+					continue;
+				}
+				if (isContain(.@newname$, "!@#$%^&*()-=+_[]{}")) {
+					mes .@npcname$;
+					mes "Your name contains illegal characters.";
+					next;
+					select("Back");
+					continue;
+				}
+				if (getstrlen(.@newname$) < 4 || getstrlen(.@newname$) > 23) {
+					mes .@npcname$;
+					mes "Your name length must be around 4~23 english characters";
+					next;
+					select("Back");
+					continue;
+				}
+				mes .@npcname$;
+				mes "Are you sure you want to change your name to " + .@newname$ + "?";
+				next;
+				switch (select("Yes:Back:No")) {
+					case 1:
+					{
+						mes .@npcname$;
+						mes "Okie dokie!";
+						mes "You'll have to relog for you name to change.";
+						close2;
+						delitem 7623,1;
+						Zeny -= 100000;
+						query_sql "UPDATE `char` SET `name` = '" + escape_sql(.@newname$) + "' WHERE `char_id` = '" + getcharid(0) + "'";
+						end;
+					}
+					case 2:
+						continue;
+					case 3:
+					{
+						mes .@npcname$;
+						mes "Okay. Come back if you change your mind.";
+						close;
+					}
+				}
+			}
+			case 2:
+				close;
+		}
+	}
+}

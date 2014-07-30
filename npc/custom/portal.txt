@@ -415,6 +415,10 @@ OnStartNPC:
 		set .@startLoadTime, gettimetick(0);
 
 		AddLastWarpsNode();
+		StartNode("^ff0000Player VS Player^000000");
+			AddMap("PvP Lobby", "pvplobby", 79, 58);
+			AddMap("Battlegrounds Waiting Room", "bat_room", 155, 150);
+		EndNode();
 		StartNode("Towns");
 			AddMap("Alberta", "alberta", 28, 234);
 			AddMap("Aldebaran", "aldebaran", 140, 131);
@@ -852,10 +856,6 @@ OnStartNPC:
 				AddMap("Passage to a Foreign World", "um_dun01", 48, 30);
 				AddMap("Hvergermil's Fountain", "yggdrasil01", 204, 78);
 			EndNode();
-		EndNode();
-		StartNode("PvP");
-			AddMap("PvP Lobby", "pvplobby", 79, 58);
-			AddMap("Battlegrounds Waiting Room", "bat_room", 155, 150);
 		EndNode();
 		StartNode("Castles");
 			StartNode("Aldebaran Castles");

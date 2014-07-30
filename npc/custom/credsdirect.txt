@@ -32,7 +32,7 @@ set .npcName$,"[^FF3355 Mint Adenade ^000000]";
 		set .vpoints_var$,"#KAFRAPOINTS";				// Points variable
 		set .@points,getPoints(getcharid(3));
 		set .@vpoints,getvPoints(getcharid(3));
-		setd .points_var$, getd(.points_var$) + .@points*10;  ///TESTING
+		setd .points_var$, getd(.points_var$) + .@points*100;  ///TESTING
 		setd .vpoints_var$, getd(.vpoints_var$) + .@vpoints;  ///TESTING
 		updatePoints(getcharid(3),.@points);
 		updatevPoints(getcharid(3),.@vpoints);
