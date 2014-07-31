@@ -7,14 +7,16 @@ OnInit:
     
 OnClaim:
     // if ( getgmlevel() ) end;
-    mes "^FF0000 Enter a new promotional code.";
+    mes "^FF0000[PROMOTIONAL CODE]^000000";
+	mes "ENTER YOUR PROMO CODE!";
+	mes "You can get a promo code via our social networking sites such as ^2278e2Facebook^000000, ^2278e2Twitter^000000, ^2278e2Youtube^000000, ^2278e2Google+^000000, ^2278e2Twitch^000000 and our exclusive ^086733Partner Cafes^000000.";
     input .@pc$;
     close2;
     
     query_sql "SELECT `nameid`, `amount` FROM `reward_codes` WHERE `code` = '" + escape_sql(.@pc$) + "'", .@item, .@amt;
     
     if ( !.@item ) 
-        dispbottom "Either invalid code or the code is already claimed by other people";
+        dispbottom "Either the code you've entered is invalid or the code has already been claimed by somebody else.";
     else {
         getitem .@item, .@amt;
         dispbottom "Promotional code successfully redeemed.";
@@ -31,10 +33,11 @@ OnEditCode:
     
     switch ( select( .@choice$ ) ) {
         case 1:
+				mes "Enter the Code";
                 input .@pcode$;
                 if ( getstrlen( .@pcode$ ) < .@length[0] || getstrlen( .@pcode$ ) > .@length[1] ) {
                         dispbottom "Codes must not be less than " +.@length[0]+ " and must be greater than " +.@length[1]+ ".";
-                        end;
+                        close;
                 }
                 mes "You have entered ^FF0000"+.@pcode$+"^000000 as the code.";
                 mes "Are you sure?";
@@ -42,14 +45,14 @@ OnEditCode:
                 query_sql "SELECT `code` FROM `reward_codes` WHERE `code` = '" + escape_sql(.@pcode$) + "'", .@pcode_exists;
                 if ( .@pcode_exists ) {
                         dispbottom "Sorry, that code already exist.";
-                        end;
+                        close;
                 }
                 mes "Please set a reward for the players who has entered the code.";
                 input .@reward;
                 next;
                 if ( !.@reward || getitemname(.@reward) == "null" ) {
                         dispbottom "Sorry, that is an invalid item id.";
-                        end;
+                        close;
                 }
                 set .@iname$, getitemname(.@reward);
                 mes "Item number ^FF0000"+.@reward+"^000000";
@@ -62,7 +65,7 @@ OnEditCode:
                 next;
                 if ( !.@amount ) {
                     dispbottom "Sorry, that is an invalid amount number.";
-                    end;
+                    close;
                 }
                 mes "Are you sure?";
                 next;
@@ -73,14 +76,14 @@ OnEditCode:
         case 2:
                 set .@nb, query_sql("SELECT code, item_name, amount FROM `reward_codes` ORDER BY time_created DESC LIMIT 20", .@code$, .@nid$, .@amount);    
                 if ( !.@nb ) {
-                    dispbottom "No exisiting codes.";
-                    end;
+                    dispbottom "No existing codes.";
+                    break;
                 }
                 dispbottom "=============================================";
-                dispbottom "==============  EXISITING CODES  ==============";
+                dispbottom "==============  EXISTING CODES  =============";
                 dispbottom "=============================================";
-                for(set .@i,0; .@i < .@nb; set .@i,.@i+1)
-                dispbottom ""+.@code$[.@i]+" (  Reward: "+.@amount[.@i]+" "+.@nid$[.@i]+" ) ";
+//              for(set .@i,0; .@i < .@nb; set .@i,.@i+1)
+//               dispbottom ""+.@code$[.@i]+" (  Reward: "+.@amount[.@i]+" "+.@nid$[.@i]+" ) ";
                 dispbottom "=============================================";
                 break;
         case 3:
@@ -88,7 +91,7 @@ OnEditCode:
                 query_sql "SELECT `code` FROM `reward_codes` WHERE `code` = '" + escape_sql(.@dcode$) + "'", .@dcode_exists;
                 if ( !.@dcode_exists ) {
                     dispbottom "Promotional code not found.";
-                    end;
+                    break;
                 }
                 mes "Would you like to delete that code?";
                 next;

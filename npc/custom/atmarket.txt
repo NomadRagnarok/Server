@@ -7,7 +7,7 @@
 -	script	AtMarket	-1,{
 
 OnInit:
-	bindatcmd "market", strnpcinfo(0)+"::OnMCommand", 99,100;
+	bindatcmd "market", strnpcinfo(0)+"::OnMCommand";
 	end;
 	
 OnMCommand:
