@@ -61,4 +61,4 @@ Zeny_Lack:
 }
 
 pvplobby,87,87,3	duplicate(Priest Eira#Priest)	Priest Eira's Clone	501
-izlude,121,125,5	duplicate(Priest Eira#Priest)	Priest Eira's Clone	501
+izlude,121,125,5	duplicate(Priest Eira#Priest)	Priest Eira's Clone#1	501
