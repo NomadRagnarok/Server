@@ -1,0 +1,14 @@
+﻿Build started 8/3/2014 12:41:28 AM.
+     1>Project "C:\Users\Exc\Desktop\RO Tools\Server RT\trunk\afk\afk.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\src\common /I..\3rdparty\msinttypes\include /ZI /nologo /W3 /WX- /Od /Oy- /D _WINDLL /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"afk\\" /Fd"afk\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt ..\src\plugins\afk.c
+         afk.c
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\plugins\\afk.dll" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"..\plugins\afk.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"..\plugins\afk.lib" /MACHINE:X86 /DLL afk\afk.obj
+            Creating library ..\plugins\afk.lib and object ..\plugins\afk.exp
+         afk.vcxproj -> C:\Users\Exc\Desktop\RO Tools\Server RT\trunk\afk\..\plugins\afk.dll
+     1>Done Building Project "C:\Users\Exc\Desktop\RO Tools\Server RT\trunk\afk\afk.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:03.42

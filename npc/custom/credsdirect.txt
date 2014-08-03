@@ -38,7 +38,7 @@ set .npcName$,"[^FF3355 Mint Adenade ^000000]";
 		updatevPoints(getcharid(3),.@vpoints);
 		mes "Cash Points Synchronized! Thank you! We appreciate your continued support for Ragnarok Tales.";
 		mes "";
-		mes "^0096ff"+.@points*10+"^000000 cash pt(s). & ^19b019"+.@vpoints+"^000000 vote pt(s) have been added to your account";		
+		mes "^0096ff"+.@points*100+"^000000 cash pt(s). & ^19b019"+.@vpoints+"^000000 vote pt(s) have been added to your account";		
 		garbagecol();
 		close;
 		case 2:

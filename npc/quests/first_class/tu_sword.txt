@@ -1075,7 +1075,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 		if (checkre(0))
 			warp "izlude",127,100;
 		else
-			warp "izlude",35,78;
+			warp "izlude",51,164;
 		end;
 	}
 	if(tu_swordman == 19){
@@ -2194,7 +2194,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 					if (checkre(0))
 						warp "izlude",127,100;
 					else
-						warp "izlude",35,78;
+						warp "izlude",51,164;
 					close;
 				}
 			case 2:

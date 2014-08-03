@@ -853,7 +853,7 @@ OnStartNPC:
 			EndNode();
 			StartNode("Umbala Dungeons");
 				AddMap("Carpenter's Shop in the Tree", "um_dun01", 42, 31);
-				AddMap("Passage to a Foreign World", "um_dun01", 48, 30);
+				AddMap("Passage to a Foreign World", "um_dun02", 52, 22);
 				AddMap("Hvergermil's Fountain", "yggdrasil01", 204, 78);
 			EndNode();
 		EndNode();
