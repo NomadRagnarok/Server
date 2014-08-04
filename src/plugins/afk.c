@@ -33,7 +33,7 @@ HPExport struct hplugin_info pinfo = {
 
 // Set this to the amount of minutes afk chars will be kicked from the server. 720 = 12 hours
 int afk_timeout = 0;
-void parse_my_setting(const char *val) {
+void parse_my_afk(const char *val) {
 	afk_timeout = atoi(val);
 }
 ACMD(afk) {
@@ -82,7 +82,7 @@ HPExport void server_preinit (void) {
 	/* makes map server listen to mysetting:value in any "battleconf" file (including imported or custom ones) */
 	/* value is not limited to numbers, its passed to our plugins handler (parse_my_setting) as const char *,
 	 * and thus can be manipulated at will */
-	addBattleConf("parse_my_setting",parse_my_setting);
+	addBattleConf("parse_my_afk",parse_my_afk);
 };
 
 /* Server Startup */

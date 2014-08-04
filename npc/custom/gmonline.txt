@@ -21,7 +21,7 @@ OnInit:
 
 	.idletime = 120; // idle for 60 seconds = idle status
 	setarray .admin$, "Snaehild";
-	setarray .gm$, "FryD", "Raziel", "Lemz";
+	setarray .gm$, "FryD", "Raziel", "Lexmark";
 
 	.admincount = getarraysize( .admin$ );
 	.gmcount = getarraysize( .gm$ );

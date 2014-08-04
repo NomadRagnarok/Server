@@ -1,0 +1,89 @@
+//===== Hercules Script ======================================
+//= Floating Server Rates
+//===== By: ==================================================
+//= Lupus
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= It's a simply example of setbattleflag
+//= This script will change your server rates from 1x to 1.5x every 6 hours
+//= Note: It doesn't affect Card granted drops, MVP & Treasure Chests drops ^_-
+//=       It also doesn't affect CARD drops, because they are just 0.01%
+//===== Additional Comments: =================================
+//= You can make incredible scripts with 'setbattleflag'!
+//============================================================
+
+-	script	ModRates	-1,{
+
+OnInit:
+
+	bindatcmd "ratex1", strnpcinfo(0)+"::OnRateX1", 99,100;
+	bindatcmd "ratex2", strnpcinfo(0)+"::OnRateX2", 99,100;
+	bindatcmd "ratex3", strnpcinfo(0)+"::OnRateX3", 99,100;
+	end;
+	
+OnRateX1:
+//-------------------
+	set $@brate,100;
+	set $@jrate,100;
+	set $@drate,100;
+	//Base exp
+	setbattleflag("base_exp_rate",$@brate);
+	//Job exp
+	setbattleflag("job_exp_rate",$@jrate);
+	//Drops
+	setbattleflag("item_rate_common",$@drate);
+	setbattleflag("item_rate_heal",$@drate);
+	setbattleflag("item_rate_use",$@drate);
+	setbattleflag("item_rate_equip",$@drate);
+	setbattleflag("item_rate_card",10000);
+	//we don't change card drops rate, because these values won't change them anyway
+	atcommand "@reloadmobdb";
+	
+	announce "Current Rune-Midgard rates are: 1."+($@brate-100)+"x 1."+($@jrate-100)+"x 1."+($@drate-100)+"x",bc_all,0xFF6060;
+	end;
+
+OnRateX2:
+//-------------------
+	set $@brate,200;
+	set $@jrate,200;
+	set $@drate,200;
+	//Base exp
+	setbattleflag("base_exp_rate",$@brate);
+	//Job exp
+	setbattleflag("job_exp_rate",$@jrate);
+	//Drops
+	setbattleflag("item_rate_common",$@drate);
+	setbattleflag("item_rate_heal",$@drate);
+	setbattleflag("item_rate_use",$@drate);
+	setbattleflag("item_rate_equip",$@drate);
+	setbattleflag("item_rate_card",20000);
+	//we don't change card drops rate, because these values won't change them anyway
+	atcommand "@reloadmobdb";
+	
+	announce "Current Rune-Midgard rates are: 1."+($@brate-100)+"x 1."+($@jrate-100)+"x 1."+($@drate-100)+"x",bc_all,0xFF6060;
+	end;
+	
+OnRateX3:
+//-------------------
+	set $@brate,300;
+	set $@jrate,300;
+	set $@drate,300;
+	//Base exp
+	setbattleflag("base_exp_rate",$@brate);
+	//Job exp
+	setbattleflag("job_exp_rate",$@jrate);
+	//Drops
+	setbattleflag("item_rate_common",$@drate);
+	setbattleflag("item_rate_heal",$@drate);
+	setbattleflag("item_rate_use",$@drate);
+	setbattleflag("item_rate_equip",$@drate);
+	//we don't change card drops rate, because these values won't change them anyway
+	atcommand "@reloadmobdb";
+	
+	announce "Current Rune-Midgard rates are: 1."+($@brate-100)+"x 1."+($@jrate-100)+"x 1."+($@drate-100)+"x",bc_all,0xFF6060;
+	end;
+	
+
+	
+}
