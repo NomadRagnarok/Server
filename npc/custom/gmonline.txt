@@ -15,8 +15,8 @@ OnInit:
 
 	setarray .Message$," <3 ",
 				"Please be reminded that GMs will NEVER ask you for your password.",
-				"You can help our server by voting for us! Visit www.ragnaroktales.com to vote!",
-				"Welcome to Ragnarok Tales!",
+				"You can help our server by writing a RateMyServer review for us! Visit www.ragnaroktales.com to write a review!",
+				"You can earn Tale Points by exchanging Tale Coins that you can get as a reward from automated events.",
 				" . . . ";
 
 	.idletime = 120; // idle for 60 seconds = idle status

@@ -70,13 +70,13 @@ ymirforest,117,173,5	script	Senel Coolidge	531,{
 	{
 		mes "[Senel Coolidge]";
 		emotion	e_ho;
-		mes "Hi there! Did you know that we have two currencies in our cash shop? The Cash Points and the Uni Points.";
+		mes "Hi there! Did you know that we have two currencies in our cash shop? The Cash Points and the Tale Points.";
 		next;
 		mes "[Senel Coolidge]";
 		mes "The Cash Points is basically the points you get from donating. Your Cash Credits after donating will be synchronized with the help of Mint Adenade in Prontera.";
 		next;
 		mes "[Senel Coolidge]";
-		mes "While the Uni Points or the 'unified' points is the points from your vote credits and converted event tickets and coins.";
+		mes "While the Tale Points is the points that you can exchange from Tale Coins which you can obtain through our events.";
 		next;
 		mes "So basically, you'll be able to get any item from the cash shop w/o spending anything.";
 		mes " ";
