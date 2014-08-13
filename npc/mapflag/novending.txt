@@ -10,5 +10,5 @@
 //= 1.0 - Initial script.
 //============================================================
 
-//prontera	mapflag	novending
-//prt_in	mapflag	novending
+prontera	mapflag	novending
+prt_in	mapflag	novending
