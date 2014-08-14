@@ -1,6 +1,6 @@
 //Ragnarok Tales - Fortune's Market
 
-market	mapflag	autotrade
+//market	mapflag	autotrade
 market	mapflag	nopenalty
 market	mapflag	noteleport
 market	mapflag	nobranch
@@ -27,7 +27,6 @@ mes "We hope you can find all you need... good luck!";
 close;
 
 }
-
 
 -	script	Vending_Engine	-1,{
 	end;
