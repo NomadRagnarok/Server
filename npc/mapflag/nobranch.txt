@@ -387,3 +387,5 @@ ecl_hub01	mapflag	nobranch
 // Poring War ==================
 poring_w01	mapflag	nobranch
 poring_w02	mapflag	nobranch
+
+ymirforest	mapflag	nobranch
