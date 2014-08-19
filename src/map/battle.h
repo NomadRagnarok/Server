@@ -6,7 +6,6 @@
 #define MAP_BATTLE_H
 
 #include "map.h" //ELE_MAX
-#include "mapreg.h"
 #include "../common/cbasetypes.h"
 
 /**
@@ -417,6 +416,7 @@ struct Battle_Config {
 	int invincible_nodamage;
 	int mob_slave_keep_target;
 	int autospell_check_range;	//Enable range check for autospell bonus. [L0ne_W0lf]
+	int knockback_left;
 	int client_reshuffle_dice;  // Reshuffle /dice
 	int client_sort_storage;
 	int feature_buying_store;
@@ -450,7 +450,8 @@ struct Battle_Config {
 	int atcommand_mobinfo_type;
 	
 	int mob_size_influence; // Enable modifications on earned experience, drop rates and monster status depending on monster size. [mkbu95]
-	
+	int bowling_bash_area;
+
 	/** Hercules **/
 	int skill_trap_type;
 	int item_restricted_consumption_type;
