@@ -20,10 +20,12 @@ prontera,169,231,4	script	Event Rewards	660,{
 	set .GMAccess,60;
 	set .GMDelete,80;
 	set .GMLogging,99;
-	set .PackageCount,3;
+	set .PackageCount,5;
 	setarray .Package1[0],7539,1;
 	setarray .Package2[0],7608,1;
 	setarray .Package3[0],12210,1;
+	setarray .Package4[0],12210,10,7539,2;
+	setarray .Package5[0],12210,5,7539,1;
 
 // --------------------------------------------------
 
