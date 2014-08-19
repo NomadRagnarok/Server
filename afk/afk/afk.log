@@ -1,4 +1,4 @@
-﻿Build started 8/4/2014 5:29:50 PM.
+﻿Build started 8/15/2014 12:56:37 AM.
      1>Project "C:\Users\Exc\Desktop\RO Tools\Server RT\trunk\afk\afk.vcxproj" on node 3 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\src\common /I..\3rdparty\msinttypes\include /ZI /nologo /W3 /WX- /Od /Oy- /D _WINDLL /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"afk\\" /Fd"afk\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt ..\src\plugins\afk.c
@@ -11,4 +11,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:11.64
+Time Elapsed 00:00:00.81
