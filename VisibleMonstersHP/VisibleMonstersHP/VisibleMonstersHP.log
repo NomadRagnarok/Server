@@ -1,0 +1,12 @@
+﻿Build started 8/19/2014 6:48:15 PM.
+     1>Project "C:\Users\Exc\Desktop\RO Tools\Server RT\trunk\VisibleMonstersHP\VisibleMonstersHP.vcxproj" on node 6 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\src\common /I..\3rdparty\msinttypes\include /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _WINDLL /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"VisibleMonstersHP\\" /Fd"VisibleMonstersHP\\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt ..\plugins\VisibleMonstersHP.c
+         VisibleMonstersHP.c
+     1>c:\users\exc\desktop\ro tools\server rt\trunk\plugins\visiblemonstershp.c(401): error C2037: left of 'option' specifies undefined struct/union 'npc_data'
+     1>c:\users\exc\desktop\ro tools\server rt\trunk\plugins\visiblemonstershp.c(401): fatal error C1903: unable to recover from previous error(s); stopping compilation
+     1>Done Building Project "C:\Users\Exc\Desktop\RO Tools\Server RT\trunk\VisibleMonstersHP\VisibleMonstersHP.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:01.15

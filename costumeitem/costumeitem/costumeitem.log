@@ -1,5 +1,5 @@
-﻿Build started 8/19/2014 1:02:08 PM.
-     1>Project "C:\Users\Exc\Desktop\RO Tools\Server RT\trunk\costumeitem\costumeitem.vcxproj" on node 6 (Build target(s)).
+﻿Build started 8/19/2014 6:57:36 PM.
+     1>Project "C:\Users\Exc\Desktop\RO Tools\Server RT\trunk\costumeitem\costumeitem.vcxproj" on node 9 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\src\common /I..\3rdparty\msinttypes\include /ZI /nologo /W3 /WX- /Od /Oy- /D _WINDLL /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"costumeitem\\" /Fd"costumeitem\\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt ..\src\plugins\costumeitem.c
          costumeitem.c
@@ -13,4 +13,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:31.06
+Time Elapsed 00:00:03.75

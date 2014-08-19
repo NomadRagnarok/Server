@@ -15,10 +15,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-sample", "vcproj-12\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking", "vcproj-12\plugin-HPMHooking.vcxproj", "{745D4A8C-6A68-4721-A43A-D81BF59860A1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "setbgid", "setbgid\setbgid.vcxproj", "{E51D993F-9DCB-434A-9231-2E7802C3427E}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "costumeitem", "costumeitem\costumeitem.vcxproj", "{5374C116-4C20-48D0-995C-BEA4E1CD5DD2}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "afk", "afk\afk.vcxproj", "{37505EBD-055F-4EDB-A18F-785B43920F38}"
 EndProject
 Global
@@ -51,14 +47,6 @@ Global
 		{745D4A8C-6A68-4721-A43A-D81BF59860A1}.Debug|Win32.Build.0 = Debug|Win32
 		{745D4A8C-6A68-4721-A43A-D81BF59860A1}.Release|Win32.ActiveCfg = Release|Win32
 		{745D4A8C-6A68-4721-A43A-D81BF59860A1}.Release|Win32.Build.0 = Release|Win32
-		{E51D993F-9DCB-434A-9231-2E7802C3427E}.Debug|Win32.ActiveCfg = Debug|Win32
-		{E51D993F-9DCB-434A-9231-2E7802C3427E}.Debug|Win32.Build.0 = Debug|Win32
-		{E51D993F-9DCB-434A-9231-2E7802C3427E}.Release|Win32.ActiveCfg = Release|Win32
-		{E51D993F-9DCB-434A-9231-2E7802C3427E}.Release|Win32.Build.0 = Release|Win32
-		{5374C116-4C20-48D0-995C-BEA4E1CD5DD2}.Debug|Win32.ActiveCfg = Debug|Win32
-		{5374C116-4C20-48D0-995C-BEA4E1CD5DD2}.Debug|Win32.Build.0 = Debug|Win32
-		{5374C116-4C20-48D0-995C-BEA4E1CD5DD2}.Release|Win32.ActiveCfg = Release|Win32
-		{5374C116-4C20-48D0-995C-BEA4E1CD5DD2}.Release|Win32.Build.0 = Release|Win32
 		{37505EBD-055F-4EDB-A18F-785B43920F38}.Debug|Win32.ActiveCfg = Debug|Win32
 		{37505EBD-055F-4EDB-A18F-785B43920F38}.Debug|Win32.Build.0 = Debug|Win32
 		{37505EBD-055F-4EDB-A18F-785B43920F38}.Release|Win32.ActiveCfg = Release|Win32
