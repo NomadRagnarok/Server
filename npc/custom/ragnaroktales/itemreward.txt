@@ -20,12 +20,28 @@ prontera,169,231,4	script	Event Rewards	660,{
 	set .GMAccess,60;
 	set .GMDelete,80;
 	set .GMLogging,99;
-	set .PackageCount,5;
-	setarray .Package1[0],7539,1;
-	setarray .Package2[0],7608,1;
-	setarray .Package3[0],12210,1;
-	setarray .Package4[0],12210,10,7539,2;
-	setarray .Package5[0],12210,5,7539,1;
+	set .PackageCount,21;
+	setarray .Package1[0],5746,1;					//Lord knight
+	setarray .Package2[0],5747,1;					//High Priest
+	setarray .Package3[0],5748,1;					//Sniper
+	setarray .Package4[0],5749,1;					//Whitesmith
+	setarray .Package5[0],5750,1;					//Stalker
+	setarray .Package6[0],5751,1;					//Clown
+	setarray .Package7[0],5752,1;					//Creator
+	setarray .Package8[0],5753,1;					//High Wizard
+	setarray .Package9[0],5754,1;					//Champion
+	setarray .Package10[0],5755,1;					//Sinx
+	setarray .Package11[0],5756,1;					//Professor
+	setarray .Package12[0],5757,1;					//Paladin
+	setarray .Package13[0],5758,1;					//Gypsy
+	setarray .Package14[0],5760,1;					//WS F
+	setarray .Package15[0],12210,5,7539,1;			//Creator
+	setarray .Package16[0],12210,10,7539,2;			//Creator
+	setarray .Package17[0],7539,1;
+	setarray .Package18[0],7608,1;
+	setarray .Package19[0],12210,1;
+	setarray .Package20[0],12210,10,7539,2;
+	setarray .Package21[0],12210,5,7539,1;
 
 // --------------------------------------------------
 

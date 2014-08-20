@@ -20,7 +20,7 @@ prontera,202,182,4	script	FryD's Assistant	620,{
 	set .GMAccess,60;
 	set .GMDelete,80;
 	set .GMLogging,99;
-	set .PackageCount,16;
+	set .PackageCount,21;
 	setarray .Package1[0],5746,1;					//Lord knight
 	setarray .Package2[0],5747,1;					//High Priest
 	setarray .Package3[0],5748,1;					//Sniper
@@ -37,6 +37,11 @@ prontera,202,182,4	script	FryD's Assistant	620,{
 	setarray .Package14[0],5760,1;					//WS F
 	setarray .Package15[0],12210,5,7539,1;			//Creator
 	setarray .Package16[0],12210,10,7539,2;			//Creator
+	setarray .Package17[0],7539,1;
+	setarray .Package18[0],7608,1;
+	setarray .Package19[0],12210,1;
+	setarray .Package20[0],12210,10,7539,2;
+	setarray .Package21[0],12210,5,7539,1;
 
 // --------------------------------------------------
 
