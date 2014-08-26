@@ -129,11 +129,11 @@ OnCorrectKilled:
 	disablenpc "Poring Chase Warper";
 	end;
 OnFakeKilled:
-//	dispbottom "You killed the wrong Poring! Yerrrrrrrrrrrr out!";
-//	warp .Map$, .x, .y;
-//	if ( !getmapusers( "poring_c01" ) ) goto OnEnd;
-	dispbottom "You killed the wrong Poring!";
-	sc_start2 SC_FREEZE, 9000,0,10000; // 9 seconds to freeze
+	dispbottom "You killed the wrong Poring! You're out!";
+	warp .Map$, .x, .y;
+	if ( !getmapusers( "poring_c01" ) ) goto OnEnd;
+//	dispbottom "You killed the wrong Poring!";
+//	sc_start2 SC_FREEZE, 9000,0,10000; // 9 seconds to freeze
 //	sc_start2 SC_STONE, 9000,0,10000;
 //	sc_start2 SC_STUN, 9000,0,10000;
 //	sc_start2 SC_SLEEP, 9000,0,10000;

@@ -17,7 +17,7 @@ v1.0 - First version.
 	v1.0.1 - Added changelog.
 =========================================================*/
 
-prontera,130,216,5	script	Tales Manager::points2item	606,{
+prontera,130,216,5	script	Tales Manager::points2item	10066,{
 	
 	/*-----------------------------------------------------
 	Script
