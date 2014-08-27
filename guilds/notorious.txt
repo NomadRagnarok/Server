@@ -1,0 +1,25 @@
+2000264		219.89.82.45		Gol D Roger 		Champion	 	99
+2000453		203.111.224.36		Monkey D Dragon 	High Wizard 	95
+2000743		112.210.95.243 		Death Bringer 		Whitesmith		99
+2000566		219.89.82.45		Mr Chips Lord 		Knight 			89
+2000214		124.6.181.66		xXJoshyXx 			Sniper 			99
+2000216							InFaMuS 			Creator 		99
+2000339		219.89.82.45		Fr Igno 			Champion 		99
+2000609		112.198.64.72		Alyre 				Champion 		99
+2000083		222.127.85.49		Jeff Fox 			Sniper 			99
+2000164		112.198.77.23		WhoDazz 			Sniper 			99
+2000218		112.209.147.81		Acid Amino 			Champion 		99
+2000520		124.106.39.80		Hand of King 		Champion 		99
+2000608		219.89.82.45		Emma Stone 			Whitesmith 		99
+2001067		112.198.64.81 		o N e c L i C k 	Sniper 			82
+2000558		112.208.232.88		Denimlab 			Champion 		94
+2000244		180.191.105.3		Mr C o f f e e 		Champion 		99
+2000426		222.127.174.246		Sachoo 				Whitesmith 		99
+2000854		112.198.77.23		One Night Stand 	Assassin Cross 	99
+2000525		121.1.55.122		IamXinn 			Sniper 			99
+2000315		92.99.100.150		Lord Bryant 		Lord Knight 	99
+2000293		219.89.82.45		pandoks 			Champion 		94
+2001046		219.89.82.45		Mr Smith 			Clown 			99
+2000330		112.198.90.11		Christine 			Stalker			99
+2000321		112.207.182.21		Palladium 			Lord Knight 	99
+2000810		219.89.82.45		Linus Torvalds 		Stalker 		91
