@@ -1,7 +1,7 @@
 2000264		219.89.82.45		Gol D Roger 		Champion	 	99
 2000453		203.111.224.36		Monkey D Dragon 	High Wizard 	95
 2000743		112.210.95.243 		Death Bringer 		Whitesmith		99
-2000566		219.89.82.45		Mr Chips Lord 		Knight 			89
+2000566		219.89.82.45		Mr Chips 			Lord Knight 	89
 2000214		124.6.181.66		xXJoshyXx 			Sniper 			99
 2000216							InFaMuS 			Creator 		99
 2000339		219.89.82.45		Fr Igno 			Champion 		99
