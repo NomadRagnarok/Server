@@ -129,7 +129,7 @@ que_hugel	mapflag	noreturn
 //payg_cas03	mapflag	noreturn
 //payg_cas04	mapflag	noreturn
 //payg_cas05	mapflag	noreturn
-//prtg_cas01	mapflag	noreturn
+prtg_cas01	mapflag	noreturn
 //prtg_cas02	mapflag	noreturn
 //prtg_cas03	mapflag	noreturn
 //prtg_cas04	mapflag	noreturn
