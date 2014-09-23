@@ -1601,8 +1601,13 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 					if( src->type == BL_PC )
 						clif->msg((TBL_PC*)src, SKILL_CANT_USE_AREA); // This skill cannot be used within this area
 					else if( src->type == BL_MOB && map->list[src->m].zone->disabled_skills[i]->subtype != MZS_NONE ) {
-						if( (st->mode&MD_BOSS) && !(map->list[src->m].zone->disabled_skills[i]->subtype&MZS_BOSS) )
-							break;
+						if( st->mode&MD_BOSS ) { /** is boss **/
+							if( !( map->list[src->m].zone->disabled_skills[i]->subtype&MZS_BOSS ) )
+								break;
+						} else { /** is not boss **/
+							if( map->list[src->m].zone->disabled_skills[i]->subtype&MZS_BOSS )
+								break;
+						}
 					}
 					return 0;
 				}
@@ -1969,6 +1974,10 @@ unsigned short status_base_atk(const struct block_list *bl, const struct status_
 	//Normally only players have base-atk, but homunc have a different batk
 	// equation, hinting that perhaps non-players should use this for batk.
 	// [Skotlex]
+#ifdef RENEWAL
+	if (bl->type == BL_HOM)
+		str = (int)(floor((rstr + dex + st->luk) / 3) + floor(((TBL_HOM*)bl)->homunculus.level / 10));
+#endif
 	dstr = str/10;
 	str += dstr*dstr;
 	if (bl->type == BL_PC)
@@ -2005,11 +2014,16 @@ void status_calc_misc(struct block_list *bl, struct status_data *st, int level) 
 		st->cri = st->flee2 = 0;
 
 #ifdef RENEWAL // renewal formulas
-	st->matk_min = st->matk_max = bl->type == BL_PC ? status->base_matk(st, level) : level + st->int_;
-	st->hit += level + st->dex + (bl->type == BL_PC ? st->luk/3 + 175 : 150); //base level + ( every 1 dex = +1 hit ) + (every 3 luk = +1 hit) + 175
-	st->flee += level + st->agi + (bl->type == BL_PC ? st->luk/5 : 0) + 100; //base level + ( every 1 agi = +1 flee ) + (every 5 luk = +1 flee) + 100
-	st->def2 += (int)(((float)level + st->vit)/2 + ( bl->type == BL_PC ? ((float)st->agi/5) : 0 )); //base level + (every 2 vit = +1 def) + (every 5 agi = +1 def)
-	st->mdef2 += (int)( bl->type == BL_PC ?(st->int_ + ((float)level/4) + ((float)(st->dex+st->vit)/5)):((float)(st->int_ + level)/4)); //(every 4 base level = +1 mdef) + (every 1 int = +1 mdef) + (every 5 dex = +1 mdef) + (every 5 vit = +1 mdef)
+	if (bl->type == BL_HOM) {
+		st->hit = level + st->dex + 150; //base level + dex + 150
+		st->flee = level + st->agi + level/10; //base level + agi + base level/10
+	} else {
+		st->matk_min = st->matk_max = bl->type == BL_PC ? status->base_matk(st, level) : level + st->int_;
+		st->hit += level + st->dex + (bl->type == BL_PC ? st->luk/3 + 175 : 150); //base level + ( every 1 dex = +1 hit ) + (every 3 luk = +1 hit) + 175
+		st->flee += level + st->agi + (bl->type == BL_PC ? st->luk/5 : 0) + 100; //base level + ( every 1 agi = +1 flee ) + (every 5 luk = +1 flee) + 100
+		st->def2 += (int)(((float)level + st->vit)/2 + ( bl->type == BL_PC ? ((float)st->agi/5) : 0 )); //base level + (every 2 vit = +1 def) + (every 5 agi = +1 def)
+		st->mdef2 += (int)( bl->type == BL_PC ?(st->int_ + ((float)level/4) + ((float)(st->dex+st->vit)/5)):((float)(st->int_ + level)/4)); //(every 4 base level = +1 mdef) + (every 1 int = +1 mdef) + (every 5 dex = +1 mdef) + (every 5 vit = +1 mdef)
+	}
 #else // not RENEWAL
 	st->matk_min = status_base_matk_min(st);
 	st->matk_max = status_base_matk_max(st);
@@ -2164,7 +2178,7 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 
 	if (flag&2 && battle_config.mob_size_influence) {
 		// change for sized monsters [Valaris]
-		if (md->special_state.size==SZ_SMALL) {
+		if (md->special_state.size==SZ_MEDIUM) {
 			mstatus->max_hp>>=1;
 			mstatus->max_sp>>=1;
 			if (!mstatus->max_hp) mstatus->max_hp = 1;
@@ -2470,13 +2484,13 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	//Give them all modes except these (useful for clones)
 	bstatus->mode = MD_MASK&~(MD_BOSS|MD_PLANT|MD_DETECTOR|MD_ANGRY|MD_TARGETWEAK);
 
-	bstatus->size = (sd->class_&JOBL_BABY)?SZ_MEDIUM:SZ_SMALL;
+	bstatus->size = (sd->class_&JOBL_BABY)?SZ_SMALL:SZ_MEDIUM;
 	if (battle_config.character_size && (pc_isriding(sd) || pc_isridingdragon(sd)) ) { //[Lupus]
 		if (sd->class_&JOBL_BABY) {
 			if (battle_config.character_size&SZ_BIG)
 				bstatus->size++;
 		} else
-			if(battle_config.character_size&SZ_SMALL)
+			if(battle_config.character_size&SZ_MEDIUM)
 				bstatus->size++;
 	}
 	bstatus->aspd_rate = 1000;
@@ -3288,11 +3302,26 @@ int status_calc_homunculus_(struct homun_data *hd, enum e_status_calc_opt opt) {
 		hstatus->hp = 1;
 		hstatus->sp = 1;
 	}
+
+	hstatus->aspd_rate = 1000;
+
+#ifdef RENEWAL
+	hstatus->def = (hstatus->vit + (hom->level / 10)) + ((hstatus->agi + (hom->level / 10)) / 2);
+	hstatus->mdef = hstatus->int_ + ((hstatus->int_ + hstatus->dex + hstatus->luk) / 3) + (hom->level / 10) * 2;
+
+	amotion = (1000 -2*hstatus->agi -hstatus->dex) * hd->homunculusDB->baseASPD/1000;
+#else
 	skill_lv = hom->level/10 + hstatus->vit/5;
 	hstatus->def = cap_value(skill_lv, 0, 99);
 
 	skill_lv = hom->level/10 + hstatus->int_/5;
 	hstatus->mdef = cap_value(skill_lv, 0, 99);
+	amotion = (1000 -4*hstatus->agi - hstatus->dex) * hd->homunculusDB->baseASPD/1000;
+#endif
+
+	hstatus->amotion = cap_value(amotion,battle_config.max_aspd,2000);
+	hstatus->adelay = hstatus->amotion; //It seems adelay = amotion for Homunculus.
+
 
 	hstatus->max_hp = hom->max_hp;
 	hstatus->max_sp = hom->max_sp;
@@ -3318,14 +3347,10 @@ int status_calc_homunculus_(struct homun_data *hd, enum e_status_calc_opt opt) {
 		hd->battle_status.sp = hom->sp;
 	}
 
+#ifndef RENEWAL
 	hstatus->rhw.atk = hstatus->dex;
 	hstatus->rhw.atk2 = hstatus->str + hom->level;
-
-	hstatus->aspd_rate = 1000;
-
-	amotion = (1000 -4*hstatus->agi -hstatus->dex) * hd->homunculusDB->baseASPD/1000;
-	hstatus->amotion = cap_value(amotion,battle_config.max_aspd,2000);
-	hstatus->adelay = hstatus->amotion; //It seems adelay = amotion for Homunculus.
+#endif
 
 	status->calc_misc(&hd->bl, hstatus, hom->level);
 
@@ -3694,12 +3719,12 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 			}
 		}
 
-		if( bl->type&BL_HOM ) {
+		/*if( bl->type&BL_HOM ) {
 			st->rhw.atk += (st->dex - bst->dex);
 			st->rhw.atk2 += (st->str - bst->str);
 			if( st->rhw.atk2 < st->rhw.atk )
 				st->rhw.atk2 = st->rhw.atk;
-		}
+		}*/
 	}
 
 	if(flag&SCB_HIT) {
@@ -3912,7 +3937,11 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 
 			st->adelay = 2*st->amotion;
 		} else if( bl->type&BL_HOM ) {
+#ifdef RENEWAL
+			amotion = (1000 - 2*st->agi - st->dex) * ((TBL_HOM*)bl)->homunculusDB->baseASPD/1000;
+#else
 			amotion = (1000 - 4*st->agi - st->dex) * ((TBL_HOM*)bl)->homunculusDB->baseASPD/1000;
+#endif	
 			st->aspd_rate = status->calc_aspd_rate(bl, sc, bst->aspd_rate);
 
 			if(st->aspd_rate != 1000)
@@ -6287,9 +6316,12 @@ void status_change_init(struct block_list *bl) {
 	memset(sc, 0, sizeof (struct status_change));
 }
 
-//Applies SC defense to a given status change.
-//Returns the adjusted duration based on flag values.
-//the flag values are the same as in status->change_start.
+/**
+ * Applies SC defense to a given status change.
+ *
+ * @see status_change_start for the expected parameters.
+ * @return the adjusted duration based on flag values.
+ */
 int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int tick, int flag) {
 	//Percentual resistance: 10000 = 100% Resist
 	//Example: 50% -> sc_def=5000 -> 25%; 5000ms -> tick_def=5000 -> 2500ms
@@ -6582,7 +6614,7 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 		tick_def = sc_def;
 
 	//Natural resistance
-	if (!(flag&8)) {
+	if (!(flag&SCFLAG_FIXEDRATE)) {
 		rate -= rate*sc_def/10000;
 		rate -= sc_def2;
 
@@ -6616,7 +6648,7 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 	if (tick < 1) return 1;
 
 	//Rate reduction
-	if (flag&2)
+	if (flag&SCFLAG_FIXEDTICK)
 		return tick;
 
 	tick -= tick*tick_def/10000;
@@ -6703,18 +6735,23 @@ void status_display_remove(struct map_session_data *sd, enum sc_type type) {
 		}
 	}
 }
-/*==========================================
-* Starts a status change.
-* 'type' = type, 'val1~4' depend on the type.
-* 'rate' = base success rate. 10000 = 100%
-* 'tick' is base duration
-* 'flag':
-* &1 : Cannot be avoided (it has to start)
-* &2 : Tick should not be reduced (by vit, luk, lv, etc)
-* &4 : sc_data loaded, no value has to be altered.
-* &8 : rate should not be reduced (not evaluated here, but in some calls to other functions)
-* &16: Status icon (SI) should not be send
-*------------------------------------------*/
+/**
+ * Starts a status change.
+ *
+ * @param src  Status change source bl.
+ * @param bl   Status change target bl.
+ * @param type Status change type.
+ * @param rate Base success rate. 1 means 0.01%, 10000 means 100%.
+ * @param val1 Additional value (meaning depends on type).
+ * @param val2 Additional value (meaning depends on type).
+ * @param val3 Additional value (meaning depends on type).
+ * @param val4 Additional value (meaning depends on type).
+ * @param tick Base duration (milliseconds).
+ * @param flag Special flags (@see enum scstart_flag).
+ *
+ * @retval 0 if no status change happened.
+ * @retval 1 if the status change was successfully applied.
+ */
 int status_change_start(struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag) {
 	struct map_session_data *sd = NULL;
 	struct status_change* sc;
@@ -6817,7 +6854,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 	sd = BL_CAST(BL_PC, bl);
 
 	//Adjust tick according to status resistances
-	if( !(flag&(1|4)) ) {
+	if( !(flag&(SCFLAG_NOAVOID|SCFLAG_LOADED)) ) {
 		tick = status->get_sc_def(src, bl, type, rate, tick, flag);
 		if( !tick ) return 0;
 	}
@@ -6847,7 +6884,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				return 0;
 		case SC_FREEZE:
 			//Undead are immune to Freeze/Stone
-			if (undead_flag && !(flag&1))
+			if (undead_flag && !(flag&SCFLAG_NOAVOID))
 				return 0;
 		case SC_SLEEP:
 		case SC_STUN:
@@ -6956,7 +6993,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			break;
 			//Strip skills, need to divest something or it fails.
 		case SC_NOEQUIPWEAPON:
-			if (sd && !(flag&4)) { //apply sc anyway if loading saved sc_data
+			if (sd && !(flag&SCFLAG_LOADED)) { //apply sc anyway if loading saved sc_data
 				int i;
 				opt_flag = 0; //Reuse to check success condition.
 				if(sd->bonus.unstripable_equip&EQP_WEAPON)
@@ -6974,7 +7011,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_NOEQUIPSHIELD:
 			if( val2 == 1 ) val2 = 0; //GX effect. Do not take shield off..
 			else
-				if (sd && !(flag&4)) {
+				if (sd && !(flag&SCFLAG_LOADED)) {
 					int i;
 					if(sd->bonus.unstripable_equip&EQP_SHIELD)
 						return 0;
@@ -6986,7 +7023,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
 				break;
 		case SC_NOEQUIPARMOR:
-			if (sd && !(flag&4)) {
+			if (sd && !(flag&SCFLAG_LOADED)) {
 				int i;
 				if(sd->bonus.unstripable_equip&EQP_ARMOR)
 					return 0;
@@ -6998,7 +7035,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
 			break;
 		case SC_NOEQUIPHELM:
-			if (sd && !(flag&4)) {
+			if (sd && !(flag&SCFLAG_LOADED)) {
 				int i;
 				if(sd->bonus.unstripable_equip&EQP_HELM)
 					return 0;
@@ -7111,7 +7148,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 	}
 
 	//Check for BOSS resistances
-	if(st->mode&MD_BOSS && !(flag&1)) {
+	if(st->mode&MD_BOSS && !(flag&SCFLAG_NOAVOID)) {
 		if (type>=SC_COMMON_MIN && type <= SC_COMMON_MAX)
 			return 0;
 		switch (type) {
@@ -7509,7 +7546,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 
 	vd = status->get_viewdata(bl);
 	calc_flag = status->ChangeFlagTable[type];
-	if(!(flag&4)) { //&4 - Do not parse val settings when loading SCs
+	if(!(flag&SCFLAG_LOADED)) { // Do not parse val settings when loading SCs
 		switch(type) {
 			case SC_ADORAMUS:
 				sc_start(src,bl,SC_BLIND,100,val1,skill->get_time(status->sc2skill(type),val1));
@@ -7520,16 +7557,16 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				break;
 			case SC_ENDURE:
 				val2 = 7; // Hit-count [Celest]
-				if( !(flag&1) && (bl->type&(BL_PC|BL_MER)) && !map_flag_gvg(bl->m) && !map->list[bl->m].flag.battleground && !val4 ) {
+				if( !(flag&SCFLAG_NOAVOID) && (bl->type&(BL_PC|BL_MER)) && !map_flag_gvg(bl->m) && !map->list[bl->m].flag.battleground && !val4 ) {
 					struct map_session_data *tsd;
 					if( sd ) {
 						int i;
 						for( i = 0; i < 5; i++ ) {
 							if( sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) )
-								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, val3, val4, tick, 17);
+								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, val3, val4, tick, SCFLAG_ALL);
 						}
 					} else if( bl->type == BL_MER && ((TBL_MER*)bl)->devotion_flag && (tsd = ((TBL_MER*)bl)->master) )
-						status->change_start(bl, &tsd->bl, type, 10000, val1, val2, val3, val4, tick, 17);
+						status->change_start(bl, &tsd->bl, type, 10000, val1, val2, val3, val4, tick, SCFLAG_ALL);
 				}
 				//val4 signals infinite endure (if val4 == 2 it is infinite endure from Berserk)
 				if( val4 )
@@ -7617,16 +7654,16 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				break;
 			case SC_REFLECTSHIELD:
 				val2=10+val1*3; // %Dmg reflected
-				if( !(flag&1) && (bl->type&(BL_PC|BL_MER)) ) {
+				if( !(flag&SCFLAG_NOAVOID) && (bl->type&(BL_PC|BL_MER)) ) {
 					struct map_session_data *tsd;
 					if( sd ) {
 						int i;
 						for( i = 0; i < 5; i++ ) {
 							if( sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) )
-								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, 17);
+								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
 						}
 					} else if( bl->type == BL_MER && ((TBL_MER*)bl)->devotion_flag && (tsd = ((TBL_MER*)bl)->master) )
-						status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, 17);
+						status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
 				}
 				break;
 			case SC_NOEQUIPWEAPON:
@@ -7869,7 +7906,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				break;
 
 			case SC_AUTOGUARD:
-				if( !(flag&1) ) {
+				if( !(flag&SCFLAG_NOAVOID) ) {
 					struct map_session_data *tsd;
 					int i,t;
 					for( i = val2 = 0; i < val1; i++) {
@@ -7881,17 +7918,17 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 						if( sd ) {
 							for( i = 0; i < 5; i++ ) {
 								if( sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) )
-									status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, 17);
+									status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
 							}
 						}
 						else if( bl->type == BL_MER && ((TBL_MER*)bl)->devotion_flag && (tsd = ((TBL_MER*)bl)->master) )
-							status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, 17);
+							status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
 					}
 				}
 				break;
 
 			case SC_DEFENDER:
-				if (!(flag&1)) {
+				if (!(flag&SCFLAG_NOAVOID)) {
 					val2 = 5 + 15*val1; //Damage reduction
 					val3 = 0; // unused, previously speed adjustment
 					val4 = 250 - 50*val1; //Aspd adjustment
@@ -7902,7 +7939,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 						for (i = 0; i < 5; i++) {
 							//See if there are devoted characters, and pass the status to them. [Skotlex]
 							if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])))
-								status->change_start(bl, &tsd->bl,type,10000,val1,5+val1*5,val3,val4,tick,1);
+								status->change_start(bl, &tsd->bl,type,10000,val1,5+val1*5,val3,val4,tick,SCFLAG_NOAVOID);
 						}
 					}
 				}
@@ -8029,7 +8066,9 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					while( i >= 0 ) {
 						type2 = types[i];
 						if( d_sc->data[type2] )
-							status->change_start(bl, bl, type2, 10000, d_sc->data[type2]->val1, 0, 0, 0, skill->get_time(status->sc2skill(type2),d_sc->data[type2]->val1), (type2 != SC_DEFENDER) ? 16 : 0);
+							status->change_start(bl, bl, type2, 10000, d_sc->data[type2]->val1, 0, 0, 0,
+							                     skill->get_time(status->sc2skill(type2),d_sc->data[type2]->val1),
+							                     (type2 != SC_DEFENDER) ? SCFLAG_NOICON : SCFLAG_NONE);
 						i--;
 					}
 				}
@@ -8428,7 +8467,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				tick_time = 4000; // [GodLesZ] tick time
 				break;
 			case SC_PYREXIA:
-				status->change_start(src, bl,SC_BLIND,10000,val1,0,0,0,30000,11); // Blind status that last for 30 seconds
+				status->change_start(src, bl,SC_BLIND,10000,val1,0,0,0,30000,SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_FIXEDRATE); // Blind status that last for 30 seconds
 				val4 = tick / 3000;
 				tick_time = 3000; // [GodLesZ] tick time
 				break;
@@ -9026,7 +9065,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		}
 	}
 
-	/* values that must be set regardless of flag&4 e.g. val_flag */
+	/* values that must be set regardless of SCFLAG_LOADED e.g. val_flag */
 	switch(type) {
 		case SC_FIGHTINGSPIRIT:
 			val_flag |= 1|2;
@@ -9438,7 +9477,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		calc_flag&=~SCB_DYE;
 	}
 
-	if(!(flag&16) && !(flag&4 && status->DisplayType[type]))
+	if(!(flag&SCFLAG_NOICON) && !(flag&SCFLAG_LOADED && status->DisplayType[type]))
 		clif->status_change(bl,status->IconChangeTable[type],1,tick,(val_flag&1)?val1:1,(val_flag&2)?val2:0,(val_flag&4)?val3:0);
 
 	/**
@@ -11631,7 +11670,7 @@ int status_change_spread( struct block_list *src, struct block_list *bl ) {
 			data.val2 = sc->data[i]->val2;
 			data.val3 = sc->data[i]->val3;
 			data.val4 = sc->data[i]->val4;
-			status->change_start(src,bl,(sc_type)i,10000,data.val1,data.val2,data.val3,data.val4,data.tick,1|2|8);
+			status->change_start(src,bl,(sc_type)i,10000,data.val1,data.val2,data.val3,data.val4,data.tick,SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_FIXEDRATE);
 			flag = 1;
 		}
 	}
