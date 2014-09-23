@@ -419,6 +419,9 @@ OnStartNPC:
 			AddMap("PvP Lobby", "pvplobby", 79, 58);
 			AddMap("Battlegrounds Waiting Room", "bat_room", 155, 150);
 		EndNode();
+		StartNode("^ff9c00Market^000000");
+			AddMap("Market", "market", 83, 57);
+		EndNode();
 		StartNode("Towns");
 			AddMap("Alberta", "alberta", 28, 234);
 			AddMap("Aldebaran", "aldebaran", 140, 131);
