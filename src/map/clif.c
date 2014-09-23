@@ -1348,7 +1348,7 @@ bool clif_spawn(struct block_list *bl)
 					clif->spiritball(&sd->bl);
 				if(sd->state.size==SZ_BIG) // tiny/big players [Valaris]
 					clif->specialeffect(bl,423,AREA);
-				else if(sd->state.size==SZ_SMALL)
+				else if(sd->state.size==SZ_MEDIUM)
 					clif->specialeffect(bl,421,AREA);
 				if( sd->bg_id && map->list[sd->bl.m].flag.battleground )
 					clif->sendbgemblem_area(sd);
@@ -1368,7 +1368,7 @@ bool clif_spawn(struct block_list *bl)
 				TBL_MOB *md = ((TBL_MOB*)bl);
 				if(md->special_state.size==SZ_BIG) // tiny/big mobs [Valaris]
 					clif->specialeffect(&md->bl,423,AREA);
-				else if(md->special_state.size==SZ_SMALL)
+				else if(md->special_state.size==SZ_MEDIUM)
 					clif->specialeffect(&md->bl,421,AREA);
 			}
 			break;
@@ -1377,7 +1377,7 @@ bool clif_spawn(struct block_list *bl)
 				TBL_NPC *nd = ((TBL_NPC*)bl);
 				if( nd->size == SZ_BIG )
 					clif->specialeffect(&nd->bl,423,AREA);
-				else if( nd->size == SZ_SMALL )
+				else if( nd->size == SZ_MEDIUM )
 					clif->specialeffect(&nd->bl,421,AREA);
 			}
 			break;
@@ -1585,7 +1585,7 @@ void clif_move2(struct block_list *bl, struct view_data *vd, struct unit_data *u
 	//			clif_movepc(sd);
 				if(sd->state.size==SZ_BIG) // tiny/big players [Valaris]
 					clif->specialeffect(&sd->bl,423,AREA);
-				else if(sd->state.size==SZ_SMALL)
+				else if(sd->state.size==SZ_MEDIUM)
 					clif->specialeffect(&sd->bl,421,AREA);
 			}
 			break;
@@ -1594,7 +1594,7 @@ void clif_move2(struct block_list *bl, struct view_data *vd, struct unit_data *u
 				TBL_MOB *md = ((TBL_MOB*)bl);
 				if(md->special_state.size==SZ_BIG) // tiny/big mobs [Valaris]
 					clif->specialeffect(&md->bl,423,AREA);
-				else if(md->special_state.size==SZ_SMALL)
+				else if(md->special_state.size==SZ_MEDIUM)
 					clif->specialeffect(&md->bl,421,AREA);
 			}
 			break;
@@ -3210,12 +3210,6 @@ void clif_changelook(struct block_list *bl,int type,int val)
 			break;
 			case LOOK_BASE:
 				if( !sd ) break;
-				// We shouldn't update LOOK_BASE if the player is disguised
-				// if we do so the client will think that the player class
-				// is really a mob and issues like 7725 will happen in every
-				// SC_ that alters class_ in any way [Panikon]
-				if( sd->disguise != -1 )
-					return;
 
 				if( sd->sc.option&OPTION_COSTUME )
 					vd->weapon = vd->shield = 0;
@@ -3295,7 +3289,7 @@ void clif_changelook(struct block_list *bl,int type,int val)
 	}
 
 	// prevent leaking the presence of GM-hidden objects
-	if( sc && sc->option&OPTION_INVISIBLE )
+	if( sc && sc->option&OPTION_INVISIBLE && !disguised(bl) )
 		target = SELF;
 
 #if PACKETVER < 4
@@ -3316,11 +3310,12 @@ void clif_changelook(struct block_list *bl,int type,int val)
 		WBUFB(buf,6)=type;
 		WBUFL(buf,7)=val;
 	}
-	clif->send(buf,packet_len(0x1d7),bl,target);
-	if( disguised(bl) && sd && sd->fontcolor ) {
+	if( disguised(bl) ) {
+		clif->send(buf,packet_len(0x1d7),bl,AREA_WOS);
 		WBUFL(buf,2)=-bl->id;
 		clif->send(buf,packet_len(0x1d7),bl,SELF);
-	}
+	} else
+		clif->send(buf,packet_len(0x1d7),bl,target);
 #endif
 }
 
@@ -3437,7 +3432,6 @@ void clif_arrowequip(struct map_session_data *sd,int val)
 
 	nullpo_retv(sd);
 
-	pc_stop_attack(sd); // [Valaris]
 #if PACKETVER >= 20121128
 	clif->status_change(&sd->bl, SI_CLIENT_ONLY_EQUIP_ARROW, 1, INVALID_TIMER, 0, 0, 0);
 #endif
@@ -4326,7 +4320,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 				clif->getareachar_pc(sd, tsd);
 				if(tsd->state.size==SZ_BIG) // tiny/big players [Valaris]
 					clif->specialeffect_single(bl,423,sd->fd);
-				else if(tsd->state.size==SZ_SMALL)
+				else if(tsd->state.size==SZ_MEDIUM)
 					clif->specialeffect_single(bl,421,sd->fd);
 				if( tsd->bg_id && map->list[tsd->bl.m].flag.battleground )
 					clif->sendbgemblem_single(sd->fd,tsd);
@@ -4345,7 +4339,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 					clif->dispchat((struct chat_data*)map->id2bl(nd->chat_id),sd->fd);
 				if( nd->size == SZ_BIG )
 					clif->specialeffect_single(bl,423,sd->fd);
-				else if( nd->size == SZ_SMALL )
+				else if( nd->size == SZ_MEDIUM )
 					clif->specialeffect_single(bl,421,sd->fd);
 			}
 			break;
@@ -4354,7 +4348,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 				TBL_MOB* md = (TBL_MOB*)bl;
 				if(md->special_state.size==SZ_BIG) // tiny/big mobs [Valaris]
 					clif->specialeffect_single(bl,423,sd->fd);
-				else if(md->special_state.size==SZ_SMALL)
+				else if(md->special_state.size==SZ_MEDIUM)
 					clif->specialeffect_single(bl,421,sd->fd);
 #if PACKETVER >= 20120404
 				if( !(md->status.mode&MD_BOSS) ){
@@ -5128,8 +5122,12 @@ int clif_skill_damage(struct block_list *src, struct block_list *dst, int64 tick
 
 	damage = (int)cap_value(in_damage,INT_MIN,INT_MAX);
 	type = clif_calc_delay(type,div,damage,ddelay);
-	sc = status->get_sc(dst);
-	if(sc && sc->count) {
+	
+#if PACKETVER >= 20131223
+	if( type == 6 ) type = 8; //bugreport:8263
+#endif
+	
+	if( ( sc = status->get_sc(dst) ) && sc->count ) {
 		if(sc->data[SC_ILLUSION] && damage)
 			damage = damage*(sc->data[SC_ILLUSION]->val2) + rnd()%100;
 	}
@@ -10497,7 +10495,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 	}
 
 	// if player is autotrading
-	if( dstsd->state.autotrade == 1 ) {
+	if( dstsd->state.autotrade ) {
 		char output[256];
 		sprintf(output, "%s is in autotrade mode and cannot receive whispered messages.", dstsd->status.name);
 		clif->wis_message(fd, map->wisp_server_name, output, strlen(output) + 1);
@@ -12235,7 +12233,7 @@ void clif_parse_PartyMessage(int fd, struct map_session_data* sd)
 void clif_parse_PartyChangeLeader(int fd, struct map_session_data* sd) {
 	party->changeleader(sd, map->id2sd(RFIFOL(fd,2)));
 }
-
+	
 /// Party Booking in KRO [Spiria]
 ///
 
@@ -17702,8 +17700,8 @@ void clif_maptypeproperty2(struct block_list *bl,enum send_target t) {
 	p.PacketType = maptypeproperty2Type;
 	p.type = 0x28;
 	p.flag.party = map->list[bl->m].flag.pvp ? 1 : 0;
-	p.flag.guild = map_flag_gvg(bl->m) ? 1 : 0;
-	p.flag.siege = map_flag_gvg2(bl->m) ? 1: 0;
+	p.flag.guild = (map->list[bl->m].flag.battleground || map_flag_gvg(bl->m)) ? 1 : 0;
+	p.flag.siege = (map->list[bl->m].flag.battleground || map_flag_gvg2(bl->m)) ? 1: 0;
 	p.flag.mineffect = map_flag_gvg(bl->m); // FIXME/CHECKME Forcing /mineffect in castles during WoE (probably redundant? I'm not sure)
 	p.flag.nolockon = 0; // TODO
 	p.flag.countpk = map->list[bl->m].flag.pvp ? 1 : 0;
@@ -18255,6 +18253,18 @@ void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd) {
 	clif->npc_market_purchase_ack(sd,p,npc->market_buylist(sd,(p->PacketLength - 4) / sizeof(p->list[0]),p));
 #endif
 }
+	
+void clif_PartyLeaderChanged(struct map_session_data *sd, int prev_leader_aid, int new_leader_aid) {
+	struct packet_party_leader_changed p;
+	
+	p.PacketType = partyleaderchangedType;
+	
+	p.prev_leader_aid = prev_leader_aid;
+	p.new_leader_aid = new_leader_aid;
+	
+	clif->send(&p,sizeof(p),&sd->bl,PARTY);
+}
+	
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
 	if( sd ) {
@@ -18885,6 +18895,7 @@ void clif_defaults(void) {
 	clif->party_xy_remove = clif_party_xy_remove;
 	clif->party_show_picker = clif_party_show_picker;
 	clif->partyinvitationstate = clif_partyinvitationstate;
+	clif->PartyLeaderChanged = clif_PartyLeaderChanged;
 	/* guild-specific */
 	clif->guild_created = clif_guild_created;
 	clif->guild_belonginfo = clif_guild_belonginfo;

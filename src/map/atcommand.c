@@ -619,7 +619,7 @@ ACMD(who) {
 					break;
 				}
 			}
-			clif->message(fd, StrBuf->Value(&buf));
+			clif->colormes(fd, COLOR_DEFAULT, StrBuf->Value(&buf));/** for whatever reason clif->message crashes with some patterns, see bugreport:8186 **/
 			StrBuf->Clear(&buf);
 			count++;
 		}
@@ -1915,11 +1915,11 @@ ACMD(monster)
 		number = battle_config.atc_spawn_quantity_limit;
 	
 	if (strcmpi(info->command, "monstersmall") == 0)
-		size = SZ_SMALL;
+		size = SZ_MEDIUM;
 	else if (strcmpi(info->command, "monsterbig") == 0)
 		size = SZ_BIG;
 	else
-		size = SZ_MEDIUM;
+		size = SZ_SMALL;
 	
 	if (battle_config.etc_log)
 		ShowInfo("%s monster='%s' name='%s' id=%d count=%d (%d,%d)\n", command, monster, name, mob_id, number, sd->bl.x, sd->bl.y);
@@ -5469,22 +5469,20 @@ ACMD(autotrade) {
 	sd->state.autotrade = 1;
 	if( battle_config.at_timeout ) {
 		int timeout = atoi(message);
-		status->change_start(NULL,&sd->bl, SC_AUTOTRADE, 10000, 0, 0, 0, 0, ((timeout > 0) ? min(timeout,battle_config.at_timeout) : battle_config.at_timeout) * 60000, 0);
+		status->change_start(NULL,&sd->bl, SC_AUTOTRADE, 10000, 0, 0, 0, 0,
+		                     ((timeout > 0) ? min(timeout,battle_config.at_timeout) : battle_config.at_timeout) * 60000, SCFLAG_NONE);
 	}
 
-	/* currently standalone is not supporting buyingstores, so we rely on the previous method */
-	if( sd->state.buyingstore ) {
-		clif->authfail_fd(fd, 15);
-		return true;
-	}
-
-	
 	clif->chsys_quit(sd);
 	
 	clif->authfail_fd(sd->fd, 15);
-	
+
+	/* currently standalone is not supporting buyingstores, so we rely on the previous method */
+	if( sd->state.buyingstore )
+		return true;
 	
 #ifdef AUTOTRADE_PERSISTENCY
+	sd->state.autotrade = 2;/** state will enter pre-save, we use it to rule out some criterias **/
 	pc->autotrade_prepare(sd);
 	
 	return false;/* we fail to not cause it to proceed on is_atcommand */
@@ -6252,7 +6250,7 @@ ACMD(summon)
 		return false;
 	}
 	
-	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, -1, -1, "--ja--", mob_id, "", SZ_MEDIUM, AI_NONE);
+	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, -1, -1, "--ja--", mob_id, "", SZ_SMALL, AI_NONE);
 	
 	if(!md)
 		return false;
@@ -7312,15 +7310,15 @@ ACMD(size)
 {
 	int size = 0;
 	
-	size = cap_value(atoi(message),SZ_MEDIUM,SZ_BIG);
+	size = cap_value(atoi(message),SZ_SMALL,SZ_BIG);
 	
 	if(sd->state.size) {
-		sd->state.size = SZ_MEDIUM;
+		sd->state.size = SZ_SMALL;
 		pc->setpos(sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_TELEPORT);
 	}
 	
 	sd->state.size = size;
-	if( size == SZ_SMALL )
+	if( size == SZ_MEDIUM )
 		clif->specialeffect(&sd->bl,420,AREA);
 	else if( size == SZ_BIG )
 		clif->specialeffect(&sd->bl,422,AREA);
@@ -7342,12 +7340,12 @@ ACMD(sizeall)
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) ) {
 		if( pl_sd->state.size != size ) {
 			if( pl_sd->state.size ) {
-				pl_sd->state.size = SZ_MEDIUM;
+				pl_sd->state.size = SZ_SMALL;
 				pc->setpos(pl_sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
 			}
 			
 			pl_sd->state.size = size;
-			if( size == SZ_SMALL )
+			if( size == SZ_MEDIUM )
 				clif->specialeffect(&pl_sd->bl,420,AREA);
 			else if( size == SZ_BIG )
 				clif->specialeffect(&pl_sd->bl,422,AREA);
@@ -7378,17 +7376,17 @@ ACMD(sizeguild)
 		return false;
 	}
 	
-	size = cap_value(size,SZ_MEDIUM,SZ_BIG);
+	size = cap_value(size,SZ_SMALL,SZ_BIG);
 	
 	for( i = 0; i < g->max_member; i++ ) {
 		if( (pl_sd = g->member[i].sd) && pl_sd->state.size != size ) {
 			if( pl_sd->state.size ) {
-				pl_sd->state.size = SZ_MEDIUM;
+				pl_sd->state.size = SZ_SMALL;
 				pc->setpos(pl_sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
 			}
 			
 			pl_sd->state.size = size;
-			if( size == SZ_SMALL )
+			if( size == SZ_MEDIUM )
 				clif->specialeffect(&pl_sd->bl,420,AREA);
 			else if( size == SZ_BIG )
 				clif->specialeffect(&pl_sd->bl,422,AREA);
@@ -9961,8 +9959,7 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 	//Attempt to use the command
 	if ( (info->func(fd, (*atcmd_msg == atcommand->at_symbol) ? sd : ssd, command, params,info) != true) ) {
 #ifdef AUTOTRADE_PERSISTENCY
-		// Autotrade was successful if standalone is set
-		if( ((*atcmd_msg == atcommand->at_symbol) ? sd->state.standalone : ssd->state.standalone) )
+		if( info->func == atcommand_autotrade ) /** autotrade deletes caster, so we got nothing more to do here **/
 			return true;
 #endif
 		sprintf(output,msg_txt(154), command); // %s failed.
