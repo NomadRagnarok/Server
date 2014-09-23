@@ -316,7 +316,7 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 				unit->attack(bl, tbl->id, ud->state.attack_continue);
 			}
 		} else { //Update chase-path
-			unit->walktobl(bl, tbl, ud->chaserange, ud->state.walk_easy|(ud->state.attack_continue?2:0));
+			unit->walktobl(bl, tbl, ud->chaserange, ud->state.walk_easy|(ud->state.attack_continue? 1 : 0));
 			return 0;
 		}
 	} else {
@@ -930,7 +930,7 @@ int unit_can_move(struct block_list *bl) {
 		    ||  sc->data[SC_ELECTRICSHOCKER]
 		    ||  sc->data[SC_WUGBITE]
 		    ||  sc->data[SC_THORNS_TRAP]
-		    ||  sc->data[SC_MAGNETICFIELD]
+		    ||  ( sc->data[SC_MAGNETICFIELD] && !sc->data[SC_HOVERING] )
 		    ||  sc->data[SC__MANHOLE]
 		    ||  sc->data[SC_CURSEDCIRCLE_ATKER]
 		    ||  sc->data[SC_CURSEDCIRCLE_TARGET]
@@ -1137,6 +1137,21 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 
 	if(!status->check_skilluse(src, target, skill_id, 0))
 		return 0;
+	
+	if( src != target && status->isdead(target) ) {
+		/**
+		 * Skills that may be cast on dead targets
+		 **/
+		switch( skill_id ) {
+			case NPC_WIDESOULDRAIN:
+			case PR_REDEMPTIO:
+			case ALL_RESURRECTION:
+			case WM_DEADHILLHERE:
+				break;
+			default:
+				return 1;
+		}
+	}
 
 	tstatus = status->get_status_data(target);
 	// Record the status of the previous skill)
