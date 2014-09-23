@@ -6106,6 +6106,13 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 	if( (s_bl = battle->get_master(src)) == NULL )
 		s_bl = src;
 
+	if (s_bl->type == BL_PC && t_bl->type == BL_MOB) {
+		TBL_PC *sd = BL_CAST(BL_PC, s_bl);
+		if ((((TBL_MOB*)target)->class_ == 1288 && !strcmp(mapindex_id2name(sd->mapindex), "cruxis")) &&
+			(sd->status.guild_id == mapreg->readreg(script->add_str("$koegid")) || battle_getcurrentskill(src) > 0))
+		return 0;
+	}
+
 	if ( s_bl->type == BL_PC ) {
 		switch( t_bl->type ) {
 			case BL_MOB: // Source => PC, Target => MOB
