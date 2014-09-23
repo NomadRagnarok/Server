@@ -88,7 +88,8 @@ cruxis,49,56,5	script	Exit#KoE	51,{
 	close2;
 	warp "Save",0,0;
 	if ( getcharid(2) == $koegid )
-		getitem 7539, 1; // configure prize here
+		getitem 7829, 10; // configure prize here
+		getitem 7828, 10; // configure prize here
 	end;
 }
 
