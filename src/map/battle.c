@@ -3190,8 +3190,9 @@ int64 battle_calc_gvg_damage(struct block_list *src,struct block_list *bl,int64 
 			switch (skill_id) {
 #ifndef RENEWAL
 			case MO_TRIPLEATTACK:
-#endif
 			case HW_GRAVITATION:
+#endif
+			case TF_DOUBLE:
 				break;
 			default:
 				return 0;
@@ -5105,6 +5106,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 	}
 #endif
 
+#ifndef RENEWAL // Offensive damage increment in renewal is done somewhere else
 	if (sd) {
 		if (skill_id != CR_SHIELDBOOMERANG) //Only Shield boomerang doesn't takes the Star Crumbs bonus.
 			ATK_ADD2(wd.div_*sd->right_weapon.star, wd.div_*sd->left_weapon.star);
@@ -5126,7 +5128,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				ATK_ADD(10*sd->status.inventory[index].refine);
 		}
 	}
-
+#endif
     //Card Fix, tsd side
     if(tsd){ //if player on player then it was already measured above
 		wd.damage = battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage, (flag.lh?1:0), wd.flag);
@@ -6105,13 +6107,6 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 
 	if( (s_bl = battle->get_master(src)) == NULL )
 		s_bl = src;
-
-	if (s_bl->type == BL_PC && t_bl->type == BL_MOB) {
-		TBL_PC *sd = BL_CAST(BL_PC, s_bl);
-		if ((((TBL_MOB*)target)->class_ == 1288 && !strcmp(mapindex_id2name(sd->mapindex), "cruxis")) &&
-			(sd->status.guild_id == mapreg->readreg(script->add_str("$koegid")) || battle_getcurrentskill(src) > 0))
-		return 0;
-	}
 
 	if ( s_bl->type == BL_PC ) {
 		switch( t_bl->type ) {
