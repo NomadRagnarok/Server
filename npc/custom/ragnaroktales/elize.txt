@@ -1,0 +1,32 @@
+prontera,165,200,5	script	Elize	504,{
+
+    if( ResetBugA )
+	{
+		mes "^FF0000[Elize]^000000";
+		mes "Hi there! Thanks again for your cooperation.";
+		mes "In case you found a game breaking bug, please let the GM Team know. Bug abuse may cause your account to be banned.";
+		close;
+	}
+		else
+	{
+		mes "^FF0000[Elize]^000000";
+		mes "Hi there! FryD revoked my ability to save your current status build as it was abused by the mortals of Ragnarok Tales.";
+		next;
+		mes "^FF0000[Elize]^000000";
+		mes "The GM Team will be banning those accounts with UNFIXED bugged characters starting October 15, 2014.";
+		mes "";
+		mes "So...";
+		next;
+		mes "^FF0000[Elize]^000000";
+		mes "Snaehild is asking for the cooperation of everyone to reset their bugged character status.";
+		mes "In return i'll be giving you a free Tale Box!";
+		next;
+		emotion	e_no1;
+		sc_end SC_ALL;
+		resetstatus;
+		getitem	30009,1;
+		set ResetBugA, 1;
+		mes "Thanks for your cooperation!";
+		close;
+	}
+}
