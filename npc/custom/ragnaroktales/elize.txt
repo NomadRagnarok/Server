@@ -1,13 +1,13 @@
 prontera,165,200,5	script	Elize	504,{
 
-    if( ResetBugA )
+    if( ResetBugB )
 	{
 		mes "^FF0000[Elize]^000000";
 		mes "Hi there! Thanks again for your cooperation.";
 		mes "In case you found a game breaking bug, please let the GM Team know. Bug abuse may cause your account to be banned.";
 		close;
 	}
-		else
+		else if ( Class > 4000 )
 	{
 		mes "^FF0000[Elize]^000000";
 		mes "Hi there! FryD revoked my ability to save your current status build as it was abused by the mortals of Ragnarok Tales.";
@@ -25,8 +25,15 @@ prontera,165,200,5	script	Elize	504,{
 		sc_end SC_ALL;
 		resetstatus;
 		getitem	30009,1;
-		set ResetBugA, 1;
+		set ResetBugB, 1;
 		mes "Thanks for your cooperation!";
+		close;
+	}
+			else
+	{
+		mes "^FF0000[Elize]^000000";
+		mes "Hi there! Snaehild asked mo to just deal with Transcended players.";
+		mes "But in case you found a game breaking bug, please let the GM Team know. Bug abuse may cause your account to be banned.";
 		close;
 	}
 }
