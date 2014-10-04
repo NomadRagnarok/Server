@@ -7,7 +7,7 @@ prontera,165,200,5	script	Elize	504,{
 		mes "In case you found a game breaking bug, please let the GM Team know. Bug abuse may cause your account to be banned.";
 		close;
 	}
-		else if ( Class > 4000 )
+		else if ( Class > 4000 && Class < 4022 )
 	{
 		mes "^FF0000[Elize]^000000";
 		mes "Hi there! FryD revoked my ability to save your current status build as it was abused by the mortals of Ragnarok Tales.";
