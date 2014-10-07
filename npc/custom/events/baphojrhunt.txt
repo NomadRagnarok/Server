@@ -17,7 +17,7 @@ OnClock0430:
 OnClock1030:
 OnClock1630:
 OnClock2230:
-	set .ItemID,7539;
+	set .ItemID,30009;
 	set .SpecialPorings,rand(5,10);
 	set .NormalPorings,20;
 	set $@ran, rand(1,7);

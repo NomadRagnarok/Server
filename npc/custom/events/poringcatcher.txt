@@ -47,7 +47,7 @@ OnInit:
 	.gmsetting = 60; // in which level the GMs can control this event ?
 	.fakes = 1; // the amount of fakes poring * 12 * number of players in the maps
 	
-	setarray .rewardwin, 7539, 10; // edit the reward items here
+	setarray .rewardwin, 30009, 5; // edit the reward items here
 
 	.seconds = 1000; // for debug purpose only, how many mili-second = 1 second ?
 
