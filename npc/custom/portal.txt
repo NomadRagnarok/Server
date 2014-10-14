@@ -427,6 +427,7 @@ OnStartNPC:
 			AddMap("Aldebaran", "aldebaran", 140, 131);
 			AddMap("Amatsu", "amatsu", 198, 84);
 			AddMap("Ayothaya", "ayothaya", 150, 163);
+			AddMap("Brasilis", "brasilis", 182, 239);
 			AddMap("Comodo", "comodo", 209, 143);
 			AddMap("Einbech (Mining Village);", "einbech", 196, 83);
 			AddMap("Einbroch", "einbroch", 64, 200);
@@ -1292,3 +1293,4 @@ veins,217,127,4	duplicate(Portal#toasty)	Portal#toasty34-1	10007
 rachel,133,115,4	duplicate(Portal#toasty)	Portal#toasty35-1	10007
 pvplobby,80,52,4	duplicate(Portal#toasty)	Portal#toasty36-1	10007
 market,89,86,4	duplicate(Portal#toasty)	Portal#toasty37-1	10007
+brasilis,170,239,4	duplicate(Portal#toasty)	Portal#toasty38-1	10007
