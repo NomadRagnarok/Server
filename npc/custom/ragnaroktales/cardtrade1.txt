@@ -9,8 +9,8 @@
 //===== Description: =========================================
 //= Exchange cards for points.
 //============================================================
-
-pvptales5a,46,31,6	script	Card Trader	90,{
+ 
+prontera,165,196,6	script	Card Trader	90,{
 	mes "[Card Trader]";
 	mes "Hi, "+strcharinfo(0)+"!";
 	mes "What can I do for you?";
@@ -59,11 +59,11 @@ pvptales5a,46,31,6	script	Card Trader	90,{
 		emotion e_yawn;
 		close;		
 	}
-
+ 
 OnSellItem:
 	mes "Cards to sell:";
 	mes "-----------------------------------";
-	for(set .@i,0; .@i<getarraysize(@sold_nameid); set .@i,.@i+1)
+	for(set .@i,0; .@i < getarraysize(@sold_nameid); set .@i,.@i+1)
 		if (@sold_nameid[.@i] > 4000 && @sold_nameid[.@i] < 4700) {
 			if (.Level) {
 				query_sql("SELECT `LV` FROM `mob_db` WHERE `DropCardid` = "+@sold_nameid[.@i],.@lv);
@@ -94,17 +94,17 @@ OnSellItem:
 		emotion e_hmm;
 		close;
 	}
-	for(set .@i,0; .@i<getarraysize(.@card_id); set .@i,.@i+1)
+	for(set .@i,0; .@i < getarraysize(.@card_id); set .@i,.@i+1)
 		delitem .@card_id[.@i],.@card_amt[.@i];
 	setd .Points$, getd(.Points$)+.@card_total;
 	mes "[Card Trader]";
 	mes "All done!";
 	emotion e_ho;
 	close;
-
+ 
 OnBuyItem:
-	for(set .@i,0; .@i<getarraysize(@bought_nameid); set .@i,.@i+1)
-		for(set .@j,0; .@j<getarraysize(.Shop); set .@j,.@j+2)
+	for(set .@i,0; .@i < getarraysize(@bought_nameid); set .@i,.@i+1)
+		for(set .@j,0; .@j <getarraysize(.Shop); set .@j,.@j+2)
 			if (@bought_nameid[.@i] == .Shop[.@j]) {
 				set .@cost, .@cost+(.Shop[.@j+1]*@bought_quantity[.@i]);
 				break;
@@ -117,7 +117,7 @@ OnBuyItem:
 	else {
 		mes "Items purchased:";
 		mes "-----------------------------------";
-		for(set .@i,0; .@i<getarraysize(@bought_nameid); set .@i,.@i+1) {
+		for(set .@i,0; .@i < getarraysize(@bought_nameid); set .@i,.@i+1) {
 			getitem @bought_nameid[.@i], @bought_quantity[.@i];
 			mes "  ^777777"+@bought_quantity[.@i]+"x "+getitemname(@bought_nameid[.@i])+"^000000";
 		}
@@ -129,9 +129,9 @@ OnBuyItem:
 	deletearray @bought_nameid[0], getarraysize(@bought_nameid);
 	deletearray @bought_quantity[0], getarraysize(@bought_quantity);
 	close;
-
+ 
 OnInit:
-	set .Level,0;   		// Minimum monster level to trade corresponding cards.
+	set .Level,0;		   // Minimum monster level to trade corresponding cards.
 	set .Points$,"#Card_Points";	// Variable to store points.
 	setarray .Shop[0],		// Card Shop items: <ID>,<point cost>
 	  4001,1,4004,1,4033,1,4196,1,4197,25,4054,50,4174,75,4047,100;
@@ -141,7 +141,7 @@ OnInit:
 	  "4241,4263,4276,4302,4305,4318,4324,4330,4342,4357,4359,4361,4363,4365,4399,4403,4407";
 	
 	npcshopdelitem "card_shop",909;
-	for(set .@i,0; .@i<getarraysize(.Shop); set .@i,.@i+2)
+	for(set .@i,0; .@i < getarraysize(.Shop); set .@i,.@i+2)
 		npcshopadditem "card_shop",.Shop[.@i],.Shop[.@i+1];
 	end;
 }
