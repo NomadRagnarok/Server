@@ -20,7 +20,7 @@ prontera,169,231,4	script	Event Rewards	660,{
 	set .GMAccess,60;
 	set .GMDelete,80;
 	set .GMLogging,99;
-	set .PackageCount,21;
+	set .PackageCount,22;
 	setarray .Package1[0],5746,1;					//Lord knight
 	setarray .Package2[0],5747,1;					//High Priest
 	setarray .Package3[0],5748,1;					//Sniper
