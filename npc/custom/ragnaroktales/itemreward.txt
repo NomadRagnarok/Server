@@ -42,6 +42,7 @@ prontera,169,231,4	script	Event Rewards	660,{
 	setarray .Package19[0],12210,1;
 	setarray .Package20[0],12210,10,7539,2;
 	setarray .Package21[0],12210,5,7539,1;
+	setarray .Package22[0],30026,1;
 
 // --------------------------------------------------
 
