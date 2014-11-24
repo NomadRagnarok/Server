@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A5AA94E61857956100C940C8"
-               BuildableName = "sample.dylib"
-               BlueprintName = "sample"
+               BlueprintIdentifier = "A58A5A1E185801FF0099683E"
+               BuildableName = "HPMHooking_map.dylib"
+               BlueprintName = "HPMHooking_map"
                ReferencedContainer = "container:Hercules.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -42,9 +42,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A5AA94E61857956100C940C8"
-            BuildableName = "sample.dylib"
-            BlueprintName = "sample"
+            BlueprintIdentifier = "A58A5A1E185801FF0099683E"
+            BuildableName = "HPMHooking_map.dylib"
+            BlueprintName = "HPMHooking_map"
             ReferencedContainer = "container:Hercules.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
