@@ -67,7 +67,7 @@ aldeba_in,96,181,4	script	Kafra Service	4_F_KAFRA5,{
 		mes "I'll access your Storage for you.";
 		next;
 		Zeny -= 20;
-		set RESRVPTS, RESRVPTS + (20/5);
+		RESRVPTS += (20/5);
 		mes "[Kafra Leilah]";
 		mes "In the future, please";
 		mes "ask the Kafra Employee on";
@@ -295,20 +295,6 @@ prontera,146,89,6	script	Kafra Employee::kaf_prontera5	4_F_KAFRA1,{
 	mes "How may I assist you?";
 	callfunc "F_Kafra",5,0,0,40,800;
 	savepoint "prontera",116,73;
-	callfunc "F_KafEnd",0,1,"in the city of Prontera";
-}
-
-prontera,162,170,3	script	Kafra Employee::kaf_prontera6	4_F_KAFRA7,{
-	cutin "kafra_07",2;
-	callfunc "F_KafSet";
-	mes "[Kafra Employee]";
-	mes "Welcome to the";
-	mes "Kafra Corporation.";
-	mes "The Kafra services";
-	mes "are always on your side.";
-	mes "How may I assist you?";
-	callfunc "F_Kafra",5,0,0,40,800;
-	savepoint "prontera",174,203;
 	callfunc "F_KafEnd",0,1,"in the city of Prontera";
 }
 
@@ -698,21 +684,4 @@ alb2trea,59,69,5	script	Kafra Employee::kaf_alb2trea	4_F_KAFRA1,{
 	callfunc "F_Kafra",5,2,1,50,0;
 	savepoint "alb2trea",92,64;
 	callfunc "F_KafEnd",0,1,0,"at Sunken Ship";
-}
-
-// PvP Lobby
-//============================================================
-pvplobby,72,87,5	script	PvP Kafra	4_F_KAFRA6,{
-	cutin "kafra_06",2;
-	callfunc "F_KafSet";
-	mes "[Kafra Employee]";
-	mes "Welcome to the";
-	mes "Kafra Corporation~";
-	mes "The Kafra Services are";
-	mes "always here to support";
-	mes "you. So how can I be";
-	mes "of service today?";
-	callfunc "F_Kafra",5,0,0,40,800;
-	savepoint "pvplobby",65,65;
-	callfunc "F_KafEnd",0,1,"in the PvP Lobby";
 }
