@@ -18,7 +18,7 @@
 //============================================================
 -	script	Kriemhild#1::OutsideFlagsPR1	GUILD_FLAG,{
 
-	set .@GID, getcastledata("prtg_cas01",1);
+	.@GID = getcastledata("prtg_cas01",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";
@@ -94,7 +94,7 @@ prtg_cas01,45,46,4	duplicate(InsideFlagsPR1)	Kriemhild#14	GUILD_FLAG
 
 // Guild Flag (Town)
 //============================================================
-prontera,155,280,4	duplicate(InsideFlagsPR1)	Kriemhild#15	GUILD_FLAG
+prontera,155,190,4	duplicate(InsideFlagsPR1)	Kriemhild#15	GUILD_FLAG
 
 // Kafra Employee
 //============================================================

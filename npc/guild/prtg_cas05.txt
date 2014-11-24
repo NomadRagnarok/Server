@@ -18,7 +18,7 @@
 //============================================================
 -	script	Gondul#1::OutsideFlagsPR5	GUILD_FLAG,{
 
-	set .@GID, getcastledata("prtg_cas05",1);
+	.@GID = getcastledata("prtg_cas05",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";
@@ -92,7 +92,7 @@ prtg_cas05,273,257,4	duplicate(InsideFlagsPR5)	Gondul#12	GUILD_FLAG
 
 // Guild Flag (Town)
 //============================================================
-prontera,159,283,5	duplicate(InsideFlagsPR5)	Gondul#13	GUILD_FLAG
+prontera,165,194,5	duplicate(InsideFlagsPR5)	Gondul#13	GUILD_FLAG
 
 // Kafra Employee
 //============================================================

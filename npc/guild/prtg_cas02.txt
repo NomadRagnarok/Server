@@ -18,7 +18,7 @@
 //============================================================
 -	script	Swanhild#1::OutsideFlagsPR2	GUILD_FLAG,{
 
-	set .@GID, getcastledata("prtg_cas02",1);
+	.@GID = getcastledata("prtg_cas02",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";
@@ -96,7 +96,7 @@ prtg_cas02,162,161,4	duplicate(InsideFlagsPR2)	Swanhild#16	GUILD_FLAG
 
 // Guild Flag (Town)
 //============================================================
-prontera,151,283,3	duplicate(InsideFlagsPR2)	Swanhild#17	GUILD_FLAG
+prontera,146,194,3	duplicate(InsideFlagsPR2)	Swanhild#17	GUILD_FLAG
 
 // Kafra Employee
 //============================================================

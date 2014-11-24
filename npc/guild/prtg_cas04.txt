@@ -18,7 +18,7 @@
 //============================================================
 -	script	Skoegul#1::OutsideFlagsPR4	GUILD_FLAG,{
 
-	set .@GID, getcastledata("prtg_cas04",1);
+	.@GID = getcastledata("prtg_cas04",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";
@@ -94,7 +94,7 @@ prtg_cas04,263,27,4	duplicate(InsideFlagsPR4)	Skoegul#14	GUILD_FLAG
 
 // Guild Flag (Town)
 //============================================================
-prontera,161,288,6	duplicate(InsideFlagsPR4)	Skoegul#15	GUILD_FLAG
+prontera,167,203,6	duplicate(InsideFlagsPR4)	Skoegul#15	GUILD_FLAG
 
 // Kafra Employee
 //============================================================
