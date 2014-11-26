@@ -63,14 +63,16 @@ static struct view_data npc_viewdb2[MAX_NPC_CLASS2_END-MAX_NPC_CLASS2_START];
 unsigned int npc_market_qty[MAX_INVENTORY];
 
 static struct script_event_s
-{	//Holds pointers to the commonly executed scripts for speedup. [Skotlex]
+{
+	//Holds pointers to the commonly executed scripts for speedup. [Skotlex]
 	struct event_data *event[UCHAR_MAX];
 	const char *event_name[UCHAR_MAX];
 	uint8 event_count;
 } script_event[NPCE_MAX];
 
 struct view_data* npc_get_viewdata(int class_)
-{	//Returns the viewdata for normal npc classes.
+{
+	//Returns the viewdata for normal npc classes.
 	if( class_ == INVISIBLE_CLASS )
 		return &npc_viewdb[0];
 	if (npcdb_checkid(class_) || class_ == WARP_CLASS){
@@ -103,12 +105,12 @@ int npc_get_new_npc_id(void) {
 }
 
 int npc_isnear_sub(struct block_list* bl, va_list args) {
-    struct npc_data *nd = (struct npc_data*)bl;
-    
-    if( nd->option & (OPTION_HIDE|OPTION_INVISIBLE) )
-        return 0;
+	struct npc_data *nd = (struct npc_data*)bl;
 
-    return 1;
+	if( nd->option & (OPTION_HIDE|OPTION_INVISIBLE) )
+		return 0;
+
+	return 1;
 }
 
 bool npc_isnear(struct block_list * bl) {
@@ -885,9 +887,10 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 
 	nullpo_retr(1, sd);
 
-	// Why not enqueue it? [Inkfish]
-	//if(sd->npc_id)
-	//	return 1;
+#if 0 // Why not enqueue it? [Inkfish]
+	if(sd->npc_id)
+		return 1;
+#endif // 0
 
 	for(i=0;i<map->list[m].npc_num;i++) {
 		if (map->list[m].npc[i]->option&OPTION_INVISIBLE) {
@@ -1211,7 +1214,7 @@ int npc_scriptcont(struct map_session_data* sd, int id, bool closing) {
 		TBL_NPC* nd = BL_CAST(BL_NPC, target);
 		ShowDebug("npc_scriptcont: %s (sd->npc_id=%d) is not %s (id=%d).\n",
 			nd_sd?(char*)nd_sd->name:"'Unknown NPC'", (int)sd->npc_id,
-		  	nd?(char*)nd->name:"'Unknown NPC'", (int)id);
+			nd?(char*)nd->name:"'Unknown NPC'", (int)id);
 		return 1;
 	}
 	
@@ -1270,7 +1273,7 @@ int npc_buysellsel(struct map_session_data* sd, int id, int type) {
 			sd->npc_id = 0;
 		return 1;
 	}
-    
+
 	if (nd->option & OPTION_INVISIBLE) // can't buy if npc is not visible (hack?)
 		return 1;
 	
@@ -1807,22 +1810,22 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 		return npc->buylist_sub(sd,n,item_list,nd->master_nd);
 	
 	if( z > (double)sd->status.zeny )
-		return 1;	// Not enough Zeny
+		return 1; // Not enough Zeny
 	if( w + sd->weight > sd->max_weight )
-		return 2;	// Too heavy
+		return 2; // Too heavy
 	if( pc->inventoryblank(sd) < new_ )
-		return 3;	// Not enough space to store items
+		return 3; // Not enough space to store items
 	
 	pc->payzeny(sd,(int)z,LOG_TYPE_NPC, NULL);
 	
 	for( i = 0; i < n; ++i ) {
 		int nameid = item_list[i*2+1];
 		int amount = item_list[i*2+0];
-		struct item item_tmp;
 		
-		if (itemdb_type(nameid) == IT_PETEGG)
+		if (itemdb_type(nameid) == IT_PETEGG) {
 			pet->create_egg(sd, nameid);
-		else {
+		} else {
+			struct item item_tmp;
 			memset(&item_tmp,0,sizeof(item_tmp));
 			item_tmp.nameid = nameid;
 			item_tmp.identify = 1;
@@ -1920,20 +1923,19 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 	}
 
 	if( z > (double)sd->status.zeny ) /* TODO find official response for this */
-		return 1;	// Not enough Zeny
+		return 1; // Not enough Zeny
 
 	if( w + sd->weight > sd->max_weight ) /* TODO find official response for this */
-		return 1;	// Too heavy
+		return 1; // Too heavy
 
 	if( pc->inventoryblank(sd) < new_ ) /* TODO find official response for this */
-		return 1;	// Not enough space to store items
+		return 1; // Not enough space to store items
 
 	pc->payzeny(sd,(int)z,LOG_TYPE_NPC, NULL);
 	
 	for( i = 0; i < list_size; ++i ) {
 		int nameid = p->list[i].ITID;
 		int amount = p->list[i].qty;
-		struct item item_tmp;
 		
 		j = npc_market_qty[i];
 		
@@ -1944,9 +1946,10 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 		
 		npc->market_tosql(nd,j);
 		
-		if (itemdb_type(nameid) == IT_PETEGG)
+		if (itemdb_type(nameid) == IT_PETEGG) {
 			pet->create_egg(sd, nameid);
-		else {
+		} else {
+			struct item item_tmp;
 			memset(&item_tmp,0,sizeof(item_tmp));
 			item_tmp.nameid = nameid;
 			item_tmp.identify = 1;
@@ -2449,7 +2452,7 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 // Support for using Constants in place of NPC View IDs.
 int npc_parseview(const char* w4, const char* start, const char* buffer, const char* filepath) {
 	int val = -1, i = 0;
-	char viewid[1024];	// Max size of name from const.txt, see script->read_constdb.
+	char viewid[1024]; // Max size of name from const.txt, see script->read_constdb.
 
 	// Extract view ID / constant
 	while (w4[i] != '\0') {
@@ -2489,7 +2492,7 @@ bool npc_viewisid(const char * viewid)
 		}
 	}
 
-    return true;
+	return true;
 }
 
 //Add then display an npc warp on map
@@ -2839,7 +2842,7 @@ const char* npc_skip_script(const char* start, const char* buffer, const char* f
 /// <map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite id>,{<code>}
 /// <map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>,{<code>}
 const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int options, int *retval) {
-	int x, y, dir = 0, m, xs = 0, ys = 0;	// [Valaris] thanks to fov
+	int x, y, dir = 0, m, xs = 0, ys = 0; // [Valaris] thanks to fov
 	char mapname[32];
 	struct script_code *scriptroot;
 	int i;
@@ -3324,8 +3327,8 @@ int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const c
 	struct event_data* ev = (struct event_data*)strdb_get(npc->ev_db, eventname);
 	struct npc_data *nd;
 	struct script_state *st;
-	int i = 0, j = 0, k = 0;
-	char *temp;
+	int i = 0, nargs = 0;
+	size_t len;
 
 	nullpo_ret(sd);
 
@@ -3353,27 +3356,29 @@ int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const c
 	st = script->alloc_state(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
 	script->setd_sub(st, NULL, ".@atcmd_command$", 0, (void *)command, NULL);
 
-	// split atcmd parameters based on spaces
-	temp = (char*)aMalloc(strlen(message) + 1);
-
-	for( i = 0; i < ( strlen( message ) + 1 ) && k < 127; i ++ ) {
-		if( message[i] == ' ' || message[i] == '\0' ) {
-			if( message[ ( i - 1 ) ] == ' ' ) {
-				continue; // To prevent "@atcmd [space][space]" and .@atcmd_numparameters return 1 without any parameter.
-			}
-			temp[k] = '\0';
-			k = 0;
-			if( temp[0] != '\0' ) {
-				script->setd_sub( st, NULL, ".@atcmd_parameters$", j++, (void *)temp, NULL );
-			}
-		} else {
-			temp[k] = message[i];
-			k++;
+	len = strlen(message);
+	if (len) {
+		char *temp, *p;
+		p = temp = aStrdup(message);
+		// Sanity check - Skip leading spaces (shouldn't happen)
+		while (i <= len && temp[i] == ' ') {
+			p++;
+			i++;
 		}
+		// split atcmd parameters based on spaces
+		while (i <= len) {
+			if (temp[i] != ' ' && temp[i] != '\0') {
+				i++;
+				continue;
+			}
+			temp[i] = '\0';
+			script->setd_sub(st, NULL, ".@atcmd_parameters$", nargs++, (void *)p, NULL);
+			i++;
+			p = temp + i;
+		}
+		aFree(temp);
 	}
-
-	script->setd_sub(st, NULL, ".@atcmd_numparameters", 0, (void *)h64BPTRSIZE(j), NULL);
-	aFree(temp);
+	script->setd_sub(st, NULL, ".@atcmd_numparameters", 0, (void *)h64BPTRSIZE(nargs), NULL);
 
 	script->run_main(st);
 	return 0;
@@ -3603,7 +3608,7 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 }
 /*==========================================
  * Set or disable mapflag on map
- * eg : bat_c01	mapflag	battleground	2
+ * eg : bat_c01<TAB>mapflag<TAB>battleground<TAB>2
  * also chking if mapflag conflict with another
  *------------------------------------------*/
 const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int *retval) {
@@ -3627,7 +3632,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 	}
 
 	if (w4 && !strcmpi(w4, "off"))
-		state = 0;	//Disable mapflag rather than enable it. [Skotlex]
+		state = 0; //Disable mapflag rather than enable it. [Skotlex]
 
 	if (!strcmpi(w3, "nosave")) {
 		char savemap[32];
@@ -4179,9 +4184,6 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 			if( strcmp(w1,"function") == 0 ) {
 				p = npc->parse_function(w1, w2, w3, w4, p, buffer, filepath, &success);
 			} else {
-#ifdef ENABLE_CASE_CHECK
-				if( strcasecmp(w1, "function") == 0 ) DeprecationWarning("npc_parsesrcfile", w1, "function", filepath, strline(buffer, p-buffer)); // TODO
-#endif // ENABLE_CASE_CHECK
 				p = npc->parse_script(w1,w2,w3,w4, p, buffer, filepath,runOnInit?NPO_ONINIT:NPO_NONE, &success);
 			}
 		}
@@ -4206,22 +4208,6 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 		}
 		else
 		{
-#ifdef ENABLE_CASE_CHECK
-			if( strcasecmp(w2, "warp") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "warp", filepath, strline(buffer, p-buffer)); } // TODO
-			else if( strcasecmp(w2,"shop") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "shop", filepath, strline(buffer, p-buffer)); } // TODO
-			else if( strcasecmp(w2,"cashshop") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "cashshop", filepath, strline(buffer, p-buffer)); } // TODO
-			else if( strcasecmp(w2, "script") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "script", filepath, strline(buffer, p-buffer)); } // TODO
-			else if( strcasecmp(w2,"trader") == 0 ) DeprecationWarning("npc_parsesrcfile", w2, "trader", filepath, strline(buffer, p-buffer)) // TODO
-			else if( strncasecmp(w2, "duplicate", 9) == 0 ) {
-				char temp[10];
-				safestrncpy(temp, w2, 10);
-				DeprecationWarning("npc_parsesrcfile", temp, "duplicate", filepath, strline(buffer, p-buffer)); // TODO
-			}
-			else if( strcasecmp(w2,"monster") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "monster", filepath, strline(buffer, p-buffer)); } // TODO:
-			else if( strcasecmp(w2,"boss_monster") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "boss_monster", filepath, strline(buffer, p-buffer)); } // TODO
-			else if( strcasecmp(w2, "mapflag") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "mapflag", filepath, strline(buffer, p-buffer)); } // TODO
-			else
-#endif // ENABLE_CASE_CHECK
 			ShowError("npc_parsesrcfile: Unable to parse, probably a missing or extra TAB in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,p-buffer), w1, w2, w3, w4);
 			p = strchr(p,'\n');// skip and continue
 			success = EXIT_FAILURE;
@@ -4293,7 +4279,7 @@ void npc_read_event_script(void)
 				script_event[i].event_count++;
 #ifdef ENABLE_CASE_CHECK
 			} else if( p && strcasecmp(name, p) == 0 ) {
-				DeprecationWarning2("npc_read_event_script", p, name, config[i].event_name); // TODO
+				DeprecationCaseWarning("npc_read_event_script", p, name, config[i].event_name); // TODO
 #endif // ENABLE_CASE_CHECK
 			}
 		}

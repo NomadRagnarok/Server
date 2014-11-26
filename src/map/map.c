@@ -309,7 +309,7 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 		skill->unit_move(bl,tick,2);
 		status_change_end(bl, SC_RG_CCONFINE_M, INVALID_TIMER);
 		status_change_end(bl, SC_RG_CCONFINE_S, INVALID_TIMER);
-		//		status_change_end(bl, SC_BLADESTOP, INVALID_TIMER); //Won't stop when you are knocked away, go figure...
+		//status_change_end(bl, SC_BLADESTOP, INVALID_TIMER); //Won't stop when you are knocked away, go figure...
 		status_change_end(bl, SC_NJ_TATAMIGAESHI, INVALID_TIMER);
 		status_change_end(bl, SC_MAGICROD, INVALID_TIMER);
 		if (sc && sc->data[SC_PROPERTYWALK] &&
@@ -395,9 +395,11 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 
 /*==========================================
  * Counts specified number of objects on given cell.
+ * flag:
+ *   0x1 - only count standing units
  * TODO: merge with bl_getall_area
  *------------------------------------------*/
-int map_count_oncell(int16 m, int16 x, int16 y, int type) {
+int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag) {
 	int bx,by;
 	struct block_list *bl;
 	int count = 0;
@@ -410,13 +412,27 @@ int map_count_oncell(int16 m, int16 x, int16 y, int type) {
 
 	if (type&~BL_MOB)
 		for( bl = map->list[m].block[bx+by*map->list[m].bxs] ; bl != NULL ; bl = bl->next )
-			if(bl->x == x && bl->y == y && bl->type&type)
-				count++;
+			if(bl->x == x && bl->y == y && bl->type&type) {
+				if(flag&1) {
+					struct unit_data *ud = unit->bl2ud(bl);
+					if(!ud || ud->walktimer == INVALID_TIMER)
+						count++;
+				} else {
+					count++;
+				}
+			}
 
 	if (type&BL_MOB)
 		for( bl = map->list[m].block_mob[bx+by*map->list[m].bxs] ; bl != NULL ; bl = bl->next )
-			if(bl->x == x && bl->y == y)
-				count++;
+			if(bl->x == x && bl->y == y) {
+				if(flag&1) {
+					struct unit_data *ud = unit->bl2ud(bl);
+					if(!ud || ud->walktimer == INVALID_TIMER)
+						count++;
+				} else {
+					count++;
+				}
+			}
 
 	return count;
 }
@@ -1379,7 +1395,7 @@ int map_searchrandfreecell(int16 m,int16 *x,int16 *y,int stack) {
 			if(map->getcell(m,j+*x,i+*y,CELL_CHKNOPASS) && !map->getcell(m,j+*x,i+*y,CELL_CHKICEWALL))
 				continue;
 			//Avoid item stacking to prevent against exploits. [Skotlex]
-			if(stack && map->count_oncell(m,j+*x,i+*y, BL_ITEM) > stack)
+			if(stack && map->count_oncell(m,j+*x,i+*y, BL_ITEM, 0) > stack)
 				continue;
 			free_cells[free_cell][0] = j+*x;
 			free_cells[free_cell++][1] = i+*y;
@@ -1470,6 +1486,85 @@ int map_search_freecell(struct block_list *src, int16 m, int16 *x,int16 *y, int1
 	*x = bx;
 	*y = by;
 	return 0;
+}
+
+/*==========================================
+ * Locates the closest, walkable cell with no blocks of a certain type on it
+ * Returns true on success and sets x and y to cell found.
+ * Otherwise returns false and x and y are not changed.
+ * type: Types of block to count
+ * flag:
+ *   0x1 - only count standing units
+ *------------------------------------------*/
+bool map_closest_freecell(int16 m, int16 *x, int16 *y, int type, int flag)
+{
+	uint8 dir = 6;
+	int16 tx = *x;
+	int16 ty = *y;
+	int costrange = 10;
+
+	if(!map->count_oncell(m, tx, ty, type, flag))
+		return true; //Current cell is free
+
+	//Algorithm only works up to costrange of 34
+	while(costrange <= 34) {
+		short dx = dirx[dir];
+		short dy = diry[dir];
+
+		//Linear search
+		if(dir%2 == 0 && costrange%MOVE_COST == 0) {
+			tx = *x+dx*(costrange/MOVE_COST);
+			ty = *y+dy*(costrange/MOVE_COST);
+			if(!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m,tx,ty,CELL_CHKPASS)) {
+				*x = tx;
+				*y = ty;
+				return true;
+			}
+		}
+		//Full diagonal search
+		else if(dir%2 == 1 && costrange%MOVE_DIAGONAL_COST == 0) {
+			tx = *x+dx*(costrange/MOVE_DIAGONAL_COST);
+			ty = *y+dy*(costrange/MOVE_DIAGONAL_COST);
+			if(!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m,tx,ty,CELL_CHKPASS)) {
+				*x = tx;
+				*y = ty;
+				return true;
+			}
+		}
+		//One cell diagonal, rest linear (TODO: Find a better algorithm for this)
+		else if(dir%2 == 1 && costrange%MOVE_COST == 4) {
+			tx = *x+dx*((dir%4==3)?(costrange/MOVE_COST):1);
+			ty = *y+dy*((dir%4==1)?(costrange/MOVE_COST):1);
+			if(!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m,tx,ty,CELL_CHKPASS)) {
+				*x = tx;
+				*y = ty;
+				return true;
+			}
+			tx = *x+dx*((dir%4==1)?(costrange/MOVE_COST):1);
+			ty = *y+dy*((dir%4==3)?(costrange/MOVE_COST):1);
+			if(!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m,tx,ty,CELL_CHKPASS)) {
+				*x = tx;
+				*y = ty;
+				return true;
+			}
+		}
+
+		//Get next direction
+		if (dir == 5) {
+			//Diagonal search complete, repeat with higher cost range
+			if(costrange == 14) costrange += 6;
+			else if(costrange == 28 || costrange >= 38) costrange += 2;
+			else costrange += 4;
+			dir = 6;
+		} else if (dir == 4) {
+			//Linear search complete, switch to diagonal directions
+			dir = 7;
+		} else {
+			dir = (dir+2)%8;
+		}
+	}
+
+	return false;
 }
 
 /*==========================================
@@ -2412,36 +2507,31 @@ uint8 map_calc_dir(struct block_list* src, int16 x, int16 y)
 
 	dx = x-src->x;
 	dy = y-src->y;
-	if( dx == 0 && dy == 0 )
-	{	// both are standing on the same spot.
+	if (dx == 0 && dy == 0) {
+		// both are standing on the same spot.
 		// aegis-style, makes knockback default to the left.
 		// athena-style, makes knockback default to behind 'src'.
 		dir = (battle_config.knockback_left ? 6 : unit->getdir(src));
-	}
-	else if( dx >= 0 && dy >=0 )
-	{	// upper-right
-		if( dx*2 <= dy )      dir = 0;	// up
-		else if( dx > dy*2 )  dir = 6;	// right
-		else                  dir = 7;	// up-right
-	}
-	else if( dx >= 0 && dy <= 0 )
-	{	// lower-right
-		if( dx*2 <= -dy )     dir = 4;	// down
-		else if( dx > -dy*2 ) dir = 6;	// right
-		else                  dir = 5;	// down-right
-	}
-	else if( dx <= 0 && dy <= 0 )
-	{	// lower-left
-		if( dx*2 >= dy )      dir = 4;	// down
-		else if( dx < dy*2 )  dir = 2;	// left
-		else                  dir = 3;	// down-left
-	}
-	else
-	{	// upper-left
-		if( -dx*2 <= dy )     dir = 0;	// up
-		else if( -dx > dy*2 ) dir = 2;	// left
-		else                  dir = 1;	// up-left
-
+	} else if (dx >= 0 && dy >=0) {
+		// upper-right
+		if( dx*2 < dy || dx == 0 )         dir = 0; // up
+		else if( dx > dy*2+1 || dy == 0 )  dir = 6; // right
+		else                               dir = 7; // up-right
+	} else if (dx >= 0 && dy <= 0) {
+		// lower-right
+		if( dx*2 < -dy || dx == 0 )        dir = 4; // down
+		else if( dx > -dy*2+1 || dy == 0 ) dir = 6; // right
+		else                               dir = 5; // down-right
+	} else if (dx <= 0 && dy <= 0) {
+		// lower-left
+		if( dx*2 > dy || dx == 0 )         dir = 4; // down
+		else if( dx < dy*2-1 || dy == 0 )  dir = 2; // left
+		else                               dir = 3; // down-left
+	} else {
+		// upper-left
+		if( -dx*2 < dy || dx == 0 )        dir = 0; // up
+		else if( -dx > dy*2+1 || dy == 0)  dir = 2; // left
+		else                               dir = 1; // up-left
 	}
 	return dir;
 }
@@ -2587,25 +2677,27 @@ int map_getcellp(struct map_data* m,int16 x,int16 y,cell_chk cellchk) {
 		return (cell.nochat);
 	case CELL_CHKICEWALL:
 		return (cell.icewall);
+	case CELL_CHKNOICEWALL:
+		return (cell.noicewall);
 
 		// special checks
 	case CELL_CHKPASS:
 #ifdef CELL_NOSTACK
-		if (cell.cell_bl >= battle_config.cell_stack_limit) return 0;
+		if (cell.cell_bl >= battle_config.custom_cell_stack_limit) return 0;
 #endif
 	case CELL_CHKREACH:
 		return (cell.walkable);
 
 	case CELL_CHKNOPASS:
 #ifdef CELL_NOSTACK
-		if (cell.cell_bl >= battle_config.cell_stack_limit) return 1;
+		if (cell.cell_bl >= battle_config.custom_cell_stack_limit) return 1;
 #endif
 	case CELL_CHKNOREACH:
 		return (!cell.walkable);
 
 	case CELL_CHKSTACK:
 #ifdef CELL_NOSTACK
-		return (cell.cell_bl >= battle_config.cell_stack_limit);
+		return (cell.cell_bl >= battle_config.custom_cell_stack_limit);
 #else
 		return 0;
 #endif
@@ -2646,6 +2738,8 @@ void map_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag) {
 	case CELL_NOVENDING:     map->list[m].cell[j].novending = flag;     break;
 	case CELL_NOCHAT:        map->list[m].cell[j].nochat = flag;        break;
 	case CELL_ICEWALL:       map->list[m].cell[j].icewall = flag;       break;
+	case CELL_NOICEWALL:     map->list[m].cell[j].noicewall = flag;     break;
+
 	default:
 		ShowWarning("map_setcell: invalid cell type '%d'\n", (int)cell);
 		break;
@@ -3384,8 +3478,8 @@ int map_readallmaps (void) {
 		map->list[i].m = i;
 		map->addmap2db(&map->list[i]);
 
-		memset(map->list[i].moblist, 0, sizeof(map->list[i].moblist));	//Initialize moblist [Skotlex]
-		map->list[i].mob_delete_timer = INVALID_TIMER;	//Initialize timer [Skotlex]
+		memset(map->list[i].moblist, 0, sizeof(map->list[i].moblist)); //Initialize moblist [Skotlex]
+		map->list[i].mob_delete_timer = INVALID_TIMER; //Initialize timer [Skotlex]
 
 		map->list[i].bxs = (map->list[i].xs + BLOCK_SIZE - 1) / BLOCK_SIZE;
 		map->list[i].bys = (map->list[i].ys + BLOCK_SIZE - 1) / BLOCK_SIZE;
@@ -3682,6 +3776,8 @@ int inter_config_read(char *cfgName) {
 		/* import */
 		else if(strcmpi(w1,"import")==0)
 			map->inter_config_read(w2);
+		else
+			HPM->parseConf(w1, w2, HPCT_MAP_INTER);
 	}
 	fclose(fp);
 
@@ -5611,10 +5707,7 @@ int do_init(int argc, char *argv[])
 	map_load_defaults();
 
 	HPM_map_do_init();
-	HPM->DataCheck = HPM_map_DataCheck;
-	HPM->load_sub = HPM_map_plugin_load_sub;
 	HPM->symbol_defaults_sub = map_hp_symbols;
-	HPM->grabHPDataSub = HPM_map_grabHPData;
 	for( i = 1; i < argc; i++ ) {
 		const char* arg = argv[i];
 		if( strcmp(arg, "--load-plugin") == 0 ) {
@@ -5843,7 +5936,7 @@ int do_init(int argc, char *argv[])
 		exit(EXIT_SUCCESS);
 	}
 	
-	npc->event_do_oninit( false );	// Init npcs (OnInit)
+	npc->event_do_oninit( false ); // Init npcs (OnInit)
 	npc->market_fromsql(); /* after OnInit */
 	
 	if (battle_config.pk_mode)
@@ -6000,6 +6093,7 @@ void map_defaults(void) {
 	// search and creation
 	map->get_new_object_id = map_get_new_object_id;
 	map->search_freecell = map_search_freecell;
+	map->closest_freecell = map_closest_freecell;
 	//
 	map->quit = map_quit;
 	// npc
