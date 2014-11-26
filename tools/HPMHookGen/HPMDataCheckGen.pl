@@ -13,19 +13,29 @@ local $ENV{XML_SIMPLE_PREFERRED_PARSER} = 'XML::Parser';      # 0m4.256s
 #local $ENV{XML_SIMPLE_PREFERRED_PARSER} = 'XML::SAX::Expat';  # 0m14.186s
 #local $ENV{XML_SIMPLE_PREFERRED_PARSER} = 'XML::LibXML::SAX'; # 0m7.055s
 
+my $HPMDataCheckAPIVer = 1;
+
 my @files = grep { -f } grep { /[^h]\.xml/ } glob 'doxyoutput/xml/struct*.xml';
 my %out;
 
 foreach my $file (@files) {
 	my $xml = new XML::Simple;
-	my $data = $xml->XMLin($file);
-	next unless $data->{compounddef}->{includes}; # means its a struct from a .c file, plugins cant access those so we don't care.
-	next if $data->{compounddef}->{compoundname} =~ /::/; # its a duplicate with a :: name e.g. struct script_state {<...>} ay;
-	my @filepath = split(/[\/\\]/, $data->{compounddef}->{location}->{file});
+	my $data = $xml->XMLin($file, ForceArray => 1);
+	my $filekey = (keys %{ $data->{compounddef} })[0];
+	next unless $data->{compounddef}->{$filekey}->{includes}; # means its a struct from a .c file, plugins cant access those so we don't care.
+	next if $data->{compounddef}->{$filekey}->{compoundname}->[0] =~ /::/; # its a duplicate with a :: name e.g. struct script_state {<...>} ay;
+	my @filepath = split(/[\/\\]/, $data->{compounddef}->{$filekey}->{location}->[0]->{file});
 	my $foldername = uc($filepath[-2]);
 	my $filename = uc($filepath[-1]); $filename =~ s/-/_/g; $filename =~ s/\.[^.]*$//;
+	my $plugintypes = 'SERVER_TYPE_UNKNOWN';
+	$plugintypes = 'SERVER_TYPE_ALL' if $foldername eq 'COMMON';
+	$plugintypes = "SERVER_TYPE_${foldername}" if $foldername =~ /^(LOGIN|CHAR|MAP)/;
+	my $symboldata = {
+		name => $data->{compounddef}->{$filekey}->{compoundname}->[0],
+		type => $plugintypes,
+	};
 	my $name = "${foldername}_${filename}_H";
-	push @{ $out{$name} }, $data->{compounddef}->{compoundname};
+	push @{ $out{$name} }, $symboldata;
 }
 
 my $fname = '../../src/common/HPMDataCheck.h';
@@ -49,8 +59,10 @@ foreach my $key (sort keys %out) {
 	#ifdef $key
 EOF
 	foreach my $entry (@{ $out{$key} }) {
+		my $entryname = $$entry{name};
+		my $entrytype = $$entry{type};
 		print FH <<"EOF"
-		{ "$entry", sizeof(struct $entry) },
+		{ "$entryname", sizeof(struct $entryname), $entrytype },
 EOF
 	}
 	print FH <<"EOF"
@@ -62,6 +74,7 @@ EOF
 print FH <<"EOF";
 };
 HPExport unsigned int HPMDataCheckLen = ARRAYLENGTH(HPMDataCheck);
+HPExport int HPMDataCheckVer = $HPMDataCheckAPIVer;
 
 #endif /* HPM_DATA_CHECK_H */
 EOF
