@@ -7,6 +7,7 @@
 
 #include "map.h" //ELE_MAX
 #include "../common/cbasetypes.h"
+#include "mapreg.h"
 
 /**
  * Declarations
