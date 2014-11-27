@@ -1,0 +1,14 @@
+﻿Build started 11/27/2014 9:05:17 PM.
+     1>Project "C:\Users\Exc\Desktop\RO Tools\Server RT - Copy\trunk\vcproj-12\plugin-HPMHooking_char.vcxproj" on node 5 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\src\common /I..\3rdparty\msinttypes\include /Zi /nologo /W3 /WX- /MP /Od /Oy- /D _DEBUG /D WIN32 /D _WINDOWS /D _USRDLL /D HPMHOOKING_CHAR /D _WINDLL /D _MBCS /Gm- /EHsc /RTC1 /MTd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"plugin-HPMHooking_char\Debug\\" /Fd"plugin-HPMHooking_char\Debug\vc120.pdb" /Gd /TC /wd4996 /analyze- /errorReport:prompt /MP ..\src\plugins\HPMHooking.c
+         HPMHooking.c
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"..\plugins\HPMHooking_char.dll" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"plugin-HPMHooking_char\Debug\HPMHooking_char.pdb" /TLBID:1 /DYNAMICBASE:NO /NXCOMPAT /IMPLIB:"plugin-HPMHooking_char\Debug\HPMHooking_char.lib" /MACHINE:X86 /SAFESEH /DLL "plugin-HPMHooking_char\Debug\HPMHooking.obj"
+            Creating library plugin-HPMHooking_char\Debug\HPMHooking_char.lib and object plugin-HPMHooking_char\Debug\HPMHooking_char.exp
+         plugin-HPMHooking_char.vcxproj -> C:\Users\Exc\Desktop\RO Tools\Server RT - Copy\trunk\vcproj-12\..\plugins\HPMHooking_char.dll
+     1>Done Building Project "C:\Users\Exc\Desktop\RO Tools\Server RT - Copy\trunk\vcproj-12\plugin-HPMHooking_char.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:01:04.33
