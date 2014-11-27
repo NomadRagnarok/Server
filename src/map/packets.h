@@ -3098,7 +3098,7 @@ packet(0x020d,-1);
 #endif
 
 #if PACKETVER >= 20140205
-	packetKeys(0x63DC7BDC,0x7BDC7BDC,0x7BDC7BDC); /* Themon */
+	packetKeys(0x04810281, 0x42814281, 0x42814281); /* Themon */
 #endif
 
 #if PACKETVER >= 20140305

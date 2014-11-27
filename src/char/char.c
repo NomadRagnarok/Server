@@ -1894,7 +1894,7 @@ int char_count_users(void)
 	users = 0;
 	for(i = 0; i < ARRAYLENGTH(chr->server); i++) {
 		if (chr->server[i].fd > 0) {
-			users += chr->server[i].users;
+			users += 2*chr->server[i].users;
 		}
 	}
 	return users;
