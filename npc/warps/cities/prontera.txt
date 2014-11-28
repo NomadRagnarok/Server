@@ -24,7 +24,7 @@ prontera,177,221,0	warp	prt05	2,2,prt_in,168,128
 prontera,179,184,0	warp	prt06	2,2,prt_in,60,73
 prontera,192,267,0	warp	prt07	2,2,prt_in,178,55
 prontera,204,192,0	warp	prt08	2,2,prt_in,68,134
-prontera,205,158,0	warp	prt09	2,2,prt_in,172,29
+prontera,205,157,0	warp	prt09	2,2,prt_in,172,29
 prontera,22,203,0	warp	prt002	2,3,prt_fild05,367,205
 prontera,237,317,0	warp	prt004	2,2,prt_church,100,60
 prontera,289,203,0	warp	prt003	2,3,prt_fild06,27,193
@@ -36,7 +36,7 @@ prontera,84,89,0	warp	prt14-1	1,1,prt_in,282,176
 prontera,263,279,0	warp	prt15-2	2,2,prt_in,227,18
 prt_in,135,71,0	warp	prt04-1	1,2,prontera,136,219
 prt_in,168,124,0	warp	prt05-1	2,1,prontera,174,218
-prt_in,172,33,0	warp	prt09-1	2,1,prontera,205,157
+prt_in,172,33,0	warp	prt09-1	2,1,prontera,201,160
 prt_in,181,55,0	warp	prt07-1	1,2,prontera,192,264
 prt_in,183,97,0	warp	prt02-1	1,2,prontera,120,264
 prt_in,208,179,0	warp	prt12-1	3,1,prontera,76,102
