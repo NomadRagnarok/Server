@@ -1,0 +1,298 @@
+dicastes01,180,225,5	script	Linkite	452,{
+
+    if( BranchFreebieA )
+	{
+		mes "^FF0000[Linkite]^000000";
+		mes "Hello adventurer!";
+		mes "I hope you enjoyed the mystical branch that I gave you.";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "Invite more friends and unlock more challenges in Ragnarok Tales!";
+		close;
+	}
+		else if ( BaseLevel > 174 && Class == 4060 )
+	{
+		mes "^FF0000[Linkite]^000000";
+		mes "Hello Adventurer! I am Linkite, named after the mystical tree that produces a rare fruit which makes a special sound when the wind blows into it.";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "I was blessed to grant highly skilled adventurers a mystical branch to unfold an extraordinary challenge.";
+		mes "";
+		mes "Behold!";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "The Bloody Branch!";
+		next;
+		emotion	e_no1;
+		sc_end SC_ALL;
+		getitem	12103,1;
+		set BranchFreebieA, 1;
+		mes "^FF0000[Linkite]^000000";
+		mes "Invite more friends and unlock more challenges in Ragnarok Tales!";
+		close;
+	}
+		else if ( BaseLevel > 174 && Class == 4061 )
+	{
+		mes "^FF0000[Linkite]^000000";
+		mes "Hello Adventurer! I am Linkite, named after the mystical tree that produces a rare fruit which makes a special sound when the wind blows into it.";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "I was blessed to grant highly skilled adventurers a mystical branch to unfold an extraordinary challenge.";
+		mes "";
+		mes "Behold!";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "The Bloody Branch!";
+		next;
+		emotion	e_no1;
+		sc_end SC_ALL;
+		getitem	12103,1;
+		set BranchFreebieA, 1;
+		mes "^FF0000[Linkite]^000000";
+		mes "Invite more friends and unlock more challenges in Ragnarok Tales!";
+		close;
+	}
+		else if ( BaseLevel > 174 && Class == 4062 )
+	{
+		mes "^FF0000[Linkite]^000000";
+		mes "Hello Adventurer! I am Linkite, named after the mystical tree that produces a rare fruit which makes a special sound when the wind blows into it.";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "I was blessed to grant highly skilled adventurers a mystical branch to unfold an extraordinary challenge.";
+		mes "";
+		mes "Behold!";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "The Bloody Branch!";
+		next;
+		emotion	e_no1;
+		sc_end SC_ALL;
+		getitem	12103,1;
+		set BranchFreebieA, 1;
+		mes "^FF0000[Linkite]^000000";
+		mes "Invite more friends and unlock more challenges in Ragnarok Tales!";
+		close;
+	}
+		else if ( BaseLevel > 174 && Class == 4063 )
+	{
+		mes "^FF0000[Linkite]^000000";
+		mes "Hello Adventurer! I am Linkite, named after the mystical tree that produces a rare fruit which makes a special sound when the wind blows into it.";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "I was blessed to grant highly skilled adventurers a mystical branch to unfold an extraordinary challenge.";
+		mes "";
+		mes "Behold!";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "The Bloody Branch!";
+		next;
+		emotion	e_no1;
+		sc_end SC_ALL;
+		getitem	12103,1;
+		set BranchFreebieA, 1;
+		mes "^FF0000[Linkite]^000000";
+		mes "Invite more friends and unlock more challenges in Ragnarok Tales!";
+		close;
+	}
+		else if ( BaseLevel > 174 && Class == 4064 )
+	{
+		mes "^FF0000[Linkite]^000000";
+		mes "Hello Adventurer! I am Linkite, named after the mystical tree that produces a rare fruit which makes a special sound when the wind blows into it.";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "I was blessed to grant highly skilled adventurers a mystical branch to unfold an extraordinary challenge.";
+		mes "";
+		mes "Behold!";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "The Bloody Branch!";
+		next;
+		emotion	e_no1;
+		sc_end SC_ALL;
+		getitem	12103,1;
+		set BranchFreebieA, 1;
+		mes "^FF0000[Linkite]^000000";
+		mes "Invite more friends and unlock more challenges in Ragnarok Tales!";
+		close;
+	}
+		else if ( BaseLevel > 174 && Class == 4065 )
+	{
+		mes "^FF0000[Linkite]^000000";
+		mes "Hello Adventurer! I am Linkite, named after the mystical tree that produces a rare fruit which makes a special sound when the wind blows into it.";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "I was blessed to grant highly skilled adventurers a mystical branch to unfold an extraordinary challenge.";
+		mes "";
+		mes "Behold!";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "The Bloody Branch!";
+		next;
+		emotion	e_no1;
+		sc_end SC_ALL;
+		getitem	12103,1;
+		set BranchFreebieA, 1;
+		mes "^FF0000[Linkite]^000000";
+		mes "Invite more friends and unlock more challenges in Ragnarok Tales!";
+		close;
+	}
+		else if ( BaseLevel > 174 && Class == 4073 )
+	{
+		mes "^FF0000[Linkite]^000000";
+		mes "Hello Adventurer! I am Linkite, named after the mystical tree that produces a rare fruit which makes a special sound when the wind blows into it.";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "I was blessed to grant highly skilled adventurers a mystical branch to unfold an extraordinary challenge.";
+		mes "";
+		mes "Behold!";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "The Bloody Branch!";
+		next;
+		emotion	e_no1;
+		sc_end SC_ALL;
+		getitem	12103,1;
+		set BranchFreebieA, 1;
+		mes "^FF0000[Linkite]^000000";
+		mes "Invite more friends and unlock more challenges in Ragnarok Tales!";
+		close;
+	}
+		else if ( BaseLevel > 174 && Class == 4074 )
+	{
+		mes "^FF0000[Linkite]^000000";
+		mes "Hello Adventurer! I am Linkite, named after the mystical tree that produces a rare fruit which makes a special sound when the wind blows into it.";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "I was blessed to grant highly skilled adventurers a mystical branch to unfold an extraordinary challenge.";
+		mes "";
+		mes "Behold!";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "The Bloody Branch!";
+		next;
+		emotion	e_no1;
+		sc_end SC_ALL;
+		getitem	12103,1;
+		set BranchFreebieA, 1;
+		mes "^FF0000[Linkite]^000000";
+		mes "Invite more friends and unlock more challenges in Ragnarok Tales!";
+		close;
+	}
+		else if ( BaseLevel > 174 && Class == 4075 )
+	{
+		mes "^FF0000[Linkite]^000000";
+		mes "Hello Adventurer! I am Linkite, named after the mystical tree that produces a rare fruit which makes a special sound when the wind blows into it.";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "I was blessed to grant highly skilled adventurers a mystical branch to unfold an extraordinary challenge.";
+		mes "";
+		mes "Behold!";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "The Bloody Branch!";
+		next;
+		emotion	e_no1;
+		sc_end SC_ALL;
+		getitem	12103,1;
+		set BranchFreebieA, 1;
+		mes "^FF0000[Linkite]^000000";
+		mes "Invite more friends and unlock more challenges in Ragnarok Tales!";
+		close;
+	}
+		else if ( BaseLevel > 174 && Class == 4076 )
+	{
+		mes "^FF0000[Linkite]^000000";
+		mes "Hello Adventurer! I am Linkite, named after the mystical tree that produces a rare fruit which makes a special sound when the wind blows into it.";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "I was blessed to grant highly skilled adventurers a mystical branch to unfold an extraordinary challenge.";
+		mes "";
+		mes "Behold!";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "The Bloody Branch!";
+		next;
+		emotion	e_no1;
+		sc_end SC_ALL;
+		getitem	12103,1;
+		set BranchFreebieA, 1;
+		mes "^FF0000[Linkite]^000000";
+		mes "Invite more friends and unlock more challenges in Ragnarok Tales!";
+		close;
+	}
+		else if ( BaseLevel > 174 && Class == 4077 )
+	{
+		mes "^FF0000[Linkite]^000000";
+		mes "Hello Adventurer! I am Linkite, named after the mystical tree that produces a rare fruit which makes a special sound when the wind blows into it.";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "I was blessed to grant highly skilled adventurers a mystical branch to unfold an extraordinary challenge.";
+		mes "";
+		mes "Behold!";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "The Bloody Branch!";
+		next;
+		emotion	e_no1;
+		sc_end SC_ALL;
+		getitem	12103,1;
+		set BranchFreebieA, 1;
+		mes "^FF0000[Linkite]^000000";
+		mes "Invite more friends and unlock more challenges in Ragnarok Tales!";
+		close;
+	}
+		else if ( BaseLevel > 174 && Class == 4078 )
+	{
+		mes "^FF0000[Linkite]^000000";
+		mes "Hello Adventurer! I am Linkite, named after the mystical tree that produces a rare fruit which makes a special sound when the wind blows into it.";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "I was blessed to grant highly skilled adventurers a mystical branch to unfold an extraordinary challenge.";
+		mes "";
+		mes "Behold!";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "The Bloody Branch!";
+		next;
+		emotion	e_no1;
+		sc_end SC_ALL;
+		getitem	12103,1;
+		set BranchFreebieA, 1;
+		mes "^FF0000[Linkite]^000000";
+		mes "Invite more friends and unlock more challenges in Ragnarok Tales!";
+		close;
+	}
+		else if ( BaseLevel > 174 && Class == 4079 )
+	{
+		mes "^FF0000[Linkite]^000000";
+		mes "Hello Adventurer! I am Linkite, named after the mystical tree that produces a rare fruit which makes a special sound when the wind blows into it.";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "I was blessed to grant highly skilled adventurers a mystical branch to unfold an extraordinary challenge.";
+		mes "";
+		mes "Behold!";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "The Bloody Branch!";
+		next;
+		emotion	e_no1;
+		sc_end SC_ALL;
+		getitem	12103,1;
+		set BranchFreebieA, 1;
+		mes "^FF0000[Linkite]^000000";
+		mes "Invite more friends and unlock more challenges in Ragnarok Tales!";
+		close;
+	}
+			else
+	{
+		mes "^FF0000[Linkite]^000000";
+		mes "Hello Adventurer! I am Linkite, named after the mystical tree that produces a rare fruit which makes a special sound when the wind blows into it.";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "I was blessed to grant highly skilled adventurers a mystical branch to unfold an extraordinary challenge.";
+		next;
+		mes "^FF0000[Linkite]^000000";
+		mes "Feel free to talk to me again if you achieved the highest possible level that one can achieve.";
+		close;
+	}
+}

@@ -431,6 +431,7 @@ OnStartNPC:
 			AddMap("Comodo", "comodo", 209, 143);
 			AddMap("Einbech (Mining Village);", "einbech", 196, 83);
 			AddMap("Einbroch", "einbroch", 64, 200);
+			AddMap("El Dicastes", "dicastes01", 198, 187);
 			AddMap("Geffen", "geffen", 119, 59);
 			AddMap("Gonryun", "gonryun", 160, 121);
 			AddMap("Hugel", "hugel", 96, 145);
@@ -1294,3 +1295,4 @@ rachel,133,115,4	duplicate(Portal#toasty)	Portal#toasty35-1	10007
 pvplobby,80,52,4	duplicate(Portal#toasty)	Portal#toasty36-1	10007
 market,89,86,4	duplicate(Portal#toasty)	Portal#toasty37-1	10007
 brasilis,170,239,4	duplicate(Portal#toasty)	Portal#toasty38-1	10007
+dicastes01,198,196,4	duplicate(Portal#toasty)	Portal#toasty39-1	10007
