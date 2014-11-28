@@ -8,6 +8,8 @@
 prontera,165,199,5	script	Sheena Fujibayashi	719,{
 	mes "[^995050Sheena Fujibayashi^000000]";
 	mes "Hi, "+strcharinfo(0)+"!";
+	mes "I am Sheena Fujibayashi, a skilled warrior from Mizuho.";
+	mes "I love to collect cards for my Mirage Seal Pinion, a ninja master arte which used to be my favorite skill.";
 	mes "What can I do for you?";
 	next;
 	switch(select(" > Information: > Trade in cards: > Point shop (^0055FF"+getd(.Points$)+"^000000): > Leave")) {
