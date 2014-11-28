@@ -137,10 +137,10 @@ OnInit:
 	set .Level,0;		   // Minimum monster level to trade corresponding cards.
 	set .Points$,"#CASHPOINTS";	// Variable to store points.
 	setarray .Shop[0],		// Card Shop items: <ID>,<point cost>
-	  5027,10, 18505,10, 5176,10, 5305,20;
+	  6376,500;
 
 	//setarray .Points[0],5,100;	// Points per <normal card>,<MVP card>
-	setarray .Points[0],0,5,10,25;	// Points per <Class 1>,<Class 2>,<Class 3>,<Class 4>
+	setarray .Points[0],1,100000,250000,400000;	// Points per <Class 1>,<Class 2>,<Class 3>,<Class 4>
 	
 	set .class2$,	// Class 2 cards | Those not within Class 2 ~4 are all Class 1
 		"4054,4241,4290,4527,4169,4174,4179,4047,4534,4163,4197,4198,4306,4183,4532,4254,4207,4426,4250,4236,4168,4330,4142,4134,4137,4123,4324,4128,4318,4131,4144,4148,4143,4305";
