@@ -5,14 +5,14 @@
 //= Exchange cards for points.
 //============================================================
  
-prontera,44,290,5	script	Sheena Fujibayashi	719,{
+prontera,165,199,5	script	Sheena Fujibayashi	719,{
 	mes "[^995050Sheena Fujibayashi^000000]";
 	mes "Hi, "+strcharinfo(0)+"!";
 	mes "I am Sheena Fujibayashi, a skilled warrior from Mizuho.";
 	mes "I love to collect cards for my Mirage Seal Pinion, a ninja master arte which used to be my favorite skill.";
 	mes "What can I do for you?";
 	next;
-	switch(select(" > Information: > Trade in cards: > Card Points Shop (^0055FF"+getd(.Points$)+"^000000): > Leave")) {
+	switch(select(" > Information: > Trade-in Cards: > Card Points Shop (^0055FF"+getd(.Points$)+"^000000): > Leave")) {
 	case 1:
 		mes "[^995050Sheena Fujibayashi^000000]";
 		mes "Do you find that you've got";
@@ -21,12 +21,11 @@ prontera,44,290,5	script	Sheena Fujibayashi	719,{
 		mes "your hands!";
 		next;
 		mes "[^995050Sheena Fujibayashi^000000]";
-		mes "I'll give you ^0055FF"+.Points[0]+" Point"+((.Points[0] == 1)?"":"s")+"^000000 for each";
-		mes "card you give me, and";
-		mes "^0055FF"+.Points[1]+" Points^000000 for MVP cards.";
-		mes "You can trade those points";
-		mes "for items later on.";
-		mes "How does that sound?";
+		mes "Card Value:";
+		mes "Class C (normal) card is 1 Card Point";
+		mes "Class B card is 100000 Card Points";
+		mes "Class A card is 250000 Card Points";
+		mes "Class S card is 400000 Card Points";
 		emotion e_cash;
 		close;
 	case 2:
