@@ -107,9 +107,9 @@ OnSellItem:
  
 OnBuyItem:
 	for(set .@i,0; .@i<getarraysize(@bought_nameid); set .@i,.@i+1)
-		for(set .@j,0; .@j<getarraysize(.Shop); set .@j,.@j+2)
-			if (@bought_nameid[.@i] == .Shop[.@j]) {
-				set .@cost, .@cost+(.Shop[.@j+1]*@bought_quantity[.@i]);
+		for(set .@j,0; .@j<getarraysize(.CardShop); set .@j,.@j+2)
+			if (@bought_nameid[.@i] == .CardShop[.@j]) {
+				set .@cost, .@cost+(.CardShop[.@j+1]*@bought_quantity[.@i]);
 				break;
 			}
 	if (.@cost > getd(.Points$)) {
@@ -136,7 +136,7 @@ OnBuyItem:
 OnInit:
 	set .Level,0;		   // Minimum monster level to trade corresponding cards.
 	set .Points$,"#CARDPOINTS";	// Variable to store points.
-	setarray .Shop[0],		// Card Shop items: <ID>,<point cost>
+	setarray .CardShop[0],		// Card Shop items: <ID>,<point cost>
 	  7773,500;
 
 	setarray .Points[0],5,100;	// Points per <normal card>,<MVP card>
@@ -154,8 +154,8 @@ OnInit:
 //		"4359";
 	
 	npcshopdelitem "card_shop",909;
-	for(set .@i,0; .@i<getarraysize(.Shop); set .@i,.@i+2)
-		npcshopadditem "card_shop",.Shop[.@i],.Shop[.@i+1];
+	for(set .@i,0; .@i<getarraysize(.CardShop); set .@i,.@i+2)
+		npcshopadditem "card_shop",.CardShop[.@i],.CardShop[.@i+1];
 	end;
 }
 -	shop	card_shop	-1,909:-1
