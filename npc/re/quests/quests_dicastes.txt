@@ -3813,10 +3813,7 @@ dic_in01,245,119,4	script	Shay#ep133_13	4_M_ACROSS,{
 							mes "Not sure. Haven't heard of it.";
 							mes "Why don't you ^4d4dffask Sapha's around here?^000000";
 							ep13_3_secret = 4;
-							erasequest 7186;
-							setquest 7188;
-							setquest 7189;
-							setquest 7190;
+							changequest 7186,7187;
 							break;
 						}
 						mes "[Shay]";
